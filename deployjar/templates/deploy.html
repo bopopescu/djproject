@@ -1,0 +1,38 @@
+{% load static %}
+<script src="{% static "../static/js/jquery-3.4.1.js" %}"></script>
+<script src="{% static "../static/js/deploy.js" %}"></script>
+
+<div>
+    <label class="required" for="jarapp">服务器:</label>
+    {% for h in app.host.all %}
+        <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}">
+        <label for="choice{{ forloop.counter }}">{{ h.ip }}</label>
+    {% endfor %}
+</div>
+<br>
+<div>
+	<label class="required" for="jarurl">包 URL:</label>
+	<input type="text" id="jarurl">
+</div>
+<br>
+<div>
+    <label class="required" for="script">脚本:</label>
+	<select name="script" required="" id="script">
+    {% for s in list_scripts %}
+        <option id="{{ s.id }}" value="{{ s.name }}">{{ s.name }}</option>
+    {% endfor %}
+    </select>
+</div>
+<br>
+<div>
+    <label class="required" for="user">用户:</label>
+	<select name="user" required="" id="user">
+    {% for u in list_user %}
+        <option value="{{ u.name }}">{{ u.name }}</option>
+    {% endfor %}
+    </select>
+</div>
+<br>
+<input type="button" id="deploy_app" value="发布">
+
+<div id="messagecontainer"></div>

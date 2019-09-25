@@ -1,0 +1,5 @@
+<ul>
+     {% for a in list_app %}
+        <li> <a href="{% url 'deploy' a.id %}"> {{ a.name }}</a> </li>
+     {% endfor %}
+ </ul>
