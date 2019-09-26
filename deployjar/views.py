@@ -27,6 +27,8 @@ def exec_deployment(request):
         user = info[3]
         houstuser = HostUser.objects.get(name=user)
         script = Script.objects.get(name=scriptname)
+
+
         for ip in ips.split(','):
             s = paramiko.SSHClient()
             s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
@@ -42,3 +44,5 @@ def exec_deployment(request):
                     if nullcount == 100:
                         break
             s.close()
+
+        request.websocket.send('over')

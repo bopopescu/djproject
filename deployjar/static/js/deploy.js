@@ -1,5 +1,6 @@
 $(function () {
     $('#deploy_app').click(function () {
+        $('button').prop('disabled', true)
         $('#messagecontainer').empty()
 
         var socket = new WebSocket("ws://" + window.location.host + "/deployjar/exec_deployment/");
@@ -26,10 +27,15 @@ $(function () {
             socket.send(data)
         };
         socket.onmessage = function (e) {
-            // console.log('message: ' + e.data);
             if (e.data){
-                $('#messagecontainer').append(e.data+'<br/>');
+                if(e.data == 'over'){
+                    $('button').prop('disabled', false)
+                }
+                else{
+                    $('#messagecontainer').append(e.data+'<br/>');
+                }
             }
         };
+
     })
 })
