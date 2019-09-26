@@ -21,9 +21,11 @@ $(function () {
             var jarurl = document.getElementById("jarurl").value
             var script=$("#script option:selected").attr("value")
             var user=$("#user option:selected").attr("value")
+            var jardir = document.getElementById("jardir").value
+            var port = document.getElementById("port").value
 
-            data = ips + '#' + jarurl + '#' + script + '#' + user
-            // console.log(data)
+            data = ips + '#' + jarurl + '#' + script + '#' + user + '#' + jardir + '#' + port
+            console.log(data)
             socket.send(data)
         };
         socket.onmessage = function (e) {

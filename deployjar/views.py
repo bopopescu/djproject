@@ -25,24 +25,32 @@ def exec_deployment(request):
         jarurl = info[1]
         scriptname = info[2]
         user = info[3]
+        jardir = info[4]
+        port = info[5]
         houstuser = HostUser.objects.get(name=user)
         script = Script.objects.get(name=scriptname)
 
+        if ips == 'undefined':
+            request.websocket.send('请选择服务器！'.encode('utf-8'))
+            request.websocket.send('over')
+        elif not jarurl:
+            request.websocket.send('请输入包 URL！'.encode('utf-8'))
+            request.websocket.send('over')
+        else:
+            for ip in ips.split(','):
+                s = paramiko.SSHClient()
+                s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+                s.connect(hostname=ip, username=houstuser.name, password=houstuser.password, port=22)
+                cmd = 'sh ' + script.script_dir + ' ' + jarurl + ' ' + jardir + ' ' + port + ' ' '2>&1'
+                stdin, stdout, stderr = s.exec_command(cmd)
+                nullcount = 0
+                while True:
+                    outline = stdout.readline().strip().encode('utf-8')
+                    request.websocket.send(outline)
+                    if not outline:
+                        nullcount = nullcount + 1
+                        if nullcount == 100:
+                            break
+                s.close()
 
-        for ip in ips.split(','):
-            s = paramiko.SSHClient()
-            s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-            s.connect(hostname=ip, username=houstuser.name, password=houstuser.password, port=22)
-            cmd = 'sh ' + script.script_dir + ' ' + jarurl + '2>&1'
-            stdin, stdout, stderr = s.exec_command(cmd)
-            nullcount = 0
-            while True:
-                outline = stdout.readline().strip().encode('utf-8')
-                request.websocket.send(outline)
-                if not outline:
-                    nullcount = nullcount + 1
-                    if nullcount == 100:
-                        break
-            s.close()
-
-        request.websocket.send('over')
+            request.websocket.send('over')
