@@ -2,37 +2,70 @@
 <script src="{% static "../static/js/jquery-3.4.1.js" %}"></script>
 <script src="{% static "../static/js/deploy.js" %}"></script>
 
-<div>
-    <label class="required" for="jarapp">服务器:</label>
-    {% for h in app.host.all %}
-        <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}">
-        <label for="choice{{ forloop.counter }}">{{ h.ip }}</label>
-    {% endfor %}
-</div>
-<br>
-<div>
-	<label class="required" for="jarurl">包 URL:</label>
-	<input type="text" id="jarurl">
-</div>
-<br>
-<div>
-    <label class="required" for="script">脚本:</label>
-	<select name="script" required="" id="script">
-    {% for s in list_scripts %}
-        <option id="{{ s.id }}" value="{{ s.name }}">{{ s.name }}</option>
-    {% endfor %}
-    </select>
-</div>
-<br>
-<div>
-    <label class="required" for="user">用户:</label>
-	<select name="user" required="" id="user">
-    {% for u in list_user %}
-        <option value="{{ u.name }}">{{ u.name }}</option>
-    {% endfor %}
-    </select>
-</div>
-<br>
-<input type="button" id="deploy_app" value="发布">
+<div class="container">
+    <div>
+        {% include 'base.html' %}
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="{% url "index" %}">发布首页</a></li>
+        <li>{{ app.name }}</li>
+    </ol>
 
-<div id="messagecontainer"></div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="servers" class="col-sm-1 control-label">服务器</label>
+            <div id="servers" class="col-sm-11">
+              {% for h in app.host.all %}
+                  <label class="checkbox-inline">
+                      <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"> {{ h.ip }}
+                  </label>
+              {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="jarurl" class="col-sm-1 control-label">包 URL</label>
+            <div class="col-sm-11">
+              <input type="text" class="form-control" id="jarurl">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="script" class="col-sm-1 control-label">脚本</label>
+            <div class="col-sm-5">
+              <select class="form-control" name="script" required="" id="script">
+                {% for s in list_scripts %}
+                    <option id="{{ s.id }}" value="{{ s.name }}">{{ s.name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <label for="user" class="col-sm-1 control-label">用户</label>
+            <div class="col-sm-5">
+              <select class="form-control" name="user" required="" id="user">
+                {% for u in list_user %}
+                    <option value="{{ u.name }}">{{ u.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-1">
+                <input class="btn btn-info" type="button" id="deploy_app" value="发布">
+            </div>
+            <div class="col-sm-1">
+                <button onclick="location.href='{% url "index" %}'" type="button" class="btn btn-default">返回</button>
+            </div>
+        </div>
+    </form>
+    <hr class="simple" color="#6f5499" />
+
+    <div class="panel panel-default">
+      <div class="panel-heading">日志输出</div>
+      <div class="panel-body" id="messagecontainer"></div>
+    </div>
+
+</div>
