@@ -20,15 +20,25 @@ def deploy(request,app_id):
 def exec_deployment(request):
     for message in request.websocket:
         message = message.decode('utf-8')
+        print(message)
         info = message.split('#')
         ips = info[0]
         jarurl = info[1]
-        scriptname = info[2]
-        user = info[3]
-        jardir = info[4]
-        port = info[5]
-        houstuser = HostUser.objects.get(name=user)
-        script = Script.objects.get(name=scriptname)
+        appname = info[2]
+
+        # 获取包名
+        jarapp = Jarapp.objects.get(name=appname)
+        jarname = jarapp.jarname
+        # 获取脚本路径
+        script = Script.objects.get(name=jarapp.d_script)
+        script_dir = script.script_dir
+        # 获取用户名密码
+        user = HostUser.objects.get(name=jarapp.user)
+        username = user.name
+        password = user.password
+        # 端口号和路径
+        port = '%d' % jarapp.port
+        jar_dir = jarapp.jar_dir
 
         if ips == 'undefined':
             request.websocket.send('请选择服务器！'.encode('utf-8'))
@@ -40,8 +50,8 @@ def exec_deployment(request):
             for ip in ips.split(','):
                 s = paramiko.SSHClient()
                 s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-                s.connect(hostname=ip, username=houstuser.name, password=houstuser.password, port=22)
-                cmd = 'sh ' + script.script_dir + ' ' + jarurl + ' ' + jardir + ' ' + port + ' ' '2>&1'
+                s.connect(hostname=ip, username=username, password=password, port=22)
+                cmd = 'sh ' + script_dir + ' ' + username + ' ' + jarurl + ' ' + jarname + ' ' + jar_dir + ' ' + port + ' 2>&1'
                 stdin, stdout, stderr = s.exec_command(cmd)
                 nullcount = 0
                 while True:
@@ -54,3 +64,51 @@ def exec_deployment(request):
                 s.close()
 
             request.websocket.send('over')
+
+@accept_websocket
+def control(request):
+    for message in request.websocket:
+        message = message.decode('utf-8')
+        info = message.split('#')
+        ips = info[0]
+        appname = info[1]
+        c_type = info[2]
+        # 获取包名
+        jarapp = Jarapp.objects.get(name=appname)
+        jarname = jarapp.jarname
+        # 获取脚本路径
+        script = Script.objects.get(name=jarapp.c_script)
+        script_dir = script.script_dir
+        # 获取用户名密码
+        user = HostUser.objects.get(name=jarapp.user)
+        username = user.name
+        password = user.password
+        # 端口号和路径
+        port = '%d' %jarapp.port
+        jar_dir = jarapp.jar_dir
+
+        if ips == 'undefined':
+            request.websocket.send('请选择服务器！'.encode('utf-8'))
+            request.websocket.send('over')
+        else:
+            for ip in ips.split(','):
+                s = paramiko.SSHClient()
+                s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+                s.connect(hostname=ip, username=username, password=password, port=22)
+                cmd = 'sh ' + script_dir + ' ' + c_type + ' ' + username + ' ' + jarname + ' '+ jar_dir + ' ' + port + ' 2>&1'
+                stdin, stdout, stderr = s.exec_command(cmd)
+                nullcount = 0
+                msg = "### 开始在服务器 %s 上开始执行！" %ip
+                request.websocket.send(msg.encode('utf-8'))
+                print(cmd)
+                while True:
+                    outline = stdout.readline().strip().encode('utf-8')
+                    request.websocket.send(outline)
+                    if not outline:
+                        nullcount = nullcount + 1
+                        if nullcount == 100:
+                            break
+                s.close()
+
+            request.websocket.send('over')
+        request.websocket.send('over')
