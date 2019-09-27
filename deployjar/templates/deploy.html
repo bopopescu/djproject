@@ -34,26 +34,6 @@
         </div>
 
         <div class="form-group">
-            <label for="script" class="col-sm-1 control-label">脚本</label>
-            <div class="col-sm-5">
-              <select class="form-control" name="script" required="" id="script">
-                {% for s in list_scripts %}
-                    <option id="{{ s.id }}" value="{{ s.name }}">{{ s.name }}</option>
-                {% endfor %}
-                </select>
-            </div>
-
-            <label for="user" class="col-sm-1 control-label">用户</label>
-            <div class="col-sm-5">
-              <select class="form-control" name="user" required="" id="user">
-                {% for u in list_user %}
-                    <option value="{{ u.name }}">{{ u.name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-        </div>
-
-        <div class="form-group">
             <label for="jardir" class="col-sm-1 control-label">部署路径</label>
             <div id="jardirdiv" class="col-sm-5">
               <input class="form-control" id="jardir" type="text" placeholder="{{ app.jar_dir }}" value="{{ app.jar_dir }}" disabled>
