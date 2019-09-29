@@ -1,13 +1,13 @@
 {% load static %}
-<script src="{% static "../static/js/jquery-3.4.1.js" %}"></script>
-<script src="{% static "../static/js/deploy.js" %}"></script>
+<script src="{% static "js/jquery-3.4.1.js" %}"></script>
+<script src="{% static "js/deploy.js" %}"></script>
 
 <div class="container">
     <div>
         {% include 'base.html' %}
     </div>
     <ol class="breadcrumb">
-        <li><a href="{% url "index" %}">发布 JAR 包</a></li>
+        <li><a href="{% url "deployjar:index" %}">发布 JAR 包</a></li>
         <li id="appnameli">{{ app.name }}</li>
     </ol>
 
@@ -52,7 +52,7 @@
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="start" value="start">启动</button>
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="restart" value="restart">重启</button>
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="stop" value="stop">停止</button>
-            <button onclick="location.href='{% url "index" %}'" type="button" class="btn btn-default">返回</button>
+            <button onclick="location.href='{% url "deployjar:index" %}'" type="button" class="btn btn-default">返回</button>
             </div>
         </div>
 

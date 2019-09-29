@@ -72,12 +72,7 @@ function deploy() {
 
         var jarurl = document.getElementById("jarurl").value
         var appname = document.getElementById("deploy_app").name
-        // var script=$("#script option:selected").attr("value")
-        // var user=$("#user option:selected").attr("value")
-        // var jardir = document.getElementById("jardir").value
-        // var port = document.getElementById("port").value
 
-        // data = ips + '#' + jarurl + '#' + script + '#' + user + '#' + jardir + '#' + port
         data = ips + '#' + jarurl + '#' + appname
         console.log(data)
         socket.send(data)

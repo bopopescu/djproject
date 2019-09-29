@@ -7,7 +7,7 @@ from .models import *
 def index(request):
     list_app = Jarapp.objects.all()
     content = {'list_app':list_app}
-    return render(request,'module.html',content)
+    return render(request, 'module.html', content)
 
 def deploy(request,app_id):
     app = Jarapp.objects.get(pk=app_id)

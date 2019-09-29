@@ -1,4 +1,6 @@
+{% load static %}
 {% include 'base.html' %}
+<script type="text/javascript" src="{% static 'js/recovery.js' %}"></script>
 <div class="container">
     <div class="page-header">
         <h3>将生产环境数据库 ebusbar_baipao 还原到测试环境数据库 ebusbar_baipao_pro 中</h3>
@@ -21,7 +23,7 @@
     <div class="form-group">
         <div class="col-sm-2"></div>
         <div class="col-sm-6">
-            <button name="{{ app.name }}" class="btn btn-info" type="button" id="check" value="check">还原数据库</button>
+            <button class="btn btn-info" type="button" id="recovery" value="check">还原数据库</button>
         </div>
     </div>
 
