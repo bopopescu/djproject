@@ -4,7 +4,7 @@
 安装依赖包
 
 ```
-yum install gcc openssl-devel bzip2-devel libffi-devel
+yum install gcc openssl-devel bzip2-devel libffi-devel mysql-devel python-devel
 ```
 
 安装 python
