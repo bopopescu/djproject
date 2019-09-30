@@ -1,3 +1,4 @@
+#### 使用  nginx + gunicorn 部署 djproject
 ##### 安装 python 3.7
 
 安装依赖包
