@@ -29,7 +29,11 @@ python3.7 -V
 ```
 pip3.7 install --upgrade pip
 ```
+##### 安装 django
 
+```
+pip install django
+```
 ##### 准备项目文件
 
 将项目 djproject 上 git clone 到 /usr/local
