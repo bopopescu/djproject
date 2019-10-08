@@ -1,4 +1,7 @@
 $(function () {
+    $('#li_recovery').siblings('li').removeClass('active');
+    $('#li_recovery').addClass('active');
+
     $('#recovery').click(function () {
         var filename = $('#backup option:selected').val()
         // console.log(filename)

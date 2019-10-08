@@ -1,29 +1,31 @@
-<div class="container">
-    {% include 'base.html' %}
-    <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="{% url "deployjar:index" %}">发布 JAR 包</a></li>
-    </ul>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-              <th>#</th>
-              <th>名称</th>
-              <th>端口号</th>
-              <th>部署路径</th>
-              <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for a in list_app %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td><a href="{% url 'deployjar:deploy' a.id %}"> {{ a.name }}</a></td>
-                <td>{{ a.port }}</td>
-                <td>{{ a.jar_dir }}</td>
-                <td>{{ a.created_at }}</td>
-            </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
+{% include 'base.html' %}
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+			<table class="table table-hover">
+                <thead>
+                <tr>
+                      <th>#</th>
+                      <th>名称</th>
+                      <th>端口号</th>
+                      <th>部署路径</th>
+                      <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for a in list_app %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url 'deployjar:deploy' a.id %}"> {{ a.name }}</a></td>
+                        <td>{{ a.port }}</td>
+                        <td>{{ a.jar_dir }}</td>
+                        <td>{{ a.created_at }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

@@ -1,39 +1,37 @@
 {% load static %}
-<script src="{% static "js/jquery-3.4.1.js" %}"></script>
+{% include 'base.html' %}
 <script src="{% static "js/deploy.js" %}"></script>
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="card shadow">
+        <div class="card-header">发布 {{ app.name }}</div>
+        <div class="card-body">
+			<form class="form-horizontal">
+                <div class="form-group row">
+                    <label for="servers" class="col-sm-1 control-label">服务器</label>
+                    <div id="servers" class="col-sm-11">
+                      {% for h in app.host.all %}
+                          <label class="checkbox-inline">
+                              <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"> {{ h.ip }}
+                          </label>
+                      {% endfor %}
+                    </div>
+                </div>
 
-<div class="container">
-    <div>
-        {% include 'base.html' %}
-    </div>
-    <ol class="breadcrumb">
-        <li><a href="{% url "deployjar:index" %}">发布 JAR 包</a></li>
-        <li id="appnameli">{{ app.name }}</li>
-    </ol>
+                <div class="form-group row">
+                    <label for="jarurl" class="col-sm-1 control-label">包 URL</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="jarurl">
+                    </div>
+                    <div class="col-sm-2">
+                      <p class="form-control-static text-warning">仅发布时需要填写</p>
+                    </div>
+                </div>
 
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="servers" class="col-sm-1 control-label">服务器</label>
-            <div id="servers" class="col-sm-11">
-              {% for h in app.host.all %}
-                  <label class="checkbox-inline">
-                      <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"> {{ h.ip }}
-                  </label>
-              {% endfor %}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="jarurl" class="col-sm-1 control-label">包 URL</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="jarurl">
-            </div>
-            <div class="col-sm-2">
-              <p class="form-control-static text-warning">仅发布时需要填写</p>
-            </div>
-        </div>
-
-        <div class="form-group">
+        <div class="form-group row">
             <label for="jardir" class="col-sm-1 control-label">部署路径</label>
             <div id="jardirdiv" class="col-sm-5">
               <input class="form-control" id="jardir" type="text" placeholder="{{ app.jar_dir }}" value="{{ app.jar_dir }}" disabled>
@@ -52,16 +50,19 @@
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="start" value="start">启动</button>
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="restart" value="restart">重启</button>
                 <button name="{{ app.name }}" class="btn btn-info" type="button" id="stop" value="stop">停止</button>
-            <button onclick="location.href='{% url "deployjar:index" %}'" type="button" class="btn btn-default">返回</button>
+            <button onclick="location.href='{% url "deployjar:index" %}'" type="button" class="btn btn-secondary">返回</button>
             </div>
         </div>
 
     </form>
-    <hr class="simple" color="#6f5499" />
+    <hr class="simple" />
 
     <div class="panel panel-default">
       <div class="panel-heading">日志输出</div>
       <div class="panel-body" id="messagecontainer"></div>
     </div>
-
+    </div>
+    </div>
+    </div>
+    </div>
 </div>

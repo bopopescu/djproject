@@ -1,38 +1,49 @@
 {% load static %}
 {% include 'base.html' %}
 <script type="text/javascript" src="{% static 'js/recovery.js' %}"></script>
-<div class="container">
-    <div class="page-header">
-        <h3>将生产环境数据库 ebusbar_baipao 还原到测试环境数据库 ebusbar_baipao_pro 中</h3>
-    </div>
-    <form class="form-horizontal">
-    <div class="form-group">
-        <label for="backup" class="col-sm-2 control-label">选择备份</label>
-        <div class="col-sm-6">
-            <select id="backup" class="form-control" >
-                {% for b in content %}
-                    <option value="{{ b }}">{{ b }}</option>
-                {% endfor %}
-            </select>
+
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+    {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="card shadow">
+			<div class="card-header">
+                将生产环境数据库 ebusbar_baipao 还原到测试环境数据库 ebusbar_baipao_pro 中
+            </div>
+
+            <div class="card-body">
+            <form class="form-horizontal">
+            <div class="form-group row">
+                <label for="backup" class="col-sm-1 control-label">选择备份</label>
+                <div class="col-sm-6">
+                    <select id="backup" class="form-control" >
+                        {% for b in content %}
+                            <option value="{{ b }}">{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                  <p class="form-control-static text-warning">此列表显示的是每天的备份</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-info" type="button" id="recovery" value="check">还原数据库</button>
+                </div>
+            </div>
+            </form>
+
+            <hr class="simple"/>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">日志输出</div>
+              <div class="panel-body" id="messagecontainer"></div>
+            </div>
         </div>
-        <div class="col-sm-4">
-          <p class="form-control-static text-warning">此列表显示的是每天的备份</p>
+        </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-6">
-            <button class="btn btn-info" type="button" id="recovery" value="check">还原数据库</button>
-        </div>
-    </div>
-
-    </form>
-    <hr class="simple" color="#6f5499" />
-
-    <div class="panel panel-default">
-      <div class="panel-heading">日志输出</div>
-      <div class="panel-body" id="messagecontainer"></div>
-    </div>
-
 </div>
