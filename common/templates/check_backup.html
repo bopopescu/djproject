@@ -1,0 +1,36 @@
+{% load static %}
+{% include 'base.html' %}
+<script type="text/javascript" src="{% static 'js/checkbackup.js' %}"></script>
+
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+    {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="card shadow">
+			<div class="card-header">
+                查看备份
+            </div>
+
+            <div class="card-body">
+            <form class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-info" type="button" id="btn_check" value="check">开始检查</button>
+                </div>
+            </div>
+            </form>
+
+            <hr class="simple"/>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">检查结果(最近10次的备份)</div><br/>
+              <pre class="panel-body" id="messagecontainer"></pre>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>

@@ -23,11 +23,11 @@
 
                 <div class="form-group row">
                     <label for="jarurl" class="col-sm-1 control-label">包 URL</label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                       <input type="text" class="form-control" id="jarurl">
                     </div>
-                    <div class="col-sm-2">
-                      <p class="form-control-static text-warning">仅发布时需要填写</p>
+                    <div class="col-sm-4">
+                      <p class="form-control-static text-warning">仅发布时需要填写，获取地址 http://188.188.1.131:200 </p>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
               <input class="form-control" id="jardir" type="text" placeholder="{{ app.jar_dir }}" value="{{ app.jar_dir }}" disabled>
             </div>
             <label for="port" class="col-sm-1 control-label">端口号</label>
-            <div id="portdiv" class="col-sm-5">
+            <div id="portdiv" class="col-sm-2">
               <input class="form-control" id="port" type="text" placeholder="{{ app.port }}" value="{{ app.port }}" disabled>
             </div>
         </div>

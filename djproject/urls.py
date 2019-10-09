@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('deployjar/',include('deployjar.urls')),
     path('dbmanager/',include('dbmanager.urls')),
+    path('common/',include('common.urls'))
 ]
