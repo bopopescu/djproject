@@ -23,5 +23,4 @@ def execcheck(request):
                 if nullcount == 100:
                     break
         s.close()
-
         request.websocket.send('over')
