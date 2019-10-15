@@ -2,6 +2,9 @@ from django.shortcuts import render
 from dwebsocket.decorators import accept_websocket
 import paramiko
 from deployjar.models import *
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import *
 
 # Create your views here.
 def checkbackup(request):
@@ -31,12 +34,29 @@ def domain(request):
 
 def host(request):
     host_list = Host.objects.all()
-    return render(request,'host.html',{'host_list':host_list})
+    paginator = Paginator(host_list, 10)
+    page = request.GET.get('page')
+    hosts = paginator.get_page(page)
+    return render(request,'host.html',{'hosts':hosts})
 
 def instance(request):
     host_list = Host.objects.all()
-    return render(request, 'instance.html', {'host_list': host_list})
+    paginator = Paginator(host_list, 3)
+    page = request.GET.get('page')
+    hosts = paginator.get_page(page)
+    return render(request, 'instance.html', {'hosts': hosts})
 
 def model(request):
     model_list = JarModel.objects.all()
-    return render(request,'model.html',{'model_list':model_list})
+    paginator = Paginator(model_list, 5)
+    page = request.GET.get('page')
+    models = paginator.get_page(page)
+    return render(request, 'model.html', {'models': models})
+
+def project(request):
+    project_list = Project.objects.all()
+    return render(request,'project.html',{'project_list':project_list})
+
+def project_detail(request,p_id):
+    project = Project.objects.get(pk=p_id)
+    return render(request,'project_detail.html',{'project':project})

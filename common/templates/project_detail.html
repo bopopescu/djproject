@@ -4,7 +4,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
         {% include 'top.html' %}
         <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800">应用资料>系统模块</h6>
+            <h5 class="mb-2 text-gray-800">项目 {{ project.name }} 详情</h5>
 			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
@@ -19,8 +19,9 @@
                 </thead>
                 <tbody>
 
-                {% for model in models %}
+                {% for model in project.jarmodel_set.all %}
                 {% if model.instance.all.count > 0 %}
+                    <h6 class="mb-2 text-gray-800">包含的模块</h6>
                     <tr>
                         <td rowspan="{{ model.instance.all.count }}">
                             <a href="/admin/deployjar/jarmodel/{{ model.id }}/change/">{{ model.name }}</a>
@@ -53,25 +54,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <div class="row">
-                <div class="col-sm-12 col-md-7">
-                <span class="step-links">
-                    {% if models.has_previous %}
-                        <a href="?page=1">首页</a>
-                        <a href="?page={{ models.previous_page_number }}">上一页</a>
-                    {% endif %}
-
-                    <span class="current">
-                        当前 {{ models.number }} / {{ models.paginator.num_pages }}
-                    </span>
-
-                    {% if models.has_next %}
-                        <a href="?page={{ models.next_page_number }}">下一页</a>
-                        <a href="?page={{ models.paginator.num_pages }}">尾页</a>
-                    {% endif %}
-                </span>
-                </div>
-            </div>
         </div>
     </div>
 </div>

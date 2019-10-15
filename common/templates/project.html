@@ -1,0 +1,30 @@
+{% include 'base.html' %}
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+         <h6 class="mb-2 text-gray-800">项目管理</h6>
+			<table class="table table-hover">
+                <thead>
+                <tr>
+                      <th>#</th>
+                      <th>项目名称</th>
+                      <th>负责人</th>
+                      <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for p in project_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url 'common:project_detail' p.id %}"> {{ p.name }}</a></td>
+                        <td>{{ p.manager }}</td>
+                        <td>{{ p.created_at }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

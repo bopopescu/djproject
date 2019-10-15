@@ -18,7 +18,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for h in host_list %}
+                {% for h in hosts %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td><a href="/admin/deployjar/host/{{ h.id }}/change/"> {{ h.name }}</a></td>
@@ -31,6 +31,25 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <div class="row">
+                <div class="col-sm-12 col-md-7">
+                <span class="step-links">
+                    {% if hosts.has_previous %}
+                        <a href="?page=1">首页</a>
+                        <a href="?page={{ hosts.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        当前 {{ hosts.number }} / {{ hosts.paginator.num_pages }}
+                    </span>
+
+                    {% if hosts.has_next %}
+                        <a href="?page={{ hosts.next_page_number }}">下一页</a>
+                        <a href="?page={{ hosts.paginator.num_pages }}">尾页</a>
+                    {% endif %}
+                </span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

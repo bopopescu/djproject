@@ -5,7 +5,7 @@
         {% include 'top.html' %}
 
         <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800">应用资料>实例</h6>
+            <h6 class="mb-2 text-gray-800">应用资料>JAVA 实例</h6>
 			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
@@ -19,14 +19,14 @@
                 </thead>
                 <tbody>
 
-                {% for host in host_list %}
-                {% if host.instance_set.all.count > 0 %}
-                    <tr>
+                {% for host in hosts %}
+                <tr>
+                    {% if host.instance_set.all.count > 0 %}
                         <td rowspan="{{ host.instance_set.all.count }}">{{ host.ip }}</td>
-                    {% for instance in host.instance_set.all %}
-                        {% if forloop.counter != 1 %}
-                            <tr>
-                        {% endif %}
+                        {% for instance in host.instance_set.all %}
+                            {% if forloop.counter != 1 %}
+                                <tr>
+                            {% endif %}
                             <td>
                                 <a href="/admin/deployjar/instance/{{ instance.id }}/change/">{{ instance.name }}</a>
                             </td>
@@ -42,12 +42,35 @@
                             <td>
                                 {{ instance.created_at }}
                             </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <td>{{ host.ip }}</td>
+                        <td colspan="5">没有实例</td>
                         </tr>
-                    {% endfor %}
-                {% endif %}
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
+            <div class="row">
+                <div class="col-sm-12 col-md-7">
+                <span class="step-links">
+                    {% if hosts.has_previous %}
+                        <a href="?page=1">首页</a>
+                        <a href="?page={{ hosts.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        当前 {{ hosts.number }} / {{ hosts.paginator.num_pages }}
+                    </span>
+
+                    {% if hosts.has_next %}
+                        <a href="?page={{ hosts.next_page_number }}">下一页</a>
+                        <a href="?page={{ hosts.paginator.num_pages }}">尾页</a>
+                    {% endif %}
+                </span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

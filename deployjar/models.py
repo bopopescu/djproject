@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from common.models import *
 
 # Create your models here.
 class HostUser(models.Model):
@@ -82,7 +83,8 @@ class Instance(models.Model):
 class JarModel(models.Model):
     name = models.CharField('名称',max_length=200)
     url = models.CharField('访问地址',max_length=200)
-    instance = models.ManyToManyField(Instance)
+    instance = models.ManyToManyField(Instance,verbose_name='实例')
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
     class Meta:
         verbose_name = '模块'

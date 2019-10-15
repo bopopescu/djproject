@@ -29,6 +29,18 @@
           <span>查看备份</span></a>
       </li>
 
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'common:domain' %}">
+          <i class="fas fa-fw fa-address-book"></i>
+          <span>域名管理</span></a>
+      </li>
+
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'common:project' %}">
+          <i class="fas fa-fw fa-address-book"></i>
+          <span>项目管理</span></a>
+      </li>
+
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -37,15 +49,14 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{% url 'common:domain' %}">域名</a>
             <a class="collapse-item" href="{% url 'common:host' %}">主机</a>
-            <a class="collapse-item" href="{% url 'common:instance' %}">实例</a>
-            <a class="collapse-item" href="{% url 'common:model' %}">模块</a>
+            <a class="collapse-item" href="{% url 'common:instance' %}">JAVA 实例</a>
+            <a class="collapse-item" href="{% url 'common:model' %}">系统模块</a>
           </div>
         </div>
       </li>
 
-      <hr class="sidebar-divider d-none d-md-block">
+{#      <hr class="sidebar-divider d-none d-md-block">#}
 
       <!-- Sidebar Toggler (Sidebar) -->
 {#      <div class="text-center d-none d-md-inline">#}

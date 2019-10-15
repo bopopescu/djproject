@@ -8,5 +8,7 @@ urlpatterns = [
     path('host/',host,name='host'),
     path('instance/',instance,name='instance'),
     path('domain/',domain,name='domain'),
-    path('model/',model,name='model')
+    path('model/',model,name='model'),
+    path('project/',project,name='project'),
+    path('<int:p_id>/deploy/',project_detail,name='project_detail'),
 ]
