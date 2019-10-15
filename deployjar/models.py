@@ -64,4 +64,31 @@ class Jarapp(models.Model):
     def __str__(self):
         return self.name
 
+class Instance(models.Model):
+    name = models.CharField('名称',max_length=200)
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机')
+    port = models.IntegerField('端口号')
+    package = models.CharField('包名',max_length=200)
+    dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
+    created_at = models.DateTimeField('创建时间',default=timezone.now)
+
+    class Meta:
+        verbose_name = '实例'
+        verbose_name_plural = '实例'
+
+    def __str__(self):
+        return self.host.ip + ':%s' %self.port
+
+class JarModel(models.Model):
+    name = models.CharField('名称',max_length=200)
+    url = models.CharField('访问地址',max_length=200)
+    instance = models.ManyToManyField(Instance)
+    created_at = models.DateTimeField('创建时间',default=timezone.now)
+    class Meta:
+        verbose_name = '模块'
+        verbose_name_plural = '模块'
+
+    def __str__(self):
+        return self.name
+
 

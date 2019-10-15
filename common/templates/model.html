@@ -1,0 +1,58 @@
+{% include 'base.html' %}
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+            <h6 class="mb-2 text-gray-800">应用资料>模块</h6>
+			<table class="table table-bordered dataTable">
+                <thead>
+                <tr>
+                      <th>模块名</th>
+                      <th>主机 IP</th>
+                      <th>名称</th>
+                      <th>端口号</th>
+                      <th>包名</th>
+                      <th>部署路径</th>
+                      <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for model in model_list %}
+                {% if model.instance.all.count > 0 %}
+                    <tr>
+                        <td rowspan="{{ model.instance.all.count }}">
+                            <a href="/admin/deployjar/jarmodel/{{ model.id }}/change/">{{ model.name }}</a>
+                        </td>
+                    {% for instance in model.instance.all %}
+                        {% if forloop.counter != 1 %}
+                            <tr>
+                        {% endif %}
+                            <td>
+                                {{ instance.host.ip }}
+                            </td>
+                            <td>
+                                {{ instance.name }}
+                            </td>
+                            <td>
+                                {{ instance.port }}
+                            </td>
+                            <td>
+                                {{ instance.package }}
+                            </td>
+                            <td>
+                                {{ instance.dir }}
+                            </td>
+                            <td>
+                                {{ instance.created_at }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

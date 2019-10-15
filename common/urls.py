@@ -4,5 +4,9 @@ from .views import *
 app_name = 'common'
 urlpatterns = [
     path('checkbackup/',checkbackup,name='checkbackup'),
-    path('execcheck/',execcheck,name='execcheck')
+    path('execcheck/',execcheck,name='execcheck'),
+    path('host/',host,name='host'),
+    path('instance/',instance,name='instance'),
+    path('domain/',domain,name='domain'),
+    path('model/',model,name='model')
 ]

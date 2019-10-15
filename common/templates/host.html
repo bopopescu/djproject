@@ -1,0 +1,36 @@
+{% include 'base.html' %}
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+            <h6 class="mb-2 text-gray-800">应用资料>主机</h6>
+			<table class="table table-bordered dataTable">
+                <thead>
+                <tr>
+                      <th>#</th>
+                      <th>主机名</th>
+                      <th>IP 地址</th>
+                      <th>版本</th>
+                      <th>配置</th>
+                      <th>位置</th>
+                      <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for h in host_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/admin/deployjar/host/{{ h.id }}/change/"> {{ h.name }}</a></td>
+                        <td>{{ h.ip }}</td>
+                        <td>{{ h.version }}</td>
+                        <td>{{ h.config }}</td>
+                        <td>{{ h.position }}</td>
+                        <td>{{ h.created_at }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

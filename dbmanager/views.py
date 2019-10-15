@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import paramiko
 from dwebsocket.decorators import accept_websocket
+from deployjar.models import *
 
 # Create your views here.
 def index(request):

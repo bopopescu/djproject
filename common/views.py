@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from dwebsocket.decorators import accept_websocket
 import paramiko
+from deployjar.models import *
 
 # Create your views here.
 def checkbackup(request):
@@ -24,3 +25,18 @@ def execcheck(request):
                     break
         s.close()
         request.websocket.send('over')
+
+def domain(request):
+    return render(request,'domain.html')
+
+def host(request):
+    host_list = Host.objects.all()
+    return render(request,'host.html',{'host_list':host_list})
+
+def instance(request):
+    host_list = Host.objects.all()
+    return render(request, 'instance.html', {'host_list': host_list})
+
+def model(request):
+    model_list = JarModel.objects.all()
+    return render(request,'model.html',{'model_list':model_list})
