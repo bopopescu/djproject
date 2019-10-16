@@ -3,9 +3,28 @@
     {% include 'navbar.html' %}
     <div id="content-wrapper" class="d-flex flex-column">
         {% include 'top.html' %}
-
         <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800">应用资料>JAVA 实例</h6>
+            <div class="row">
+                {% if env == 'all' %}
+                    <div class="col-lg-10"><h6 class="mb-2 text-gray-800">全部实例</h6></div>
+                {% elif env == 'test' %}
+                    <div class="col-lg-10"><h6 class="mb-2 text-gray-800">测试环境实例</h6></div>
+                {% elif env == 'pro' %}
+                    <div class="col-lg-10"><h6 class="mb-2 text-gray-800">生产环境实例</h6></div>
+                {% endif %}
+                <div class="col-lg-2">
+                    <div class="dropdown mb-1" style="text-align:right">
+                    <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      选择环境
+                    </button>
+                    <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="{% url 'common:instance' %}?env=test">测试环境</a>
+                      <a class="dropdown-item" href="{% url 'common:instance' %}?env=pro">生产环境</a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <hr/>
 			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
@@ -14,6 +33,7 @@
                       <th>端口号</th>
                       <th>包名</th>
                       <th>部署路径</th>
+                      <th>环境</th>
                       <th>创建时间</th>
                 </tr>
                 </thead>
@@ -39,6 +59,11 @@
                             <td>
                                 {{ instance.dir }}
                             </td>
+                            {% if host.env == 'test' %}
+                                <td>测试环境</td>
+                            {% elif host.env == 'pro' %}
+                                <td>生产环境</td>
+                            {% endif %}
                             <td>
                                 {{ instance.created_at }}
                             </td>
@@ -46,7 +71,7 @@
                         {% endfor %}
                     {% else %}
                         <td>{{ host.ip }}</td>
-                        <td colspan="5">没有实例</td>
+                        <td colspan="6">没有实例</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -56,8 +81,8 @@
                 <div class="col-sm-12 col-md-7">
                 <span class="step-links">
                     {% if hosts.has_previous %}
-                        <a href="?page=1">首页</a>
-                        <a href="?page={{ hosts.previous_page_number }}">上一页</a>
+                        <a href="?page=1&env={{ env }}">首页</a>
+                        <a href="?page={{ hosts.previous_page_number }}&env={{ env }}">上一页</a>
                     {% endif %}
 
                     <span class="current">
@@ -65,8 +90,8 @@
                     </span>
 
                     {% if hosts.has_next %}
-                        <a href="?page={{ hosts.next_page_number }}">下一页</a>
-                        <a href="?page={{ hosts.paginator.num_pages }}">尾页</a>
+                        <a href="?page={{ hosts.next_page_number }}&env={{ env }}">下一页</a>
+                        <a href="?page={{ hosts.paginator.num_pages }}&env={{ env }}">尾页</a>
                     {% endif %}
                 </span>
                 </div>

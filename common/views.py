@@ -33,18 +33,26 @@ def domain(request):
     return render(request,'domain.html')
 
 def host(request):
-    host_list = Host.objects.all()
-    paginator = Paginator(host_list, 10)
+    env = request.GET.get('env')
+    if env == 'all':
+        host_list = Host.objects.all().order_by('-env')
+    else:
+        host_list = Host.objects.filter(env=env).order_by('-env')
+    paginator = Paginator(host_list, 2)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
-    return render(request,'host.html',{'hosts':hosts})
+    return render(request,'host.html',{'hosts':hosts,'env':env})
 
 def instance(request):
-    host_list = Host.objects.all()
+    env = request.GET.get('env')
+    if env == 'all':
+        host_list = Host.objects.all().order_by('-env')
+    else:
+        host_list = Host.objects.filter(env=env).order_by('-env')
     paginator = Paginator(host_list, 3)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
-    return render(request, 'instance.html', {'hosts': hosts})
+    return render(request, 'instance.html', {'hosts': hosts,'env':env})
 
 def model(request):
     model_list = JarModel.objects.all()
