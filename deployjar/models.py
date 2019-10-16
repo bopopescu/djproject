@@ -20,6 +20,7 @@ class Host(models.Model):
     config_list = [('4C 8G 40G','4C 8G 40G'),('8C 16G 80G','8C 16G 80G'),('8C 32G 100G','8C 32G 100G')]
     position_list = [('阿里云','阿里云'),('电信机房','电信机房')]
     env_list = [('test','测试环境'),('pro','生产环境')]
+    type_list = [('nginx','nginx'),('java','java'),('mysql','mysql'),('redis','redis')]
 
     name = models.CharField('主机名',max_length=200,unique=True)
     ip = models.GenericIPAddressField('IP 地址',unique=True)
@@ -27,6 +28,7 @@ class Host(models.Model):
     config = models.CharField('配置',max_length=200,choices=config_list)
     position = models.CharField('位置',max_length=200,choices=position_list)
     hostuser = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='系统管理员')
+    type = models.CharField('类别',max_length=200,choices=type_list,default='java')
     env = models.CharField('环境',max_length=200,choices=env_list,default='test')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
 

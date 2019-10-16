@@ -33,15 +33,20 @@ def domain(request):
     return render(request,'domain.html')
 
 def host(request):
+    type = request.GET.get('type')
     env = request.GET.get('env')
-    if env == 'all':
+    if type == 'all' and env == 'all':
         host_list = Host.objects.all().order_by('-env')
+    elif type == 'all':
+        host_list = Host.objects.filter(env=env).order_by('-type')
+    elif env == 'all':
+        host_list = Host.objects.filter(type=type).order_by('-type')
     else:
-        host_list = Host.objects.filter(env=env).order_by('-env')
-    paginator = Paginator(host_list, 2)
+        host_list = Host.objects.filter(env=env, type=type)
+    paginator = Paginator(host_list, 10)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
-    return render(request,'host.html',{'hosts':hosts,'env':env})
+    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type})
 
 def instance(request):
     env = request.GET.get('env')

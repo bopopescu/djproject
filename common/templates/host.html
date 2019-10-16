@@ -6,22 +6,35 @@
         <div class="container-fluid">
             <div class="row">
                 {% if env == 'all' %}
-                    <div class="col-lg-10 control-label"><h6 class="mb-2 text-gray-800">全部主机</h6></div>
+                    <div class="col-lg-10 control-label"><h6 class="mb-2 text-gray-800">主机</h6></div>
                 {% elif env == 'test' %}
                     <div class="col-lg-10"><h6 class="mb-2 text-gray-800">测试环境主机</h6></div>
                 {% elif env == 'pro' %}
                     <div class="col-lg-10"><h6 class="mb-2 text-gray-800">生产环境主机</h6></div>
                 {% endif %}
-                <div class="col-lg-2">
+                <div class="col-lg-1">
+                    <div class="dropdown mb-1" style="text-align:right">
+                    <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      选择类别
+                    </button>
+                    <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type=nginx&env={{ env }}">nginx</a>
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type=java&env={{ env }}">java</a>
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type=mysql&env={{ env }}">mysql</a>
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type=redis&env={{ env }}">redis</a>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-1">
                     <div class="dropdown mb-1" style="text-align:right">
                     <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       选择环境
                     </button>
                     <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="{% url 'common:host' %}?env=test">测试环境</a>
-                      <a class="dropdown-item" href="{% url 'common:host' %}?env=pro">生产环境</a>
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type={{ type }}&env=test">测试环境</a>
+                      <a class="dropdown-item" href="{% url 'common:host' %}?type={{ type }}&env=pro">生产环境</a>
                     </div>
-                  </div>
+                    </div>
                 </div>
             </div>
             <hr/>
@@ -33,6 +46,7 @@
                       <th>IP 地址</th>
                       <th>版本</th>
                       <th>配置</th>
+                      <th>类别</th>
                       <th>位置</th>
                       <th>环境</th>
                       <th>创建时间</th>
@@ -46,6 +60,7 @@
                         <td>{{ h.ip }}</td>
                         <td>{{ h.version }}</td>
                         <td>{{ h.config }}</td>
+                        <td>{{ h.type }}</td>
                         <td>{{ h.position }}</td>
                         {% if h.env == 'test' %}
                             <td>测试环境</td>
@@ -58,11 +73,12 @@
                 </tbody>
             </table>
             <div class="row">
-                <div class="col-sm-12 col-md-7">
+                <div class="col-lg-6"></div>
+                <div class="col-lg-6 col-md-7" style="text-align:right">
                 <span class="step-links">
                     {% if hosts.has_previous %}
-                        <a href="?page=1&env={{ env }}">首页</a>
-                        <a href="?page={{ hosts.previous_page_number }}&env={{ env }}">上一页</a>
+                        <a href="?&page=1&type={{ type }}&env={{ env }}">首页</a>
+                        <a href="?page={{ hosts.previous_page_number }}&type={{ type }}&env={{ env }}">上一页</a>
                     {% endif %}
 
                     <span class="current">
@@ -70,8 +86,8 @@
                     </span>
 
                     {% if hosts.has_next %}
-                        <a href="?page={{ hosts.next_page_number }}&env={{ env }}">下一页</a>
-                        <a href="?page={{ hosts.paginator.num_pages }}&env={{ env }}">尾页</a>
+                        <a href="?page={{ hosts.next_page_number }}&type={{ type }}&env={{ env }}">下一页</a>
+                        <a href="?page={{ hosts.paginator.num_pages }}&type={{ type }}&env={{ env }}">尾页</a>
                     {% endif %}
                 </span>
                 </div>
