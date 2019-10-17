@@ -40,11 +40,11 @@ def host(request):
     type = request.GET.get('type')
     env = request.GET.get('env')
     if type == 'all' and env == 'all':
-        host_list = Host.objects.all().order_by('-env')
+        host_list = Host.objects.all().order_by('-env','ip')
     elif type == 'all':
-        host_list = Host.objects.filter(env=env).order_by('-type')
+        host_list = Host.objects.filter(env=env).order_by('-type','ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type=type).order_by('-type')
+        host_list = Host.objects.filter(type=type).order_by('-type','ip')
     else:
         host_list = Host.objects.filter(env=env, type=type)
     paginator = Paginator(host_list, 10)
@@ -55,9 +55,9 @@ def host(request):
 def instance(request):
     env = request.GET.get('env')
     if env == 'all':
-        host_list = Host.objects.all().order_by('-env')
+        host_list = Host.objects.filter(type='java').order_by('-env')
     else:
-        host_list = Host.objects.filter(env=env).order_by('-env')
+        host_list = Host.objects.filter(env=env,type='java').order_by('-env')
     paginator = Paginator(host_list, 3)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
@@ -65,7 +65,7 @@ def instance(request):
 
 def model(request):
     model_list = JarModel.objects.all()
-    paginator = Paginator(model_list, 5)
+    paginator = Paginator(model_list, 3)
     page = request.GET.get('page')
     models = paginator.get_page(page)
     return render(request, 'model.html', {'models': models})

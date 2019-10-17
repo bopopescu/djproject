@@ -56,7 +56,7 @@
                 {% for h in hosts %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td><a href="/admin/deployjar/host/{{ h.id }}/change/"> {{ h.name }}</a></td>
+                        <td><a href="/admin/deployjar/host/{{ h.id }}/change/" target="_blank"> {{ h.name }}</a></td>
                         <td>{{ h.ip }}</td>
                         <td>{{ h.version }}</td>
                         <td>{{ h.config }}</td>

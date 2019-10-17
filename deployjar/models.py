@@ -33,6 +33,7 @@ class Host(models.Model):
     created_at = models.DateTimeField('创建时间',default=timezone.now)
 
     class Meta:
+        ordering = ['ip']
         verbose_name = '主机'
         verbose_name_plural = '主机'
 
@@ -69,26 +70,9 @@ class Jarapp(models.Model):
     def __str__(self):
         return self.name
 
-class Instance(models.Model):
-    name = models.CharField('名称',max_length=200)
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机')
-    port = models.IntegerField('端口号')
-    package = models.CharField('包名',max_length=200)
-    dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
-    created_at = models.DateTimeField('创建时间',default=timezone.now)
-
-    class Meta:
-        verbose_name = '实例'
-        verbose_name_plural = '实例'
-
-    def __str__(self):
-        return self.host.ip + ':%s' %self.port
-
 class JarModel(models.Model):
     name = models.CharField('名称',max_length=200)
-    url = models.CharField('访问地址',max_length=200)
-    test_instance = models.ManyToManyField(Instance, verbose_name='测试实例',related_name='test')
-    pro_instance = models.ManyToManyField(Instance,verbose_name='生产实例',related_name='pro',blank=True,null=True)
+    manager = models.CharField('负责人',max_length=200)
     project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
     class Meta:
@@ -97,6 +81,20 @@ class JarModel(models.Model):
 
     def __str__(self):
         return self.name
+
+class Instance(models.Model):
+    name = models.ForeignKey(JarModel,on_delete=models.CASCADE,verbose_name='模块名')
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机')
+    port = models.IntegerField('端口号')
+    package = models.CharField('包名',max_length=200)
+    dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
+    created_at = models.DateTimeField('创建时间',default=timezone.now)
+    class Meta:
+        verbose_name = '实例'
+        verbose_name_plural = '实例'
+
+    def __str__(self):
+        return self.host.ip + ':%s' %self.port
 
 class Domain(models.Model):
     project = models.ForeignKey(Project,verbose_name='项目',on_delete=models.CASCADE)
