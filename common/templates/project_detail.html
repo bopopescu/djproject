@@ -6,7 +6,54 @@
         <div class="container-fluid">
             <h6 class="mb-2 text-gray-800"><a href="{% url 'common:project' %}">项目管理</a> > {{ project.name }}</h6>
             <hr/>
+        {% if project.domain_set.all %}
+            <h6 class="mb-2 text-gray-800"><strong>访问地址</strong></h6>
+            <table class="table table-bordered dataTable">
+                <thead>
+                <tr>
+                      <th>名称</th>
+                      <th>URL 地址</th>
+                      <th>外网 IP</th>
+                      <th>Nginx IP</th>
+                      <th>环境</th>
+                      <th>创建时间</th>
+                      <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for domain in project.domain_set.all %}
+                         <tr>
+                            <td>
+                                <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
+                            </td>
+                            <td>
+                                {{ domain.ip }}
+                            </td>
+                            <td>
+                                {{ domain.nginx.ip }}
+                            </td>
+                            {% if domain.nginx.env == 'test' %}
+                                <td>测试环境</td>
+                            {% elif domain.nginx.env == 'pro' %}
+                                <td>生产环境</td>
+                            {% endif %}
+                            <td>
+                                {{ domain.created_at }}
+                            </td>
+                            <td>{{ domain.disc }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <hr/>
+        {% endif %}
+
+        {% if project.jarmodel_set.all  %}
             <h6 class="mb-2 text-gray-800"><strong>模块</strong></h6>
+
 			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
@@ -21,7 +68,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 {% for model in project.jarmodel_set.all %}
                 {% if model.test_instance.all.count > 0 %}
                     <tr>
@@ -88,6 +134,8 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <hr/>
+        {% endif %}
         </div>
     </div>
 </div>

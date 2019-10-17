@@ -31,7 +31,7 @@ def execcheck(request):
 
 def domain(request):
     porjects = Project.objects.all()
-    paginator = Paginator(porjects, 5)
+    paginator = Paginator(porjects, 3)
     page = request.GET.get('page')
     porject_list = paginator.get_page(page)
     return render(request,'domain.html',{'project_list':porject_list})
