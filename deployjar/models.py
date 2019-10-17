@@ -18,7 +18,7 @@ class HostUser(models.Model):
 class Host(models.Model):
     version_list = [('CentOS 6','CentOS 6'),('CentOS 7','CentOS 7')]
     config_list = [('4C 8G 40G','4C 8G 40G'),('8C 16G 80G','8C 16G 80G'),('8C 32G 100G','8C 32G 100G')]
-    position_list = [('阿里云','阿里云'),('电信机房','电信机房')]
+    position_list = [('阿里云','阿里云'),('电信机房','电信机房'),('坪山机房','坪山机房')]
     env_list = [('test','测试环境'),('pro','生产环境')]
     type_list = [('nginx','nginx'),('java','java'),('mysql','mysql'),('redis','redis')]
 
@@ -63,8 +63,8 @@ class Jarapp(models.Model):
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:
-        verbose_name = '模块'
-        verbose_name_plural = '模块'
+        verbose_name = '模块(旧)'
+        verbose_name_plural = '模块(旧)'
 
     def __str__(self):
         return self.name
@@ -98,4 +98,18 @@ class JarModel(models.Model):
     def __str__(self):
         return self.name
 
+class Domain(models.Model):
+    project = models.ForeignKey(Project,verbose_name='项目',on_delete=models.CASCADE)
+    name = models.CharField('名称',max_length=200)
+    url = models.CharField('URL 地址',max_length=200)
+    ip = models.CharField('外网 IP',max_length=200)
+    nginx = models.ForeignKey(Host, verbose_name='Nginx 服务器', on_delete=models.CASCADE)
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+    disc = models.CharField('备注',max_length=200,blank=True)
+    class Meta:
+        ordering = ['name']
+        verbose_name = '域名'
+        verbose_name_plural = '域名'
 
+    def __str__(self):
+        return self.url

@@ -13,15 +13,19 @@
                       <th>项目名称</th>
                       <th>负责人</th>
                       <th>创建时间</th>
+                      <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for p in project_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td><a href="{% url 'common:project_detail' p.id %}"> {{ p.name }}</a></td>
+                        <td><a href="/admin/common/project/{{ p.id }}/change/" target="_blank"> {{ p.name }}</a></td>
                         <td>{{ p.manager }}</td>
                         <td>{{ p.created_at }}</td>
+                        <td width="10%">
+                            <button onclick="location.href='{% url "common:project_detail" p.id %}'" type="button" class="btn btn-info btn-sm">查看详情</button>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

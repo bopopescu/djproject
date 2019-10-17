@@ -30,7 +30,11 @@ def execcheck(request):
         request.websocket.send('over')
 
 def domain(request):
-    return render(request,'domain.html')
+    porjects = Project.objects.all()
+    paginator = Paginator(porjects, 5)
+    page = request.GET.get('page')
+    porject_list = paginator.get_page(page)
+    return render(request,'domain.html',{'project_list':porject_list})
 
 def host(request):
     type = request.GET.get('type')
