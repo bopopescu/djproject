@@ -23,10 +23,16 @@
           <span>还原数据库</span></a>
       </li>
 
-       <li class="nav-item active">
+      <li class="nav-item active">
         <a class="nav-link" href="/common/checkbackup/">
           <i class="fas fa-fw fa-database"></i>
           <span>查看备份</span></a>
+      </li>
+
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'common:upload_files' %}">
+          <i class="fas fa-fw fa-database"></i>
+          <span>更新模板</span></a>
       </li>
 
       <li class="nav-item active">
@@ -52,6 +58,7 @@
             <a class="collapse-item" href="{% url 'common:host' %}?env=all&type=all">主机</a>
             <a class="collapse-item" href="{% url 'common:instance' %}?env=all">JAVA 实例</a>
             <a class="collapse-item" href="{% url 'common:model' %}">系统模块</a>
+            <a class="collapse-item" href="{% url 'common:mysqldb' %}">MySQL 数据库</a>
           </div>
         </div>
       </li>

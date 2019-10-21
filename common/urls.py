@@ -11,4 +11,9 @@ urlpatterns = [
     path('model/',model,name='model'),
     path('project/',project,name='project'),
     path('<int:p_id>/deploy/',project_detail,name='project_detail'),
+    path('model_detail/',model_detail,name='model_detail'),
+    path('mysqldb/',mysqldb,name='mysqldb'),
+    path('upload-files/',UploadFilesView.as_view(), name='upload_files'),
+    path('remove_file/<int:f_id>/',remove_file,name='remove_file'),
+    path('update_files/',update_files,name='update_files')
 ]

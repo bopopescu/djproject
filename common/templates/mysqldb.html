@@ -4,16 +4,18 @@
     <div id="content-wrapper" class="d-flex flex-column">
         {% include 'top.html' %}
         <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800">系统模块</h6>
+            <h6 class="mb-2 text-gray-800">MySQL 数据库</h6>
             <hr/>
 			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
-                      <th>模块名</th>
-                      <th>主机 IP</th>
+                      <th>数据库名</th>
+                      <th>项目</th>
+                      <th>IP 地址</th>
                       <th>端口号</th>
-                      <th>包名</th>
                       <th>部署路径</th>
+                      <th>版本</th>
+                      <th>类型</th>
                       <th>环境</th>
                       <th>创建时间</th>
                       <th>操作</th>
@@ -21,13 +23,15 @@
                 </thead>
                 <tbody>
 
-                {% for model in models %}
-                {% if model.instance_set.all.count > 0 %}
+                {% for db in db_list %}
                     <tr>
-                        <td rowspan="{{ model.instance_set.all.count  }}" style="vertical-align: middle">
-                            <a href="/admin/deployjar/jarmodel/{{ model.id }}/change/" target="_blank">{{ model.name }}</a>
+                        <td rowspan="{{ db.instance.all.count  }}" style="vertical-align: middle">
+                            <a href="/admin/deployjar/mysqldb/{{ db.id }}/change/" target="_blank">{{ db.name }}</a>
                         </td>
-                    {% for instance in model.instance_set.all %}
+                        <td rowspan="{{ db.instance.all.count  }}" style="vertical-align: middle">
+                            {{ db.project.name }}
+                        </td>
+                    {% for instance in db.instance.all %}
                         {% if forloop.counter != 1 %}
                             <tr>
                         {% endif %}
@@ -38,10 +42,13 @@
                                 {{ instance.port }}
                             </td>
                             <td>
-                                {{ instance.package }}
+                                {{ instance.dir }}
                             </td>
                             <td>
-                                {{ instance.dir }}
+                                {{ instance.version }}
+                            </td>
+                            <td>
+                                {{ instance.type }}
                             </td>
                             {% if instance.host.env == 'test' %}
                                 <td>测试环境</td>
@@ -51,10 +58,9 @@
                             <td>
                                 {{ instance.created_at }}
                             </td>
-                            <td><a class="btn-info btn-sm" href="/admin/deployjar/instance/{{ instance.id }}/change/" target="_blank">修改</a></td>
+                            <td><a class="btn-info btn-sm" href="/admin/deployjar/mysqlinstance/{{ instance.id }}/change/" target="_blank">修改</a></td>
                         </tr>
                     {% endfor %}
-                {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
@@ -62,18 +68,18 @@
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6 col-md-7" style="text-align:right">
                 <span class="step-links">
-                    {% if models.has_previous %}
+                    {% if db_list.has_previous %}
                         <a href="?page=1">首页</a>
-                        <a href="?page={{ models.previous_page_number }}">上一页</a>
+                        <a href="?page={{ db_list.previous_page_number }}">上一页</a>
                     {% endif %}
 
                     <span class="current">
-                        当前 {{ models.number }} / {{ models.paginator.num_pages }}
+                        当前 {{ db_list.number }} / {{ db_list.paginator.num_pages }}
                     </span>
 
-                    {% if models.has_next %}
-                        <a href="?page={{ models.next_page_number }}">下一页</a>
-                        <a href="?page={{ models.paginator.num_pages }}">尾页</a>
+                    {% if db_list.has_next %}
+                        <a href="?page={{ db_list.next_page_number }}">下一页</a>
+                        <a href="?page={{ db_list.paginator.num_pages }}">尾页</a>
                     {% endif %}
                 </span>
                 </div>

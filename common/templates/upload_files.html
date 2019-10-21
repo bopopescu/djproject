@@ -1,0 +1,63 @@
+{% load static %}
+{% include 'base.html' %}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/upload-files.js' %}"></script>
+
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+    {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="card shadow">
+			<div class="card-header">
+                更新百跑测试环境模板
+            </div>
+
+            <div class="card-body">
+
+            <button type="button" class="btn btn-info" id='upload_files'>
+              <span class="glyphicon glyphicon-cloud-upload"></span>选择模板
+            </button>
+
+            <button type="button" class="btn btn-info" id='update_files'>
+              <span class="glyphicon glyphicon-cloud-upload"></span>更新(新增)模板
+            </button>
+
+            {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+            <input id="fileupload" type="file" name="file" multiple
+                   style="display: none;"
+                   data-url="{% url 'common:upload_files' %}"
+                   data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+
+            {# 3. TABLE TO DISPLAY THE UPLOADED PHOTOS #}
+            <hr/>
+            <table id="gallery" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>模板</th>
+                    <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for file in files_list %}
+                  <tr>
+                    <td><a href="{{ file.file.url }}">{{ file.file.name }}</a></td>
+                    <td><a href="/common/remove_file/{{ file.id }}/">移除</a></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+            <hr class="simple"/>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">执行结果</div>
+              <div class="panel-body" id="messagecontainer"></div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>

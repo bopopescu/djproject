@@ -12,3 +12,8 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+class UploadFile(models.Model):
+    title = models.CharField(max_length=255, blank=True)
+    file = models.FileField(upload_to='')
+    uploaded_at = models.DateTimeField(auto_now_add=True)

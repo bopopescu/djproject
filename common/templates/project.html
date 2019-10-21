@@ -6,27 +6,40 @@
         <div class="container-fluid">
          <h6 class="mb-2 text-gray-800">项目管理</h6>
             <hr/>
-			<table class="table table-hover">
+			<table class="table table-bordered dataTable">
                 <thead>
                 <tr>
-                      <th>#</th>
                       <th>项目名称</th>
                       <th>负责人</th>
                       <th>创建时间</th>
-                      <th>操作</th>
+                      <th>模块</th>
                 </tr>
                 </thead>
                 <tbody>
+                <tr>
                 {% for p in project_list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><a href="/admin/common/project/{{ p.id }}/change/" target="_blank"> {{ p.name }}</a></td>
-                        <td>{{ p.manager }}</td>
-                        <td>{{ p.created_at }}</td>
-                        <td width="10%">
-                            <button onclick="location.href='{% url "common:project_detail" p.id %}'" type="button" class="btn btn-info btn-sm">查看详情</button>
-                        </td>
+                    {% if p.jarmodel_set.all %}
+                        {% if forloop.counter != 1 %}
+                            <tr>
+                        {% endif %}
+                        <td rowspan="{{ p.jarmodel_set.all.count }}"><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
+                        <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.manager }}</td>
+                        <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.created_at }}</td>
+                        {% for m in p.jarmodel_set.all %}
+                        {% if forloop.counter != 1 %}
+                            <tr>
+                        {% endif %}
+                            <td><a href="{% url 'common:model_detail' %}?name={{ m.name }}">{{ m.name }}</a></td>
+                        {% endfor %}
                     </tr>
+                    {% else %}
+                        <tr>
+                            <td><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
+                            <td>{{ p.manager }}</td>
+                            <td>{{ p.created_at }}</td>
+                            <td></td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

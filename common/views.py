@@ -1,10 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from dwebsocket.decorators import accept_websocket
 import paramiko
 from deployjar.models import *
 from django.core.paginator import Paginator
-from django.shortcuts import render
 from .models import *
+
+from django.http import JsonResponse
+from django.views import View
+
+from .form import FileForm
+from .models import UploadFile
 
 # Create your views here.
 def checkbackup(request):
@@ -70,6 +75,11 @@ def model(request):
     models = paginator.get_page(page)
     return render(request, 'model.html', {'models': models})
 
+def model_detail(request):
+    name = request.GET.get('name')
+    model = JarModel.objects.get(name=name)
+    return render(request,'model_detail.html',{'model':model})
+
 def project(request):
     project_list = Project.objects.all()
     return render(request,'project.html',{'project_list':project_list})
@@ -77,3 +87,43 @@ def project(request):
 def project_detail(request,p_id):
     project = Project.objects.get(pk=p_id)
     return render(request,'project_detail.html',{'project':project})
+
+def mysqldb(request):
+    dbs = MySQLDB.objects.all()
+    paginator = Paginator(dbs, 5)
+    page = request.GET.get('page')
+    db_list = paginator.get_page(page)
+    return render(request,'mysqldb.html',{'db_list':db_list})
+
+class UploadFilesView(View):
+    def get(self, request):
+        files_list = UploadFile.objects.all()
+        return render(self.request, 'upload_files.html', {'files_list': files_list})
+
+    def post(self, request):
+        form = FileForm(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            file = form.save()
+            data = {'id':file.id,'is_valid': True, 'name': file.file.name, 'url': file.file.url}
+        else:
+            data = {'is_valid': False}
+        return JsonResponse(data)
+
+def remove_file(request,f_id):
+    file = UploadFile.objects.get(pk=f_id)
+    file.file.delete()
+    file.delete()
+    return redirect('common:upload_files')
+
+@accept_websocket
+def update_files(request):
+    for message in request.websocket:
+        file_list = UploadFile.objects.all()
+        t = paramiko.Transport(('188.188.1.141', 22))
+        t.connect(username='tomcat', password='tomcat')
+        sftp = paramiko.SFTPClient.from_transport(t)
+        for f in file_list:
+            name = f.file
+            sftp.put('media/%s' %name,'/tmp/upload/%s' %name)
+        t.close()
+        request.websocket.send('over')

@@ -75,6 +75,7 @@ class JarModel(models.Model):
     manager = models.CharField('负责人',max_length=200)
     project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
+
     class Meta:
         verbose_name = '模块'
         verbose_name_plural = '模块'
@@ -89,12 +90,48 @@ class Instance(models.Model):
     package = models.CharField('包名',max_length=200)
     dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
+
     class Meta:
         verbose_name = '实例'
         verbose_name_plural = '实例'
 
     def __str__(self):
         return self.host.ip + ':%s' %self.port
+
+class MySQLInstance(models.Model):
+    type_list = [('primary','主节点'),('slave','从节点')]
+
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址')
+    port = models.IntegerField('端口号',default=3306)
+    dir = models.CharField('部署路径',max_length=200,default='/usr/local/mysql')
+    version = models.CharField('版本',max_length=200,default='5.7')
+    type = models.CharField('类型',max_length=200,choices=type_list)
+    password = models.CharField('root 密码',max_length=200,default='111111')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'MySQL实例'
+        verbose_name_plural = 'MySQL 实例'
+
+    def __str__(self):
+        return self.host.ip + ':%s' %self.port
+
+class MySQLDB(models.Model):
+    name = models.CharField('数据库名',max_length=200)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
+    instance = models.ManyToManyField(MySQLInstance,verbose_name='MySQL 实例')
+    dir = models.CharField('数据库路径',max_length=200,default='/usr/local/mysql/data')
+    manager = models.CharField('管理员',max_length=200)
+    user = models.CharField('用户名',max_length=200,default='dbuser')
+    password = models.CharField('密码',max_length=200,default='111111')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'MySQL 数据库'
+        verbose_name_plural = 'MySQL 数据库'
+
+    def __str__(self):
+        return self.name
 
 class Domain(models.Model):
     project = models.ForeignKey(Project,verbose_name='项目',on_delete=models.CASCADE)
@@ -104,6 +141,7 @@ class Domain(models.Model):
     nginx = models.ForeignKey(Host, verbose_name='Nginx 服务器', on_delete=models.CASCADE)
     created_at = models.DateTimeField('创建时间', default=timezone.now)
     disc = models.CharField('备注',max_length=200,blank=True)
+
     class Meta:
         ordering = ['name']
         verbose_name = '域名'

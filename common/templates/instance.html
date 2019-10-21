@@ -42,7 +42,7 @@
                 {% for host in hosts %}
                 <tr>
                     {% if host.instance_set.all.count > 0 %}
-                        <td rowspan="{{ host.instance_set.all.count }}">{{ host.ip }}</td>
+                        <td rowspan="{{ host.instance_set.all.count }}" style="vertical-align: middle">{{ host.ip }}</td>
                         {% for instance in host.instance_set.all %}
                             {% if forloop.counter != 1 %}
                                 <tr>

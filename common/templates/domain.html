@@ -24,7 +24,7 @@
                 {% for project in project_list %}
                 {% if project.domain_set.all.count > 0 %}
                     <tr>
-                        <td rowspan="{{ project.domain_set.all.count }}">
+                        <td rowspan="{{ project.domain_set.all.count }}" style="vertical-align: middle">
                             {{ project.name }}
                         </td>
                     {% for domain in project.domain_set.all %}
