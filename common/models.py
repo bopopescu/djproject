@@ -1,7 +1,18 @@
 from django.db import models
 from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+import os
 
 # Create your models here.
+class OverwriteStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if self.exists(name):
+            f = UploadFile.objects.get(title=name)
+            f.delete()
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
+
 class Project(models.Model):
     name = models.CharField('名称',max_length=200)
     manager = models.CharField('负责人',max_length=200)
@@ -15,5 +26,5 @@ class Project(models.Model):
 
 class UploadFile(models.Model):
     title = models.CharField(max_length=255, blank=True)
-    file = models.FileField(upload_to='')
+    file = models.FileField(upload_to='',storage=OverwriteStorage())
     uploaded_at = models.DateTimeField(auto_now_add=True)

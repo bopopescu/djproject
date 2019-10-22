@@ -21,8 +21,8 @@ def execcheck(request):
         s = paramiko.SSHClient()
         s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         s.connect(hostname='188.188.1.133', username='root', password='52R#jnFra%T1', port=22)
-        cmd = 'sh /mntdisk/scripts/check_backup.sh'
-        stdin, stdout, stderr = s.exec_command(cmd)
+        cmd = 'sh /mntdisk/scripts/check_backup.sh 2>&1'
+        stdin, stdout, stderr=s.exec_command(cmd)
         nullcount = 0
         while True:
             outline = stdout.readline().strip().encode('utf-8')
@@ -101,29 +101,44 @@ class UploadFilesView(View):
         return render(self.request, 'upload_files.html', {'files_list': files_list})
 
     def post(self, request):
+        data = {'is_valid': True}
         form = FileForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             file = form.save()
-            data = {'id':file.id,'is_valid': True, 'name': file.file.name, 'url': file.file.url}
+            file.title = file.file.name
+            file.save()
+            update_files(file.file)
         else:
             data = {'is_valid': False}
+
+        if data['is_valid']:
+            s = paramiko.SSHClient()
+            s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+            s.connect(hostname='188.188.1.141', username='tomcat', password='tomcat', port=22)
+            cmd = 'sh /data/scripts/zip_baipao_template_files.sh 2>&1'
+            s.exec_command(cmd)
         return JsonResponse(data)
 
 def remove_file(request,f_id):
     file = UploadFile.objects.get(pk=f_id)
+    name = file.file.name
     file.file.delete()
     file.delete()
+
+    s = paramiko.SSHClient()
+    s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    s.connect(hostname='188.188.1.141', username='tomcat', password='tomcat', port=22)
+    s.exec_command('sh /data/scripts/zip_baipao_template_files.sh %s 2>&1' %name)
     return redirect('common:upload_files')
 
-@accept_websocket
-def update_files(request):
-    for message in request.websocket:
-        file_list = UploadFile.objects.all()
-        t = paramiko.Transport(('188.188.1.141', 22))
-        t.connect(username='tomcat', password='tomcat')
-        sftp = paramiko.SFTPClient.from_transport(t)
-        for f in file_list:
-            name = f.file
-            sftp.put('media/%s' %name,'/tmp/upload/%s' %name)
-        t.close()
-        request.websocket.send('over')
+def update_files(name):
+    host = '188.188.1.141'
+    port = 22
+    username = 'tomcat'
+    password = 'tomcat'
+
+    t = paramiko.Transport((host,port))
+    t.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(t)
+    sftp.put('media/%s' %name,'/data/baipao/template/%s' %name)
+    t.close()

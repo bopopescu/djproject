@@ -4,4 +4,4 @@ from django import forms
 class FileForm(forms.ModelForm):
     class Meta:
         model = UploadFile
-        fields = ('file', )
+        fields = ('file','title')
