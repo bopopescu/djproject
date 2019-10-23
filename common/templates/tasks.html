@@ -1,0 +1,61 @@
+{% load static %}
+{% include 'base.html' %}
+<script src="{% static "js/deploy.js" %}"></script>
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="card shadow">
+        <div class="card-header">下发任务</div>
+        <div class="card-body">
+			<div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-2">服务器</div>
+                        <div class="col-lg-1">
+                            <div class="dropdown mb-1" style="text-align:right">
+                            <button class="btn btn-outline-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              选择类别
+                            </button>
+                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="{% url 'common:host' %}?type=nginx&env={{ env }}">nginx</a>
+                              <a class="dropdown-item" href="{% url 'common:host' %}?type=java&env={{ env }}">java</a>
+                              <a class="dropdown-item" href="{% url 'common:host' %}?type=mysql&env={{ env }}">mysql</a>
+                              <a class="dropdown-item" href="{% url 'common:host' %}?type=redis&env={{ env }}">redis</a>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                        <td></td>
+                        <td>名称</td>
+                        <td>IP</td>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div>任务列表</div>
+                    <table>
+                        <thead><td>名称</td></thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    <hr class="simple" />
+
+    <div class="panel panel-default">
+      <div class="panel-heading">执行结果</div>
+      <pre class="panel-body" id="messagecontainer"></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+</div>

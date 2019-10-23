@@ -15,5 +15,6 @@ urlpatterns = [
     path('mysqldb/',mysqldb,name='mysqldb'),
     path('upload-files/',UploadFilesView.as_view(), name='upload_files'),
     path('remove_file/<int:f_id>/',remove_file,name='remove_file'),
-    path('update_files/',update_files,name='update_files')
+    path('update_files/',update_files,name='update_files'),
+    path('tasks/',tasks,name='tasks')
 ]

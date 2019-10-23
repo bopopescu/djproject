@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.views.decorators.csrf import csrf_exempt
 from dwebsocket.decorators import accept_websocket
 import paramiko
 from deployjar.models import *
@@ -142,3 +143,7 @@ def update_files(name):
     sftp = paramiko.SFTPClient.from_transport(t)
     sftp.put('media/%s' %name,'/data/baipao/template/%s' %name)
     t.close()
+
+@csrf_exempt
+def tasks(request):
+    return render(request,'tasks.html')

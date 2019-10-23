@@ -16,7 +16,7 @@ class HostUser(models.Model):
         return self.name
 
 class Host(models.Model):
-    version_list = [('CentOS 6','CentOS 6'),('CentOS 7','CentOS 7')]
+    version_list = [('CentOS 6','CentOS 6'),('CentOS 7','CentOS 7'),('Windows 2008','Windows 2008')]
     config_list = [('4C 8G 40G','4C 8G 40G'),('8C 16G 80G','8C 16G 80G'),('8C 32G 100G','8C 32G 100G')]
     position_list = [('阿里云','阿里云'),('电信机房','电信机房'),('坪山机房','坪山机房')]
     env_list = [('test','测试环境'),('pro','生产环境')]
@@ -27,7 +27,8 @@ class Host(models.Model):
     version = models.CharField('版本',max_length=200,choices=version_list)
     config = models.CharField('配置',max_length=200,choices=config_list)
     position = models.CharField('位置',max_length=200,choices=position_list)
-    hostuser = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='系统管理员')
+    hostuser = models.CharField('系统管理员',max_length=200,default='root')
+    password = models.CharField('密码',max_length=200,default='bsbnet')
     type = models.CharField('类别',max_length=200,choices=type_list,default='java')
     env = models.CharField('环境',max_length=200,choices=env_list,default='test')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
@@ -99,7 +100,7 @@ class Instance(models.Model):
         return self.host.ip + ':%s' %self.port
 
 class MySQLInstance(models.Model):
-    type_list = [('primary','主节点'),('slave','从节点')]
+    type_list = [('master','主节点'),('slave','从节点')]
 
     host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址')
     port = models.IntegerField('端口号',default=3306)
