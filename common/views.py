@@ -193,7 +193,7 @@ def exec_tasks(request):
                         try:
                             s.connect(hostname=ip, username=user, password=password, port=22)
                         except Exception as e:
-                            msg = "服务器 %s 无法登陆！" %ip
+                            msg = "服务器 %s 无法登陆！" %host.name
                             request.websocket.send(msg.encode('utf-8'))
                             # request.websocket.send('over')
                             continue
@@ -209,7 +209,7 @@ def exec_tasks(request):
                                     break
                         s.close()
                 else:
-                    msg = "服务器 %s 无法连接！" %ip
+                    msg = "服务器 %s 无法连接！" %host.name
                     request.websocket.send(msg.encode('utf-8'))
         request.websocket.send('over')
 
