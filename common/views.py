@@ -11,7 +11,8 @@ from django.views import View
 
 from .form import FileForm
 from .models import UploadFile
-
+import json
+import os
 # Create your views here.
 def checkbackup(request):
     return render(request,'check_backup.html')
@@ -144,6 +145,70 @@ def update_files(name):
     sftp.put('media/%s' %name,'/data/baipao/template/%s' %name)
     t.close()
 
-@csrf_exempt
 def tasks(request):
-    return render(request,'tasks.html')
+    type = request.GET.get('type')
+    env = request.GET.get('env')
+    if type == 'all' and env == 'all':
+        host_list = Host.objects.all().order_by('-env', 'ip')
+    elif type == 'all':
+        host_list = Host.objects.filter(env=env).order_by('-type', 'ip')
+    elif env == 'all':
+        host_list = Host.objects.filter(type=type).order_by('-type', 'ip')
+    else:
+        host_list = Host.objects.filter(env=env, type=type)
+    paginator = Paginator(host_list, 10)
+    page = request.GET.get('page')
+    hosts = paginator.get_page(page)
+
+    task_list = Task.objects.all()
+    return render(request, 'tasks.html', {'hosts': hosts, 'env': env, 'type': type,'task_list':task_list})
+
+@accept_websocket
+def exec_tasks(request):
+    for message in request.websocket:
+        data = json.loads(s=message.decode('utf-8'))
+        ips = data["ips"]
+        tks = data["tks"]
+        if len(ips) == 0 :
+            request.websocket.send("请选择服务器！".encode('utf-8'))
+        elif len(tks) == 0 :
+            request.websocket.send("请选择任务！".encode('utf-8'))
+        else:
+            for ip in ips:
+                h_stat = os.system('ping -c 2 %s' %ip)
+                if not h_stat:
+                    msg = "%s can not ping" %ip
+                    request.websocket.send(msg.encode('utf-8'))
+                    print("msg")
+                else:
+                    host = Host.objects.get(ip=ip)
+                    for t in tks:
+                        task = Task.objects.get(pk=t)
+                        script = task.script
+                        user = str(task.user)
+
+                        if user == 'root':
+                            password = host.password
+                        else:
+                            password = task.user.password
+
+                        s = paramiko.SSHClient()
+                        s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+                        try:
+                            s.connect(hostname=ip, username=user, password=password, port=22)
+                        except Exception as e:
+                            request.websocket.send(str(e))
+                            request.websocket.send('登陆服务器失败！'.encode('utf-8'))
+                            request.websocket.send('over')
+                        cmd = 'sh %s 2>&1' %script
+                        stdin, stdout, stderr=s.exec_command(cmd)
+                        nullcount = 0
+                        while True:
+                            outline = stdout.readline().strip().encode('utf-8')
+                            request.websocket.send(outline)
+                            if not outline:
+                                nullcount = nullcount + 1
+                                if nullcount == 100:
+                                    break
+                        s.close()
+        request.websocket.send('over')

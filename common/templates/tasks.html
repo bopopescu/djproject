@@ -1,6 +1,6 @@
 {% load static %}
 {% include 'base.html' %}
-<script src="{% static "js/deploy.js" %}"></script>
+<script src="{% static "js/tasks.js" %}"></script>
 <div id="wrapper">
     {% include 'navbar.html' %}
     <div id="content-wrapper" class="d-flex flex-column">
@@ -9,46 +9,111 @@
         <div class="card shadow">
         <div class="card-header">下发任务</div>
         <div class="card-body">
-			<div class="row">
+		<div class="row">
                 <div class="col-lg-6">
                     <div class="row">
+                        <div class="col-lg-1"> </div>
                         <div class="col-lg-2">服务器</div>
-                        <div class="col-lg-1">
+                        <div class="col-lg-4"> </div>
+                        <div class="col-lg-2">
                             <div class="dropdown mb-1" style="text-align:right">
-                            <button class="btn btn-outline-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               选择类别
                             </button>
                             <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="{% url 'common:host' %}?type=nginx&env={{ env }}">nginx</a>
-                              <a class="dropdown-item" href="{% url 'common:host' %}?type=java&env={{ env }}">java</a>
-                              <a class="dropdown-item" href="{% url 'common:host' %}?type=mysql&env={{ env }}">mysql</a>
-                              <a class="dropdown-item" href="{% url 'common:host' %}?type=redis&env={{ env }}">redis</a>
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=nginx&env={{ env }}">nginx</a>
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=java&env={{ env }}">java</a>
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=mysql&env={{ env }}">mysql</a>
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=redis&env={{ env }}">redis</a>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="dropdown mb-1" style="text-align:right">
+                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              选择环境
+                            </button>
+                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=test">测试环境</a>
+                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=pro">生产环境</a>
                             </div>
                             </div>
                         </div>
                     </div>
-                    <table>
+                    <div class="row">
+                    <div class="col-lg-1"> </div>
+                    <table class="table-bordered col-lg-10">
                         <thead>
-                        <td></td>
-                        <td>名称</td>
-                        <td>IP</td>
+                            <td width="6%"></td>
+                            <td>名称</td>
+                            <td>IP</td>
+                            <td>类型</td>
+                            <td>环境</td>
                         </thead>
                         <tbody>
-
+                        {% for h in hosts %}
+                            <tr>
+                                <td style="text-align: center"><input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"></td>
+                                <td>{{ h.name }}</td>
+                                <td>{{ h.ip }}</td>
+                                <td>{{ h.type }}</td>
+                                {% if h.env == 'test' %}
+                                    <td>测试环境</td>
+                                {% elif h.env == 'pro' %}
+                                    <td>生产环境</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-11 col-md-7" style="text-align:right">
+                        <span class="step-links">
+                            {% if hosts.has_previous %}
+                                <a href="?&page=1&type={{ type }}&env={{ env }}">首页</a>
+                                <a href="?page={{ hosts.previous_page_number }}&type={{ type }}&env={{ env }}">上一页</a>
+                            {% endif %}
+
+                            <span class="current">
+                                当前 {{ hosts.number }} / {{ hosts.paginator.num_pages }}
+                            </span>
+
+                            {% if hosts.has_next %}
+                                <a href="?page={{ hosts.next_page_number }}&type={{ type }}&env={{ env }}">下一页</a>
+                                <a href="?page={{ hosts.paginator.num_pages }}&type={{ type }}&env={{ env }}">尾页</a>
+                            {% endif %}
+                        </span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <div>任务列表</div>
-                    <table>
-                        <thead><td>名称</td></thead>
+                <div class="col-lg-6">
+                    <div style="height: 35px">任务列表</div>
+                    <div class="row">
+                    <table class="table-bordered col-lg-10">
+                        <thead>
+                        <td width="6%"></td>
+                        <td>名称</td>
+                        </thead>
                         <tbody>
-
+                        {% for task in task_list %}
+                            <tr>
+                                <td style="text-align: center"><input type="checkbox" name="task" id="task{{ forloop.counter }}" value="{{ task.id }}"></td>
+                                <td>{{ task.name }}</td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
+                    </div>
                 </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-11" style="text-align:right">
+                <button name="manager" class="btn btn-info" type="button" id="exec_tasks">开始执行</button>
             </div>
-    <hr class="simple" />
+        </div>
+        <hr class="simple" />
 
     <div class="panel panel-default">
       <div class="panel-heading">执行结果</div>

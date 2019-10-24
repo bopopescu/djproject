@@ -150,3 +150,16 @@ class Domain(models.Model):
 
     def __str__(self):
         return self.url
+
+class Task(models.Model):
+    name = models.CharField('名称',max_length=200)
+    script = models.CharField('脚本',max_length=200,default='/data/scripts/')
+    user = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='执行用户')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = '任务'
+        verbose_name_plural = '任务'
+
+    def __str__(self):
+        return self.name

@@ -16,5 +16,6 @@ urlpatterns = [
     path('upload-files/',UploadFilesView.as_view(), name='upload_files'),
     path('remove_file/<int:f_id>/',remove_file,name='remove_file'),
     path('update_files/',update_files,name='update_files'),
-    path('tasks/',tasks,name='tasks')
+    path('tasks/',tasks,name='tasks'),
+    path('exec_tasks/',exec_tasks,name='run_tasks')
 ]
