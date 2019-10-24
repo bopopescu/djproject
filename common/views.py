@@ -5,14 +5,13 @@ import paramiko
 from deployjar.models import *
 from django.core.paginator import Paginator
 from .models import *
-
+import socket
 from django.http import JsonResponse
 from django.views import View
 
 from .form import FileForm
 from .models import UploadFile
 import json
-import os
 # Create your views here.
 def checkbackup(request):
     return render(request,'check_backup.html')
@@ -175,13 +174,10 @@ def exec_tasks(request):
             request.websocket.send("请选择任务！".encode('utf-8'))
         else:
             for ip in ips:
-                h_stat = os.system('ping -c 2 %s' %ip)
-                if not h_stat:
-                    msg = "%s can not ping" %ip
-                    request.websocket.send(msg.encode('utf-8'))
-                    print("msg")
-                else:
-                    host = Host.objects.get(ip=ip)
+                host = Host.objects.get(ip=ip)
+
+                stat = check_port(ip,22)
+                if stat:
                     for t in tks:
                         task = Task.objects.get(pk=t)
                         script = task.script
@@ -197,9 +193,10 @@ def exec_tasks(request):
                         try:
                             s.connect(hostname=ip, username=user, password=password, port=22)
                         except Exception as e:
-                            request.websocket.send(str(e))
-                            request.websocket.send('登陆服务器失败！'.encode('utf-8'))
-                            request.websocket.send('over')
+                            msg = "服务器 %s 无法登陆！" %ip
+                            request.websocket.send(msg.encode('utf-8'))
+                            # request.websocket.send('over')
+                            continue
                         cmd = 'sh %s 2>&1' %script
                         stdin, stdout, stderr=s.exec_command(cmd)
                         nullcount = 0
@@ -211,4 +208,18 @@ def exec_tasks(request):
                                 if nullcount == 100:
                                     break
                         s.close()
+                else:
+                    msg = "服务器 %s 无法连接！" %ip
+                    request.websocket.send(msg.encode('utf-8'))
         request.websocket.send('over')
+
+def check_port(ip,port):
+    sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sk.settimeout(1)
+    try:
+        sk.connect((ip, port))
+        stat = True
+    except Exception:
+        stat = False
+    sk.close()
+    return stat
