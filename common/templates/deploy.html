@@ -7,37 +7,46 @@
         {% include 'top.html' %}
         <div class="container-fluid">
         <div class="card shadow">
-        <div class="card-header">发布 {{ app.name }}</div>
+        <div class="card-header">发布 JAR 包</div>
         <div class="card-body">
 			<form class="form-horizontal">
-                <div class="row">
-                        <div class="col-lg-4">服务器</div>
-                        <div class="col-lg-1">
-                            <div class="dropdown mb-1" style="text-align:right">
-                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              选择模块
-                            </button>
-                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                                {% for model in model_list %}
-                                    <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ model.name }}&env={{ env }}">{{ model.name }}</a>
-                                {% endfor %}
-                            </div>
-                            </div>
+                <div class="row" style="margin-left: 10px;margin-bottom: 8px">
+                    <div>
+                        <div class="dropdown mb-1" style="text-align:right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if name == 'null' %}
+                                选择模块
+                            {% else %}
+                                {{ name }}
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                            {% for model in model_list %}
+                                <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ model.name }}&env={{ env }}">{{ model.name }}</a>
+                            {% endfor %}
                         </div>
-                        <div class="col-lg-1">
-                            <div class="dropdown mb-1" style="text-align:right">
-                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              选择环境
-                            </button>
-                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=test">测试环境</a>
-                              <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=pro">生产环境</a>
-                            </div>
-                            </div>
                         </div>
                     </div>
+                    <div class="col-lg-1">
+                        <div class="dropdown mb-1" style="text-align:right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if env == 'null' %}
+                                选择环境
+                            {% elif env == 'pro' %}
+                                生产环境
+                            {% elif env == 'test' %}
+                                测试环境
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=test">测试环境</a>
+                          <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=pro">生产环境</a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="row">
+                <div class="row" style="margin-left: 10px">
                     <table class="table-bordered col-lg-6">
                         <thead>
                             <td width="6%"></td>
@@ -67,7 +76,7 @@
                     <div class="col-lg-6">
                         <div class="row">
                             <div class="col-lg-1"></div>
-                            <div class="col-lg-10">包 URL(仅发布时需要填写，获取地址 http://188.188.1.131:200)</div>
+                            <div class="col-lg-10">包 URL (仅发布时需要填写，获取地址 http://188.188.1.131:200)</div>
                         </div>
                         <div class="row" style="margin-bottom: 10px">
                             <div class="col-lg-1"></div>
@@ -86,15 +95,15 @@
                             </div>
                         </div>
                     </div>
-                    </div>
+                </div>
+            </form>
+            <hr class="simple" />
 
-    <hr class="simple" />
-
-    <div class="panel panel-default">
-      <div class="panel-heading">执行结果</div>
-      <pre class="panel-body" id="messagecontainer"></pre>
-    </div>
-    </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">执行结果</div>
+              <pre class="panel-body" id="messagecontainer"></pre>
+            </div>
+        </div>
     </div>
     </div>
     </div>

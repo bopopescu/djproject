@@ -175,7 +175,6 @@ def exec_tasks(request):
         else:
             for ip in ips:
                 host = Host.objects.get(ip=ip)
-
                 stat = check_port(ip,22)
                 if stat:
                     for t in tks:
@@ -195,7 +194,6 @@ def exec_tasks(request):
                         except Exception as e:
                             msg = "服务器 %s 无法登陆！" %host.name
                             request.websocket.send(msg.encode('utf-8'))
-                            # request.websocket.send('over')
                             continue
                         cmd = 'sh %s 2>&1' %script
                         stdin, stdout, stderr=s.exec_command(cmd)

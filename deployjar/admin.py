@@ -12,7 +12,6 @@ class ScriptsAdmin(admin.ModelAdmin):
 
 admin.site.register(Host,HostAdmin)
 admin.site.register(HostUser,HostUserAdmin)
-admin.site.register(Jarapp,JarappAdmin)
 admin.site.register(Script,ScriptsAdmin)
 admin.site.register(Instance)
 admin.site.register(JarModel)

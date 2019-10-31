@@ -54,24 +54,6 @@ class Script(models.Model):
     def __str__(self):
         return self.name
 
-class Jarapp(models.Model):
-    name = models.CharField('名称',max_length=200)
-    jarname = models.CharField('包名',max_length=200)
-    host = models.ManyToManyField(Host,verbose_name='主机')
-    port = models.IntegerField('端口号',default=8080)
-    jar_dir = models.CharField('部署路径',max_length=200,default='/usr/local/jars')
-    d_script = models.ForeignKey(Script,related_name='d_script', on_delete=models.CASCADE,verbose_name='发布脚本',default=1)
-    c_script = models.ForeignKey(Script,related_name='c_script',on_delete=models.CASCADE,verbose_name='控制脚本',default=4)
-    user = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='管理用户',default=2)
-    created_at = models.DateTimeField('创建时间', default=timezone.now)
-
-    class Meta:
-        verbose_name = '模块(旧)'
-        verbose_name_plural = '模块(旧)'
-
-    def __str__(self):
-        return self.name
-
 class JarModel(models.Model):
     name = models.CharField('名称',max_length=200)
     manager = models.CharField('负责人',max_length=200)
