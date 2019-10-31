@@ -43,7 +43,8 @@ class Host(models.Model):
 
 class Script(models.Model):
     name = models.CharField('名称',max_length=200)
-    script_dir = models.CharField('路径',max_length=200,default='/data/scripts/deploy_jar.sh')
+    script_dir = models.CharField('路径',max_length=200,default='/data/scripts/')
+    user = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='执行用户')
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:

@@ -3,41 +3,38 @@ $(function () {
         deploy()
     })
     $('#check').click(function () {
-        command(this.value,this.name)
+        command(this.value)
     })
     $('#start').click(function () {
-        command(this.value,this.name)
+        command(this.value)
     })
     $('#restart').click(function () {
-        command(this.value,this.name)
+        command(this.value)
     })
     $('#stop').click(function () {
-        command(this.value,this.name)
+        command(this.value)
     })
 })
 
-function command(type,name) {
+function command(type) {
     $('button').prop('disabled', true)
     $('#messagecontainer').empty()
 
     var socket = new WebSocket("ws://" + window.location.host + "/deployjar/control/");
     console.log(socket);
     socket.onopen = function () {
-        var hosts = document.getElementsByName("host");
-        var ips;
-        for (i=0; i<hosts.length; i++){
-            if (hosts[i].checked){
-                if (!ips){
-                    ips = hosts[i].value;
-                } else {
-                    ips += "," + hosts[i].value;
-                }
+        var chks = document.getElementsByName("instance")
+        ints =[]
+        for (i=0; i<chks.length; i++){
+            if (chks[i].checked){
+                id = chks[i].value;
+                ints.push(id)
             }
         }
 
-        data = ips + '#' + name + '#' + type
+        data = {'ints':ints,'type':type}
         console.log(data)
-        socket.send(data)
+        socket.send(JSON.stringify(data))
     };
     socket.onmessage = function (e) {
         if (e.data){

@@ -12,7 +12,7 @@
       <hr class="sidebar-divider my-0">
 
 	  <li class="nav-item active">
-        <a class="nav-link" href="/deployjar/">
+        <a class="nav-link" href="{% url 'deployjar:deploy' %}?name=null&env=null">
           <i class="fas fa-fw fa-sign-in-alt"></i>
           <span>发布 JAR 包</span></a>
       </li>
@@ -68,13 +68,5 @@
           </div>
         </div>
       </li>
-
-{#      <hr class="sidebar-divider d-none d-md-block">#}
-
-      <!-- Sidebar Toggler (Sidebar) -->
-{#      <div class="text-center d-none d-md-inline">#}
-{#        <button class="rounded-circle border-0" id="sidebarToggle"></button>#}
-{#      </div>#}
-
     </ul>
     <!-- End of Sidebar -->

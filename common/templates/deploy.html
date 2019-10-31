@@ -10,51 +10,84 @@
         <div class="card-header">发布 {{ app.name }}</div>
         <div class="card-body">
 			<form class="form-horizontal">
-                <div class="form-group row">
-                    <label for="servers" class="col-sm-1 control-label">服务器</label>
-                    <div id="servers" class="col-sm-11">
-                      {% for h in app.host.all %}
-                          <label class="checkbox-inline">
-                              <input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"> {{ h.ip }}
-                          </label>
-                      {% endfor %}
+                <div class="row">
+                        <div class="col-lg-4">服务器</div>
+                        <div class="col-lg-1">
+                            <div class="dropdown mb-1" style="text-align:right">
+                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              选择模块
+                            </button>
+                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                                {% for model in model_list %}
+                                    <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ model.name }}&env={{ env }}">{{ model.name }}</a>
+                                {% endfor %}
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="dropdown mb-1" style="text-align:right">
+                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              选择环境
+                            </button>
+                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=test">测试环境</a>
+                              <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=pro">生产环境</a>
+                            </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="jarurl" class="col-sm-1 control-label">包 URL</label>
-                    <div class="col-sm-5">
-                      <input type="text" class="form-control" id="jarurl">
+                    <div class="row">
+                    <table class="table-bordered col-lg-6">
+                        <thead>
+                            <td width="6%"></td>
+                            <td>IP</td>
+                            <td>端口号</td>
+                            <td>包名</td>
+                            <td>环境</td>
+                            <td>模块名</td>
+                        </thead>
+                        <tbody>
+                        {% for instance in instances %}
+                            <tr>
+                                <td style="text-align: center"><input type="checkbox" name="instance" id="instance{{ forloop.counter }}" value="{{ instance.id }}"></td>
+                                <td>{{ instance.host.ip  }}</td>
+                                <td>{{ instance.port }}</td>
+                                <td>{{ instance.package }}</td>
+                                {% if instance.host.env == 'test' %}
+                                    <td>测试环境</td>
+                                {% elif instance.host.env == 'pro' %}
+                                    <td>生产环境</td>
+                                {% endif %}
+                                <td>{{ instance.name.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-10">包 URL(仅发布时需要填写，获取地址 http://188.188.1.131:200)</div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-10">
+                              <input type="text" class="form-control" id="jarurl">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-11">
+                                <button class="btn btn-primary" type="button" id="deploy_app">发布</button>
+                                <button class="btn btn-info" type="button" id="check" value="check">检查</button>
+                                <button class="btn btn-info" type="button" id="start" value="start">启动</button>
+                                <button class="btn btn-info" type="button" id="restart" value="restart">重启</button>
+                                <button class="btn btn-info" type="button" id="stop" value="stop">停止</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-4">
-                      <p class="form-control-static text-warning">仅发布时需要填写，获取地址 http://188.188.1.131:200 </p>
                     </div>
-                </div>
 
-        <div class="form-group row">
-            <label for="jardir" class="col-sm-1 control-label">部署路径</label>
-            <div id="jardirdiv" class="col-sm-5">
-              <input class="form-control" id="jardir" type="text" placeholder="{{ app.jar_dir }}" value="{{ app.jar_dir }}" disabled>
-            </div>
-            <label for="port" class="col-sm-1 control-label">端口号</label>
-            <div id="portdiv" class="col-sm-2">
-              <input class="form-control" id="port" type="text" placeholder="{{ app.port }}" value="{{ app.port }}" disabled>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-11">
-                <button name="{{ app.name }}" class="btn btn-primary" type="button" id="deploy_app">发布</button>
-                <button name="{{ app.name }}" class="btn btn-info" type="button" id="check" value="check">检查</button>
-                <button name="{{ app.name }}" class="btn btn-info" type="button" id="start" value="start">启动</button>
-                <button name="{{ app.name }}" class="btn btn-info" type="button" id="restart" value="restart">重启</button>
-                <button name="{{ app.name }}" class="btn btn-info" type="button" id="stop" value="stop">停止</button>
-            <button onclick="location.href='{% url "deployjar:index" %}'" type="button" class="btn btn-secondary">返回</button>
-            </div>
-        </div>
-
-    </form>
     <hr class="simple" />
 
     <div class="panel panel-default">

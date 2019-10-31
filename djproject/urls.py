@@ -18,9 +18,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path,include
 from deployjar import views
+from common.views import project
 
 urlpatterns = [
-    path('',views.index,name='home'),
+    path('',project,name='home'),
     path('admin/', admin.site.urls),
     path('deployjar/',include('deployjar.urls')),
     path('dbmanager/',include('dbmanager.urls')),

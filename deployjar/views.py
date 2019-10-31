@@ -2,19 +2,16 @@ from django.shortcuts import render
 import paramiko
 from dwebsocket.decorators import accept_websocket
 from .models import *
+from django.core.paginator import Paginator
+import json
 
-# Create your views here.
-def index(request):
-    list_app = Jarapp.objects.all()
-    content = {'list_app':list_app}
-    return render(request, 'module.html', content)
+def deploy(request):
+    model_list = JarModel.objects.all()
+    name = request.GET.get('name')
+    env = request.GET.get('env')
+    instances = Instance.objects.filter(name__name=name,host__env=env)
 
-def deploy(request,app_id):
-    app = Jarapp.objects.get(pk=app_id)
-    list_user = HostUser.objects.all()
-    list_script = Script.objects.all()
-    content = {'list_user': list_user, 'list_scripts': list_script,'app':app}
-    return render(request, 'deploy.html', content)
+    return render(request, 'deploy.html', {'instances': instances, 'name':name, 'env': env, 'model_list':model_list})
 
 @accept_websocket
 def exec_deployment(request):
@@ -68,34 +65,28 @@ def exec_deployment(request):
 @accept_websocket
 def control(request):
     for message in request.websocket:
-        message = message.decode('utf-8')
-        info = message.split('#')
-        ips = info[0]
-        appname = info[1]
-        c_type = info[2]
-        # 获取包名
-        jarapp = Jarapp.objects.get(name=appname)
-        jarname = jarapp.jarname
-        # 获取脚本路径
-        script = Script.objects.get(name=jarapp.c_script)
-        script_dir = script.script_dir
-        # 获取用户名密码
-        user = HostUser.objects.get(name=jarapp.user)
-        username = user.name
-        password = user.password
-        # 端口号和路径
-        port = '%d' %jarapp.port
-        jar_dir = jarapp.jar_dir
+        data = json.loads(s=message.decode('utf-8'))
+        ints = data["ints"]
+        type= data["type"]
 
-        if ips == 'undefined':
+        if len(ints) == 0:
             request.websocket.send('请选择服务器！'.encode('utf-8'))
-            request.websocket.send('over')
         else:
-            for ip in ips.split(','):
+            for int_id in ints:
+                int = Instance.objects.get(pk=int_id)
+                script = Script.objects.get(name='control_jar')
+                ip = int.host.ip
+                port = '%d' %int.port
+                jarname = int.package
+                jar_dir = int.dir
+                script_dir = script.script_dir
+                username = script.user.name
+                password = script.user.password
+
                 s = paramiko.SSHClient()
                 s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
                 s.connect(hostname=ip, username=username, password=password, port=22)
-                cmd = 'sh ' + script_dir + ' ' + c_type + ' ' + username + ' ' + jarname + ' '+ jar_dir + ' ' + port + ' 2>&1'
+                cmd = 'sh ' + script_dir + ' ' + type + ' ' + username + ' ' + jarname + ' '+ jar_dir + ' ' + port + ' 2>&1'
                 stdin, stdout, stderr = s.exec_command(cmd)
                 nullcount = 0
                 msg = "### 开始在服务器 %s 上开始执行！" %ip
@@ -109,6 +100,4 @@ def control(request):
                         if nullcount == 100:
                             break
                 s.close()
-
-            request.websocket.send('over')
         request.websocket.send('over')
