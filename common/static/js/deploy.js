@@ -14,7 +14,27 @@ $(function () {
     $('#stop').click(function () {
         command(this.value)
     })
+
+    $("#all_ckb").click(function(){
+        if ($('input[name="SelectAll"]').is(':checked')) {
+            $('input[name="instance"]').prop('checked', true);//全选
+　　　　}
+　　　　else {
+　　　　    $('input[name="instance"]').prop('checked', false);//取消全选
+　　　　}
+    })
 })
+
+function ch_all_chk() {
+    chbs = document.getElementsByName('instance').length
+    chks = $("input[name='instance']:checked").length
+    if(chbs == chks){
+        $('#all_ckb').prop('checked', true)
+    }
+    else{
+        $('#all_ckb').prop('checked', false)
+    }
+}
 
 function command(type) {
     $('button').prop('disabled', true)

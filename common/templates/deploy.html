@@ -49,7 +49,7 @@
                 <div class="row" style="margin-left: 10px">
                     <table class="table-bordered col-lg-6">
                         <thead>
-                            <td width="6%"></td>
+                            <td style="text-align: center" width="6%"><input type="checkbox" id="all_ckb" name="SelectAll"></td>
                             <td>IP</td>
                             <td>端口号</td>
                             <td>包名</td>
@@ -59,7 +59,7 @@
                         <tbody>
                         {% for instance in instances %}
                             <tr>
-                                <td style="text-align: center"><input type="checkbox" name="instance" id="instance{{ forloop.counter }}" value="{{ instance.id }}"></td>
+                                <td style="text-align: center"><input type="checkbox" name="instance" id="instance{{ forloop.counter }}" value="{{ instance.id }}" onclick="ch_all_chk()"></td>
                                 <td>{{ instance.host.ip  }}</td>
                                 <td>{{ instance.port }}</td>
                                 <td>{{ instance.package }}</td>
