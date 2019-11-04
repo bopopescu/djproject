@@ -15,6 +15,26 @@ class HostUser(models.Model):
     def __str__(self):
         return self.name
 
+class HostType(models.Model):
+    name = models.CharField('主机类别',max_length=200)
+
+    class Meta:
+        verbose_name = '主机类别'
+        verbose_name_plural = '主机类别'
+
+    def __str__(self):
+        return self.name
+
+class HostEnv(models.Model):
+    en_name = models.CharField('英文名',max_length=200)
+    cn_name = models.CharField('中文名',max_length=200)
+
+    class Meta:
+        verbose_name = '环境类型'
+        verbose_name_plural = '环境类型'
+    def __str__(self):
+        return self.cn_name
+
 class Host(models.Model):
     version_list = [('CentOS 6','CentOS 6'),('CentOS 7','CentOS 7'),('Windows 2008','Windows 2008')]
     config_list = [('4C 8G 40G','4C 8G 40G'),('8C 16G 80G','8C 16G 80G'),('8C 32G 100G','8C 32G 100G')]
@@ -146,3 +166,17 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
+
+class ConfigFile(models.Model):
+    file_name = models.CharField('文件名',max_length=200)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
+    type = models.ForeignKey(HostType,on_delete=models.CASCADE,verbose_name='类别')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = '配置文件'
+        verbose_name_plural = '配置文件'
+        ordering = ['file_name']
+
+    def __str__(self):
+        return self.project.name +'-' + self.file_name

@@ -221,3 +221,7 @@ def check_port(ip,port):
         stat = False
     sk.close()
     return stat
+
+def config_file(request):
+    project_list = Project.objects.all()
+    return render(request,'config_file.html',{'project_list':project_list})

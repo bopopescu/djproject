@@ -1,0 +1,67 @@
+{% load static %}
+{% include 'base.html' %}
+<link rel="stylesheet" href="{% static "css/style.min.css" %}" />
+<script src="{% static "js/jstree.min.js" %}"></script>
+<script src="{% static "js/config-file.js" %}"></script>
+<div id="wrapper">
+    {% include 'navbar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        {% include 'top.html' %}
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div id="config_file" class="demo">
+                        <ul>
+                            {% for project in project_list %}
+                                {% if project.configfile_set.all %}
+                                    {% if forloop.counter == 1 %}
+                                        <li data-jstree='{ "opened" : true }'>{{ project }}
+                                    {% else %}
+                                        <li>{{ project }}
+                                    {% endif %}
+
+                                        <ul>
+                                            {% for config in project.configfile_set.all %}
+                                                <li>{{ config.file_name }}
+{#                                                    <ul>#}
+{#                                                        <li>{{ config.file_name }}</li>#}
+{#                                                    </ul>#}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+{#                            <li data-jstree='{ "opened" : true }'>Root node#}
+{#                                <ul>#}
+{#                                    <li data-jstree='{ "selected" : true }'>Child node 1#}
+{#                                        <ul>#}
+{#                                            <li>Child node 2</li>#}
+{#                                        </ul>#}
+{#                                    </li>#}
+{#                                    <li>Child node 2</li>#}
+{#                                </ul>#}
+{#                            </li>#}
+                        </ul>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-9">
+              <div class="card shadow mb-4">
+                <div class="card-header py-2">
+                    <button class="btn btn-info btn-sm">编辑</button>
+                </div>
+                <div class="card-body">
+
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
