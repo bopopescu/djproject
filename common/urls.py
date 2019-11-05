@@ -19,5 +19,6 @@ urlpatterns = [
     path('tasks/',tasks,name='tasks'),
     path('exec_tasks/',exec_tasks,name='run_tasks'),
     path('config_file/',config_file,name='config_file'),
-    path('open_file/',open_file,name='open_file')
+    path('open_file/',open_file,name='open_file'),
+    path('save_file/',save_file,name='save_file')
 ]

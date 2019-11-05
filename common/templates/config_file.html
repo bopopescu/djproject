@@ -4,6 +4,7 @@
 <link href="{% static 'codemirror/codemirror.css' %}" rel="stylesheet" type="text/css">
 <link href="{% static 'codemirror/monokai.css' %}" rel="stylesheet" type="text/css">
 <link href="{% static 'codemirror/fullscreen.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/alter.css' %}" rel="stylesheet" type="text/css">
 
 <!-- 引入CodeMirror核心文件 -->
 <script type="text/javascript" src="{% static 'codemirror/codemirror.js' %}"></script>
@@ -37,7 +38,7 @@
 
                                         <ul>
                                             {% for config in project.configfile_set.all %}
-                                                <li name="{{ config.project.name }}">{{ config.file_name }}</li>
+                                                <li name="{{ config.project.name }}" value="file">{{ config.file_name }}</li>
                                             {% endfor %}
                                         </ul>
                                     </li>
@@ -53,8 +54,18 @@
             <div class="col-lg-9">
               <div class="card shadow mb-4">
                 <div class="card-header py-2">
-                    <button id='save_file' class="btn btn-info btn-sm">保存</button>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <button id='save_file' class="btn btn-info btn-sm">保存</button>
+                        </div>
+                        <div class="col-lg-10" style="vertical-align: center">
+                            <span id="file_p" style="float: right"></span>
+                        </div>
+                    </div>
                 </div>
+
+                  <div class="alter"></div>
+
                 <div class="card-body">
                     <textarea id="file_content" name="content"></textarea>
                 </div>

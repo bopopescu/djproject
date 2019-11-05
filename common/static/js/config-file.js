@@ -1,29 +1,38 @@
 $(function () {
     $('#file_content').hide()
+    $('button').prop('disabled', true)
     $('#config_file').jstree()
     $('#config_file').jstree().hide_icons()
 
     $('#config_file').on("changed.jstree", function (e, data) {
 		var project = data.node.li_attr.name
+        var type = data.node.li_attr.value
 		var file_name = data.node.text
 		info = {'project':project, 'file_name':file_name}
 
-		$.ajax({
-            url:"/common/open_file/",
-            type:"POST",
-            dataType:"Json",
-            data:info,
-            success:function(data){
-                $('.CodeMirror').remove()
-                show_content(data)
-                // $('#file_content').show()
-            }
-        })
+		if (type == 'file') {
+		    $('button').prop('disabled', false)
+            file_url = document.location.protocol + '//' + document.location.host + '/media/' + project + '/' + file_name
+            p_text = '下载地址:  ' + '<a href=' + file_url + '>' + file_url + '</a>'
+            $('#file_p').empty()
+            $('#file_p').append(p_text)
+		    $.ajax({
+                url:"/common/open_file/",
+                type:"POST",
+                dataType:"Json",
+                data:info,
+                success:function(data){
+                    $('.CodeMirror').remove()
+                    show_content(data,project,file_name)
+                }
+            })
+        }
+
 	});
 
 })
 
-function show_content(data) {
+function show_content(data,project,file_name) {
     var editor = CodeMirror.fromTextArea(document.getElementById("file_content"), {
         lineNumbers: true,     // 显示行数
         indentUnit: 4,         // 缩进单位为4
@@ -53,7 +62,19 @@ function show_content(data) {
     editor.setSize("100%", "100%")
 
     $('#save_file').click(function () {
+        $('button').prop('disabled', true)
         content = editor.getValue()
-        console.log(content)
+        data = {'content':content,'project':project,'file_name':file_name}
+
+        $.ajax({
+            url:"/common/save_file/",
+            type:"POST",
+            dataType:"Json",
+            data:data,
+            success:function(data){
+                $('button').prop('disabled', false)
+                $('<div>').appendTo('body').addClass('alert alert-success').html('保存成功').show().delay(1500).fadeOut();
+            }
+        })
     })
 }

@@ -236,8 +236,6 @@ def open_file(request):
     p_stat = os.path.exists(path)
     f_stat = os.path.exists(file_path)
     content = ''
-    print(p_stat)
-    print(f_stat)
 
     if p_stat:
         if f_stat:
@@ -253,3 +251,27 @@ def open_file(request):
         file.close()
 
     return JsonResponse({'content':content})
+
+@csrf_exempt
+def save_file(request):
+    content = request.POST.get("content")
+    project = request.POST.get("project")
+    file_name = request.POST.get("file_name")
+
+    path = 'media/%s/' %project
+    file_path = path + file_name
+    p_stat = os.path.exists(path)
+    f_stat = os.path.exists(file_path)
+
+    if p_stat:
+        file = open(file_path, 'w')
+        file.write(content)
+        file.close()
+    else:
+        print('目录已经不存在')
+        os.makedirs(path)
+        file = open(path + file_name,'w')
+        file.write(content)
+        file.close()
+
+    return JsonResponse({'status':'success'})
