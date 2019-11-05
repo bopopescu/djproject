@@ -275,3 +275,18 @@ def save_file(request):
         file.close()
 
     return JsonResponse({'status':'success'})
+
+@csrf_exempt
+def del_file(request):
+    project = request.POST.get("project")
+    file_name = request.POST.get("file_name")
+    c_file = ConfigFile.objects.get(project__name=project,file_name=file_name)
+    c_file.delete()
+
+    path = 'media/%s/' %project + file_name
+    stat = os.path.exists(path)
+
+    if stat:
+       os.remove(path)
+
+    return JsonResponse({'status':'success'})

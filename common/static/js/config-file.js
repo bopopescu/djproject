@@ -1,6 +1,8 @@
 $(function () {
     $('#file_content').hide()
-    $('button').prop('disabled', true)
+    $('#save_file').prop('disabled', true)
+    $('#del_file').prop('disabled', true)
+    $('#add_file').prop('disabled', false)
     $('#config_file').jstree()
     $('#config_file').jstree().hide_icons()
 
@@ -29,6 +31,10 @@ $(function () {
         }
 
 	});
+
+    $('#add_file').click(function () {
+         window.open("/admin/deployjar/configfile/add/")
+    })
 
 })
 
@@ -76,5 +82,42 @@ function show_content(data,project,file_name) {
                 $('<div>').appendTo('body').addClass('alert alert-success').html('保存成功').show().delay(1500).fadeOut();
             }
         })
+    })
+
+    $('#del_file').click(function () {
+
+        data = {'project':project,'file_name':file_name}
+        msg = '确定删除\"' + project + '\"配置文件: ' + '\"' + file_name + '\"?'
+
+        swal({
+            title: msg,
+            text: "文件删除后无法恢复!",
+            showCancelButton: true,
+            cancelButtonText: "取消",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url:"/common/del_file/",
+                type:"POST",
+                dataType:"Json",
+                data:data,
+                success:function(data){
+                    swal({
+                        title: "删除!",
+                        text: "文件已经删除.",
+                        confirmButtonText: "确定",
+                        },
+                        function(){
+                            window.location.href = "/common/config_file/"
+                        });
+
+
+                    // swal("删除!", "文件已经删除.", "success");
+                    // window.location.href = "/common/config_file/"
+                }
+            })
+        });
     })
 }

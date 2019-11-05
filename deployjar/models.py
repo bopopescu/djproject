@@ -177,6 +177,7 @@ class ConfigFile(models.Model):
         verbose_name = '配置文件'
         verbose_name_plural = '配置文件'
         ordering = ['file_name']
+        unique_together = ['project', 'file_name']
 
     def __str__(self):
         return self.project.name +'-' + self.file_name
