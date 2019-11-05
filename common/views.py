@@ -8,7 +8,7 @@ from .models import *
 import socket
 from django.http import JsonResponse
 from django.views import View
-
+import os
 from .form import FileForm
 from .models import UploadFile
 import json
@@ -225,3 +225,31 @@ def check_port(ip,port):
 def config_file(request):
     project_list = Project.objects.all()
     return render(request,'config_file.html',{'project_list':project_list})
+
+@csrf_exempt
+def open_file(request):
+    project = request.POST.get("project")
+    file_name = request.POST.get("file_name")
+
+    path = 'media/%s/' %project
+    file_path = path + file_name
+    p_stat = os.path.exists(path)
+    f_stat = os.path.exists(file_path)
+    content = ''
+    print(p_stat)
+    print(f_stat)
+
+    if p_stat:
+        if f_stat:
+            with open(path + file_name) as f:
+                content = f.read()
+        else:
+            file = open(file_path, 'w')
+            file.close()
+    else:
+        print('目录已经不存在')
+        os.makedirs(path)
+        file = open(path + file_name,'w')
+        file.close()
+
+    return JsonResponse({'content':content})

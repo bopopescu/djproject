@@ -1,6 +1,19 @@
 {% load static %}
 {% include 'base.html' %}
 <link rel="stylesheet" href="{% static "css/style.min.css" %}" />
+<link href="{% static 'codemirror/codemirror.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'codemirror/monokai.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'codemirror/fullscreen.css' %}" rel="stylesheet" type="text/css">
+
+<!-- 引入CodeMirror核心文件 -->
+<script type="text/javascript" src="{% static 'codemirror/codemirror.js' %}"></script>
+<script type="text/javascript" src="{% static 'codemirror/nginx.js' %}"></script>
+
+<!-- 下面分别为显示行数、括号匹配和全屏插件 -->
+<script type="text/javascript" src="{% static 'codemirror/active-line.js' %}"></script>
+<script type="text/javascript" src="{% static 'codemirror/matchbrackets.js' %}"></script>
+<script type="text/javascript" src="{% static 'codemirror/fullscreen.js' %}"></script>
+
 <script src="{% static "js/jstree.min.js" %}"></script>
 <script src="{% static "js/config-file.js" %}"></script>
 <div id="wrapper">
@@ -24,27 +37,13 @@
 
                                         <ul>
                                             {% for config in project.configfile_set.all %}
-                                                <li>{{ config.file_name }}
-{#                                                    <ul>#}
-{#                                                        <li>{{ config.file_name }}</li>#}
-{#                                                    </ul>#}
-                                                </li>
+                                                <li name="{{ config.project.name }}">{{ config.file_name }}</li>
                                             {% endfor %}
                                         </ul>
                                     </li>
                                 {% endif %}
                             {% endfor %}
 
-{#                            <li data-jstree='{ "opened" : true }'>Root node#}
-{#                                <ul>#}
-{#                                    <li data-jstree='{ "selected" : true }'>Child node 1#}
-{#                                        <ul>#}
-{#                                            <li>Child node 2</li>#}
-{#                                        </ul>#}
-{#                                    </li>#}
-{#                                    <li>Child node 2</li>#}
-{#                                </ul>#}
-{#                            </li>#}
                         </ul>
                     </div>
                 </div>
@@ -54,10 +53,10 @@
             <div class="col-lg-9">
               <div class="card shadow mb-4">
                 <div class="card-header py-2">
-                    <button class="btn btn-info btn-sm">编辑</button>
+                    <button id='save_file' class="btn btn-info btn-sm">保存</button>
                 </div>
                 <div class="card-body">
-
+                    <textarea id="file_content" name="content"></textarea>
                 </div>
               </div>
             </div>

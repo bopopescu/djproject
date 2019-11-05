@@ -18,5 +18,6 @@ urlpatterns = [
     path('update_files/',update_files,name='update_files'),
     path('tasks/',tasks,name='tasks'),
     path('exec_tasks/',exec_tasks,name='run_tasks'),
-    path('config_file',config_file,name='config_file')
+    path('config_file/',config_file,name='config_file'),
+    path('open_file/',open_file,name='open_file')
 ]
