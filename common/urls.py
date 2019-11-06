@@ -21,5 +21,9 @@ urlpatterns = [
     path('config_file/',config_file,name='config_file'),
     path('open_file/',open_file,name='open_file'),
     path('save_file/',save_file,name='save_file'),
-    path('del_file/',del_file,name='del_file')
+    path('del_file/',del_file,name='del_file'),
+    path('task_script/',task_script,name='task_script'),
+    path('open_script_file/',open_script_file,name='open_script_file'),
+    path('save_script_file/',save_script_file,name='save_script_file'),
+    path('del_script_file/',del_script_file,name='del_script_file')
 ]

@@ -181,11 +181,25 @@ def exec_tasks(request):
                         task = Task.objects.get(pk=t)
                         script = task.script
                         user = str(task.user)
+                        type = task.type.cn_name
 
                         if user == 'root':
                             password = host.password
                         else:
                             password = task.user.password
+
+                        # 传输脚本
+                        t = paramiko.Transport((ip, 22))
+                        try:
+                            t.connect(username=user, password=password)
+                            sftp = paramiko.SFTPClient.from_transport(t)
+                            sftp.put('media/scripts/' + type + '/' + script, '/tmp/%s' % script)
+                        except Exception as e:
+                            print(e)
+                            msg = "在服务器 %s 上执行失败！" % host.name
+                            request.websocket.send(msg.encode('utf-8'))
+                            continue
+                        t.close()
 
                         s = paramiko.SSHClient()
                         s.set_missing_host_key_policy(paramiko.AutoAddPolicy)
@@ -195,7 +209,7 @@ def exec_tasks(request):
                             msg = "服务器 %s 无法登陆！" %host.name
                             request.websocket.send(msg.encode('utf-8'))
                             continue
-                        cmd = 'sh %s 2>&1' %script
+                        cmd = 'sh /tmp/%s 2>&1' %script
                         stdin, stdout, stderr=s.exec_command(cmd)
                         nullcount = 0
                         while True:
@@ -282,6 +296,74 @@ def del_file(request):
     c_file.delete()
 
     path = 'media/%s/' %project + file_name
+    stat = os.path.exists(path)
+
+    if stat:
+       os.remove(path)
+
+    return JsonResponse({'status':'success'})
+
+@csrf_exempt
+def task_script(request):
+    type_list = TaskType.objects.all()
+    return render(request,'task_script.html',{'type_list':type_list})
+
+@csrf_exempt
+def open_script_file(request):
+    type = request.POST.get("type")
+    file_name = request.POST.get("file_name")
+
+    path = 'media/scripts/%s/' % type
+    file_path = path + file_name
+    p_stat = os.path.exists(path)
+    f_stat = os.path.exists(file_path)
+    content = ''
+
+    if p_stat:
+        if f_stat:
+            with open(path + file_name, encoding='utf-8') as f:
+                content = f.read()
+        else:
+            file = open(file_path, 'w', encoding='utf-8')
+            file.close()
+    else:
+        os.makedirs(path)
+        file = open(path + file_name, 'w', encoding='utf-8')
+        file.close()
+
+    return JsonResponse({'content': content})
+
+@csrf_exempt
+def save_script_file(request):
+    content = request.POST.get("content")
+    type = request.POST.get("type")
+    file_name = request.POST.get("file_name")
+
+    path = 'media/scripts/%s/' %type
+    file_path = path + file_name
+    p_stat = os.path.exists(path)
+
+    if p_stat:
+        file = open(file_path, 'w',encoding='utf-8')
+        file.write(content)
+        file.close()
+    else:
+        print('目录已经不存在')
+        os.makedirs(path)
+        file = open(path + file_name,'w',encoding='utf-8')
+        file.write(content)
+        file.close()
+
+    return JsonResponse({'status':'success'})
+
+@csrf_exempt
+def del_script_file(request):
+    type = request.POST.get("type")
+    file_name = request.POST.get("file_name")
+    s_file = Task.objects.get(type__cn_name=type,script=file_name)
+    s_file.delete()
+
+    path = 'media/scripts/%s/' %type + file_name
     stat = os.path.exists(path)
 
     if stat:

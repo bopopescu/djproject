@@ -154,10 +154,22 @@ class Domain(models.Model):
     def __str__(self):
         return self.url
 
+class TaskType(models.Model):
+    en_name = models.CharField('英文名', max_length=200, unique=True)
+    cn_name = models.CharField('中文名', max_length=200, unique=True)
+
+    class Meta:
+        verbose_name = '任务类别'
+        verbose_name_plural = '任务类别'
+
+    def __str__(self):
+        return self.en_name
+
 class Task(models.Model):
     name = models.CharField('名称',max_length=200)
-    script = models.CharField('脚本',max_length=200,default='/data/scripts/')
+    script = models.CharField('脚本文件名',max_length=200)
     user = models.ForeignKey(HostUser,on_delete=models.CASCADE,verbose_name='执行用户')
+    type = models.ForeignKey(TaskType,on_delete=models.CASCADE,verbose_name='类别')
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:
