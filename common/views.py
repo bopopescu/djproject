@@ -239,7 +239,7 @@ def open_file(request):
 
     if p_stat:
         if f_stat:
-            with open(path + file_name) as f:
+            with open(path + file_name,'rb') as f:
                 content = f.read()
         else:
             file = open(file_path, 'w')
