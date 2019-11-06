@@ -242,12 +242,11 @@ def open_file(request):
             with open(path + file_name, encoding='utf-8') as f:
                 content = f.read()
         else:
-            file = open(file_path, 'w')
+            file = open(file_path, 'w',encoding='utf-8')
             file.close()
     else:
-        print('目录已经不存在')
         os.makedirs(path)
-        file = open(path + file_name,'w')
+        file = open(path + file_name,'w',encoding='utf-8')
         file.close()
 
     return JsonResponse({'content':content})
@@ -261,16 +260,15 @@ def save_file(request):
     path = 'media/%s/' %project
     file_path = path + file_name
     p_stat = os.path.exists(path)
-    f_stat = os.path.exists(file_path)
 
     if p_stat:
-        file = open(file_path, 'w')
+        file = open(file_path, 'w',encoding='utf-8')
         file.write(content)
         file.close()
     else:
         print('目录已经不存在')
         os.makedirs(path)
-        file = open(path + file_name,'w')
+        file = open(path + file_name,'w',encoding='utf-8')
         file.write(content)
         file.close()
 

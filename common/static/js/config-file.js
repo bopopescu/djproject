@@ -79,7 +79,9 @@ function show_content(data,project,file_name) {
             data:data,
             success:function(data){
                 $('button').prop('disabled', false)
-                $('<div>').appendTo('body').addClass('alert alert-success').html('保存成功').show().delay(1500).fadeOut();
+                swal({
+                    title: "保存成功！",
+                });
             }
         })
     })
@@ -112,10 +114,6 @@ function show_content(data,project,file_name) {
                         function(){
                             window.location.href = "/common/config_file/"
                         });
-
-
-                    // swal("删除!", "文件已经删除.", "success");
-                    // window.location.href = "/common/config_file/"
                 }
             })
         });
