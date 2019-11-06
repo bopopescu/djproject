@@ -1,4 +1,3 @@
 #!/bin/bash
-hostname
-abc
-2222
+date
+echo "检查服务器 $(hostname) 服务器端口状况"
