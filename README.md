@@ -56,6 +56,12 @@ cd /usr/local/djproject
 python3.7 manage.py collectstatic
 ```
 
+创建超级用户
+```
+cd /usr/local/djproject
+python manage.py createsuperuser
+```
+
 ##### 安装 gunicorn 和启动实例
 
 ```
