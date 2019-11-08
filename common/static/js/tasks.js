@@ -1,4 +1,8 @@
 $(function () {
+    $('#a_task').addClass('active')
+    $('#a_exec_taxt').addClass('active')
+    $('#ul_task').addClass('in')
+
     $("#exec_tasks").click(function () {
         var hosts = document.getElementsByName("host")
         ips =[]

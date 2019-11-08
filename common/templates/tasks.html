@@ -1,96 +1,111 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
+
+{% block scripts %}
 <script src="{% static "js/tasks.js" %}"></script>
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="card shadow">
-        <div class="card-header">下发任务</div>
-        <div class="card-body">
-		<div class="row">
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-1"> </div>
-                        <div class="col-lg-2">服务器</div>
-                        <div class="col-lg-4"> </div>
-                        <div class="col-lg-2">
-                            <div class="dropdown mb-1" style="text-align:right">
-                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              选择类别
-                            </button>
-                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=nginx&env={{ env }}">nginx</a>
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=java&env={{ env }}">java</a>
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=mysql&env={{ env }}">mysql</a>
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type=redis&env={{ env }}">redis</a>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="dropdown mb-1" style="text-align:right">
-                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              选择环境
-                            </button>
-                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=test">测试环境</a>
-                              <a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=pro">生产环境</a>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-lg-1"> </div>
-                    <table class="table-bordered col-lg-10">
-                        <thead>
-                            <td width="6%"></td>
-                            <td>名称</td>
-                            <td>IP</td>
-                            <td>类型</td>
-                            <td>环境</td>
-                        </thead>
-                        <tbody>
-                        {% for h in hosts %}
-                            <tr>
-                                <td style="text-align: center"><input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"></td>
-                                <td>{{ h.name }}</td>
-                                <td>{{ h.ip }}</td>
-                                <td>{{ h.type }}</td>
-                                {% if h.env == 'test' %}
-                                    <td>测试环境</td>
-                                {% elif h.env == 'pro' %}
-                                    <td>生产环境</td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-11 col-md-7" style="text-align:right">
-                        <span class="step-links">
-                            {% if hosts.has_previous %}
-                                <a href="?&page=1&type={{ type }}&env={{ env }}">首页</a>
-                                <a href="?page={{ hosts.previous_page_number }}&type={{ type }}&env={{ env }}">上一页</a>
-                            {% endif %}
+{% endblock %}
 
-                            <span class="current">
-                                当前 {{ hosts.number }} / {{ hosts.paginator.num_pages }}
-                            </span>
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>任务管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li>任务管理</li>
+                <li class="active">
+                    <strong>下发任务</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
 
-                            {% if hosts.has_next %}
-                                <a href="?page={{ hosts.next_page_number }}&type={{ type }}&env={{ env }}">下一页</a>
-                                <a href="?page={{ hosts.paginator.num_pages }}&type={{ type }}&env={{ env }}">尾页</a>
-                            {% endif %}
-                        </span>
-                        </div>
+{% block page-content %}
+<div class="wrapper wrapper-content">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+                            选择类别
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=nginx&env={{ env }}">nginx</a></li>
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=java&env={{ env }}">java</a></li>
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=mysql&env={{ env }}">mysql</a></li>
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=redis&env={{ env }}">redis</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+                            选择环境
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=test">测试环境</a></li>
+                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ type }}&env=pro">生产环境</a></li>
+                       </ul>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div style="height: 35px">任务列表</div>
-                    <div class="row">
-                    <table class="table-bordered col-lg-10">
+            </div>
+            <div class="col-lg-6">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-bordered dataTable">
+                    <thead>
+                        <td width="6%"></td>
+                        <td>名称</td>
+                        <td>IP</td>
+                        <td>类型</td>
+                        <td>环境</td>
+                    </thead>
+                    <tbody>
+                    {% for h in hosts %}
+                        <tr>
+                            <td style="text-align: center"><input type="checkbox" name="host" id="host{{ forloop.counter }}" value="{{ h.ip }}"></td>
+                            <td>{{ h.name }}</td>
+                            <td>{{ h.ip }}</td>
+                            <td>{{ h.type }}</td>
+                            {% if h.env == 'test' %}
+                                <td>测试环境</td>
+                            {% elif h.env == 'pro' %}
+                                <td>生产环境</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div>
+                    <span class="step-links pull-right">
+                        {% if hosts.has_previous %}
+                            <a href="?&page=1&type={{ type }}&env={{ env }}">首页</a>
+                            <a href="?page={{ hosts.previous_page_number }}&type={{ type }}&env={{ env }}">上一页</a>
+                        {% endif %}
+
+                        <span class="current">
+                            当前 {{ hosts.number }} / {{ hosts.paginator.num_pages }}
+                        </span>
+
+                        {% if hosts.has_next %}
+                            <a href="?page={{ hosts.next_page_number }}&type={{ type }}&env={{ env }}">下一页</a>
+                            <a href="?page={{ hosts.paginator.num_pages }}&type={{ type }}&env={{ env }}">尾页</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="ibox">
+                    <table class="table table-bordered dataTable">
                         <thead>
                         <td width="6%"></td>
                         <td>名称</td>
@@ -104,23 +119,16 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    </div>
                 </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-11" style="text-align:right">
-                <button name="manager" class="btn btn-info" type="button" id="exec_tasks">开始执行</button>
+                <div>
+                    <button name="manager" class="btn btn-info" type="button" id="exec_tasks">开始执行</button>
+                </div>
             </div>
         </div>
-        <hr class="simple" />
 
-    <div class="panel panel-default">
-      <div class="panel-heading">执行结果</div>
-      <pre class="panel-body" id="messagecontainer"></pre>
-    </div>
-    </div>
-    </div>
-    </div>
+        <hr/>
+        <label>执行结果</label>
+        <pre class="well" id="messagecontainer"></pre>
     </div>
 </div>
+{% endblock %}

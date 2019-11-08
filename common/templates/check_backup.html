@@ -1,36 +1,45 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
-<script type="text/javascript" src="{% static 'js/checkbackup.js' %}"></script>
 
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-    {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="card shadow">
-			<div class="card-header">
-                查看备份
-            </div>
-
-            <div class="card-body">
-            <form class="form-horizontal">
-
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-6">
-                    <button class="btn btn-info" type="button" id="btn_check" value="check">开始检查</button>
-                </div>
-            </div>
-            </form>
-
-            <hr class="simple"/>
-
-            <div class="panel panel-default">
-              <div class="panel-heading">检查结果(最近10次的备份)</div>
-              <pre class="panel-body" id="messagecontainer"></pre>
-            </div>
-        </div>
-        </div>
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>检查备份</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>检查备份</strong>
+                </li>
+            </ol>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>检查最近10次的备份</h5>
+                    </div>
+
+                    <div class="ibox-content">
+                        <div>
+                            <button class="btn btn-info" type="button" id="btn_check" value="check">开始检查</button>
+                        </div>
+                        <hr/>
+                        <label>执行结果</label>
+                        <pre class="well" id="messagecontainer"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/checkbackup.js' %}"></script>
+{% endblock %}

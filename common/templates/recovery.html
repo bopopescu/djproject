@@ -1,49 +1,59 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
+
+{% block scripts %}
 <script type="text/javascript" src="{% static 'js/recovery.js' %}"></script>
+{% endblock %}
 
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-    {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="card shadow">
-			<div class="card-header">
-                将生产环境数据库 ebusbar_baipao 还原到测试环境数据库 ebusbar_baipao_pro 中
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>还原数据库</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>还原数据库</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>将生产环境数据库 ebusbar_baipao 还原到测试环境数据库 ebusbar_baipao_pro 中</h5>
             </div>
-
-            <div class="card-body">
-            <form class="form-horizontal">
-            <div class="form-group row">
-                <label for="backup" class="col-sm-1 control-label">选择备份</label>
-                <div class="col-sm-6">
-                    <select id="backup" class="form-control" >
+            <div class="ibox-content">
+            <div>
+                <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">选择备份</label>
+                    <div class="col-lg-6">
+                        <select id="backup" class="form-control" >
                         {% for b in content %}
                             <option value="{{ b }}">{{ b }}</option>
                         {% endfor %}
-                    </select>
-                </div>
-                <div class="col-sm-4">
-                  <p class="form-control-static text-warning">此列表显示的是每天的备份</p>
-                </div>
-            </div>
+                        </select>
+                        <span class="help-block m-b-none text-warning">此列表显示的是每天的备份</span>
+                    </div>
 
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-6">
-                    <button class="btn btn-info" type="button" id="recovery" value="check">还原数据库</button>
                 </div>
-            </div>
-            </form>
 
-            <hr class="simple"/>
-
-            <div class="panel panel-default">
-              <div class="panel-heading">执行结果</div>
-              <div class="panel-body" id="messagecontainer"></div>
+                <div class="form-group">
+                    <div class='col-lg-offset-2 col-lg-6'>
+                        <button class="btn btn-info" type="button" id="recovery" value="check">还原数据库</button>
+                    </div>
+                </div>
+                </form>
             </div>
-        </div>
-        </div>
+            <hr/>
+            <label>执行结果</label>
+            <pre class="well" id="messagecontainer"></pre>
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}

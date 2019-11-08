@@ -20,5 +20,7 @@ $(function () {
                 }
             }
         };
-     })
+    })
+
+    $('#checkbackup').addClass('active')
 })

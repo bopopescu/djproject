@@ -23,6 +23,8 @@ $(function () {
 　　　　    $('input[name="instance"]').prop('checked', false);//取消全选
 　　　　}
     })
+
+    $('#deploy').addClass('active')
 })
 
 function ch_all_chk() {

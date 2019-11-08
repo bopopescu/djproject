@@ -1,110 +1,118 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
+
+{% block scripts %}
 <script src="{% static "js/deploy.js" %}"></script>
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="card shadow">
-        <div class="card-header">发布 JAR 包</div>
-        <div class="card-body">
-			<form class="form-horizontal">
-                <div class="row" style="margin-left: 10px;margin-bottom: 8px">
-                    <div>
-                        <div class="dropdown mb-1" style="text-align:right">
-                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+{% endblock %}
+
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>应用发布</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>应用发布</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
                             {% if name == 'null' %}
                                 选择模块
                             {% else %}
                                 {{ name }}
                             {% endif %}
+                            <span class="caret"></span>
                         </button>
-                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                        <ul class="dropdown-menu">
                             {% for model in model_list %}
-                                <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ model.name }}&env={{ env }}">{{ model.name }}</a>
+                                <li><a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ model.name }}&env={{ env }}">{{ model.name }}</a></li>
                             {% endfor %}
-                        </div>
-                        </div>
+                        </ul>
                     </div>
-                    <div class="col-lg-1">
-                        <div class="dropdown mb-1" style="text-align:right">
-                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
                             {% if env == 'null' %}
-                                选择环境
+                            选择环境
                             {% elif env == 'pro' %}
                                 生产环境
                             {% elif env == 'test' %}
                                 测试环境
                             {% endif %}
+                            <span class="caret"></span>
                         </button>
-                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=test">测试环境</a>
-                          <a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=pro">生产环境</a>
-                        </div>
-                        </div>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=test">测试环境</a></li>
+                            <li><a class="dropdown-item" href="{% url 'deployjar:deploy' %}?name={{ name }}&env=pro">生产环境</a></li>
+                       </ul>
                     </div>
                 </div>
-
-                <div class="row" style="margin-left: 10px">
-                    <table class="table-bordered col-lg-6">
-                        <thead>
-                            <td style="text-align: center" width="6%"><input type="checkbox" id="all_ckb" name="SelectAll"></td>
-                            <td>IP</td>
-                            <td>端口号</td>
-                            <td>包名</td>
-                            <td>环境</td>
-                            <td>模块名</td>
-                        </thead>
-                        <tbody>
-                        {% for instance in instances %}
-                            <tr>
-                                <td style="text-align: center"><input type="checkbox" name="instance" id="instance{{ forloop.counter }}" value="{{ instance.id }}" onclick="ch_all_chk()"></td>
-                                <td>{{ instance.host.ip  }}</td>
-                                <td>{{ instance.port }}</td>
-                                <td>{{ instance.package }}</td>
-                                {% if instance.host.env == 'test' %}
-                                    <td>测试环境</td>
-                                {% elif instance.host.env == 'pro' %}
-                                    <td>生产环境</td>
-                                {% endif %}
-                                <td>{{ instance.name.name }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="col-lg-6">
-                        <div class="row">
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-10">包 URL (仅发布时需要填写，获取地址 http://188.188.1.131:200)</div>
-                        </div>
-                        <div class="row" style="margin-bottom: 10px">
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-10">
-                              <input type="text" class="form-control" id="jarurl">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-11">
-                                <button class="btn btn-primary" type="button" id="deploy_app">发布</button>
-                                <button class="btn btn-info" type="button" id="check" value="check">检查</button>
-                                <button class="btn btn-info" type="button" id="start" value="start">启动</button>
-                                <button class="btn btn-info" type="button" id="restart" value="restart">重启</button>
-                                <button class="btn btn-info" type="button" id="stop" value="stop">停止</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <hr class="simple" />
-
-            <div class="panel panel-default">
-              <div class="panel-heading">执行结果</div>
-              <pre class="panel-body" id="messagecontainer"></pre>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-bordered">
+                    <thead>
+                        <td style="text-align: center" width="6%"><input type="checkbox" id="all_ckb" name="SelectAll"></td>
+                        <td>IP</td>
+                        <td>端口号</td>
+                        <td>包名</td>
+                        <td>环境</td>
+                        <td>模块名</td>
+                    </thead>
+                    <tbody>
+                    {% for instance in instances %}
+                        <tr>
+                            <td style="text-align: center"><input type="checkbox" name="instance" id="instance{{ forloop.counter }}" value="{{ instance.id }}" onclick="ch_all_chk()"></td>
+                            <td>{{ instance.host.ip  }}</td>
+                            <td>{{ instance.port }}</td>
+                            <td>{{ instance.package }}</td>
+                            {% if instance.host.env == 'test' %}
+                                <td>测试环境</td>
+                            {% elif instance.host.env == 'pro' %}
+                                <td>生产环境</td>
+                            {% endif %}
+                            <td>{{ instance.name.name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label>
+                        包 URL (仅发布时需要填写，获取地址 http://188.188.1.131:200)
+                    </label>
+                    <div>
+                      <input type="text" id="jarurl" class="form-control">
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-info" type="button" id="deploy_app">发布</button>
+                    <button class="btn btn-info" type="button" id="check" value="check">检查</button>
+                    <button class="btn btn-info" type="button" id="start" value="start">启动</button>
+                    <button class="btn btn-info" type="button" id="restart" value="restart">重启</button>
+                    <button class="btn btn-info" type="button" id="stop" value="stop">停止</button>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+        <label>执行结果</label>
+        <pre class="well" id="messagecontainer"></pre>
     </div>
     </div>
-    </div>
-</div>
+{% endblock %}

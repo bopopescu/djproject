@@ -22,4 +22,5 @@ $(function () {
             }
         };
      })
+    $('#dbmanager').addClass('active')
 })

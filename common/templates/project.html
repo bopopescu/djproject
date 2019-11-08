@@ -1,48 +1,74 @@
-{% include 'base.html' %}
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-         <h6 class="mb-2 text-gray-800">项目管理</h6>
-            <hr/>
-			<table class="table table-bordered dataTable">
-                <thead>
-                <tr>
-                      <th>项目名称</th>
-                      <th>负责人</th>
-                      <th>创建时间</th>
-                      <th>模块</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                {% for p in project_list %}
-                    {% if p.jarmodel_set.all %}
-                        {% if forloop.counter != 1 %}
-                            <tr>
-                        {% endif %}
-                        <td rowspan="{{ p.jarmodel_set.all.count }}"><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
-                        <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.manager }}</td>
-                        <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.created_at }}</td>
-                        {% for m in p.jarmodel_set.all %}
-                        {% if forloop.counter != 1 %}
-                            <tr>
-                        {% endif %}
-                            <td><a href="{% url 'common:model_detail' %}?name={{ m.name }}">{{ m.name }}</a></td>
-                        {% endfor %}
-                    </tr>
-                    {% else %}
-                        <tr>
-                            <td><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
-                            <td>{{ p.manager }}</td>
-                            <td>{{ p.created_at }}</td>
-                            <td></td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
+{% extends 'base.html' %}
+
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>项目管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>项目管理</strong>
+                </li>
+            </ol>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                  <th>项目名称</th>
+                                  <th>负责人</th>
+                                  <th>创建时间</th>
+                                  <th>模块</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                            {% for p in project_list %}
+                                {% if p.jarmodel_set.all %}
+                                    {% if forloop.counter != 1 %}
+                                        <tr>
+                                    {% endif %}
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}"><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.manager }}</td>
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.created_at }}</td>
+                                    {% for m in p.jarmodel_set.all %}
+                                    {% if forloop.counter != 1 %}
+                                        <tr>
+                                    {% endif %}
+                                        <td><a href="{% url 'common:model_detail' %}?name={{ m.name }}">{{ m.name }}</a></td>
+                                    {% endfor %}
+                                </tr>
+                                {% else %}
+                                    <tr>
+                                        <td><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
+                                        <td>{{ p.manager }}</td>
+                                        <td>{{ p.created_at }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(function () {
+            $("#project").addClass('active')
+        })
+    </script>
+{% endblock %}
