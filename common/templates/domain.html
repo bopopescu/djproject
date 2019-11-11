@@ -1,90 +1,116 @@
-{% include 'base.html' %}
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800">域名管理</h6>
-            <hr/>
-			<table class="table table-bordered dataTable">
-                <thead>
-                <tr>
-                      <th>项目</th>
-                      <th>名称</th>
-                      <th>URL 地址</th>
-                      <th>外网 IP</th>
-                      <th>Nginx IP</th>
-                      <th>环境</th>
-                      <th>创建时间</th>
-                      <th>备注</th>
-                </tr>
-                </thead>
-                <tbody>
+{% extends 'base.html' %}
 
-                {% for project in project_list %}
-                {% if project.domain_set.all.count > 0 %}
-                    <tr>
-                        <td rowspan="{{ project.domain_set.all.count }}" style="vertical-align: middle">
-                            {{ project.name }}
-                        </td>
-                    {% for domain in project.domain_set.all %}
-                        {% if forloop.counter != 1 %}
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>域名管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>域名管理</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <table class="table table-bordered">
+                            <thead>
                             <tr>
-                        {% endif %}
-                            <td>
-                                <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
-                            </td>
-                            <td>
-                                <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
-                            </td>
-                            <td>
-                                {{ domain.ip }}
-                            </td>
-                            <td>
-                                {{ domain.nginx.ip }}
-                            </td>
-                            {% if domain.nginx.env == 'test' %}
-                                <td>测试环境</td>
-                            {% elif domain.nginx.env == 'pro' %}
-                                <td>生产环境</td>
+                                  <th>项目</th>
+                                  <th>名称</th>
+                                  <th>URL 地址</th>
+                                  <th>外网 IP</th>
+                                  <th>Nginx IP</th>
+                                  <th>环境</th>
+                                  <th>创建时间</th>
+                                  <th>备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for project in project_list %}
+                            {% if project.domain_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ project.domain_set.all.count }}" style="vertical-align: middle">
+                                        {{ project.name }}
+                                    </td>
+                                {% for domain in project.domain_set.all %}
+                                    {% if forloop.counter != 1 %}
+                                        <tr>
+                                    {% endif %}
+                                        <td>
+                                            <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
+                                        </td>
+                                        <td>
+                                            {{ domain.ip }}
+                                        </td>
+                                        <td>
+                                            {{ domain.nginx.ip }}
+                                        </td>
+                                        {% if domain.nginx.env == 'test' %}
+                                            <td>测试环境</td>
+                                        {% elif domain.nginx.env == 'pro' %}
+                                            <td>生产环境</td>
+                                        {% endif %}
+                                        <td>
+                                            {{ domain.created_at }}
+                                        </td>
+                                        <td>{{ domain.disc }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td rowspan="{{ project.domain_set.all.count }}">
+                                        {{ project.name }}
+                                    </td>
+                                    <td colspan="7">没有访问地址</td>
+                                    </tr>
                             {% endif %}
-                            <td>
-                                {{ domain.created_at }}
-                            </td>
-                            <td>{{ domain.disc }}</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td rowspan="{{ project.domain_set.all.count }}">
-                            {{ project.name }}
-                        </td>
-                        <td colspan="7">没有访问地址</td>
-                        </tr>
-                {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="row" style="margin-bottom: 20px">
-                <div class="col-lg-6"></div>
-                <div class="col-lg-6 col-md-7" style="text-align:right">
-                <span class="step-links">
-                    {% if project_list.has_previous %}
-                        <a href="?page=1">首页</a>
-                        <a href="?page={{ project_list.previous_page_number }}">上一页</a>
-                    {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
 
-                    <span class="current">
-                        当前 {{ project_list.number }} / {{ project_list.paginator.num_pages }}
-                    </span>
+                        <div class="row" style="margin-bottom: 20px">
+                            <div class="col-lg-6"></div>
+                            <div class="col-lg-6 col-md-7" style="text-align:right">
+                            <span class="step-links">
+                                {% if project_list.has_previous %}
+                                    <a href="?page=1">首页</a>
+                                    <a href="?page={{ project_list.previous_page_number }}">上一页</a>
+                                {% endif %}
 
-                    {% if project_list.has_next %}
-                        <a href="?page={{ project_list.next_page_number }}">下一页</a>
-                        <a href="?page={{ project_list.paginator.num_pages }}">尾页</a>
-                    {% endif %}
-                </span>
+                                <span class="current">
+                                    当前 {{ project_list.number }} / {{ project_list.paginator.num_pages }}
+                                </span>
+
+                                {% if project_list.has_next %}
+                                    <a href="?page={{ project_list.next_page_number }}">下一页</a>
+                                    <a href="?page={{ project_list.paginator.num_pages }}">尾页</a>
+                                {% endif %}
+                            </span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#li_domain').addClass('active')
+    </script>
+{% endblock %}

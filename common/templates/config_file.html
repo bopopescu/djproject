@@ -1,32 +1,36 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
-<link rel="stylesheet" href="{% static "css/style.min.css" %}" />
-<link href="{% static 'codemirror/codemirror.css' %}" rel="stylesheet" type="text/css">
-{#<link href="{% static 'codemirror/monokai.css' %}" rel="stylesheet" type="text/css">#}
-<link href="{% static 'codemirror/fullscreen.css' %}" rel="stylesheet" type="text/css">
-<link href="{% static 'css/alter.css' %}" rel="stylesheet" type="text/css">
 
-<!-- 引入CodeMirror核心文件 -->
-<script type="text/javascript" src="{% static 'codemirror/codemirror.js' %}"></script>
-<script type="text/javascript" src="{% static 'codemirror/nginx.js' %}"></script>
+{% block links %}
+    <link href="{% static 'css/plugins/jsTree/style.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/codemirror/codemirror.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/codemirror/ambiance.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet">
+{% endblock %}
 
-<!-- 下面分别为显示行数、括号匹配和全屏插件 -->
-<script type="text/javascript" src="{% static 'codemirror/active-line.js' %}"></script>
-<script type="text/javascript" src="{% static 'codemirror/matchbrackets.js' %}"></script>
-<script type="text/javascript" src="{% static 'codemirror/fullscreen.js' %}"></script>
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>配置中心</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>配置中心</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
 
-<script src="{% static "js/jstree.min.js" %}"></script>
-<script src="{% static "js/config-file.js" %}"></script>
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3">
-              <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div id="config_file" class="demo">
+{% block page-content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div id="config_file" class="demo">
                         <ul>
                             {% for project in project_list %}
                                 {% if project.configfile_set.all %}
@@ -47,33 +51,44 @@
 
                         </ul>
                     </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="col-lg-9">
-              <div class="card shadow mb-4">
-                <div class="card-header py-2">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <button id='save_file' class="btn btn-info btn-sm">保存</button>
-                            <button id='add_file' class="btn btn-info btn-sm">新增</button>
-                            <button id='del_file' class="btn btn-danger btn-sm">删除</button>
-                        </div>
-                        <div class="col-lg-8" style="vertical-align: center">
-                            <span id="file_p" style="float: right"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-2">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <button id='save_file' class="btn btn-info btn-sm">保存</button>
+                                        <button id='add_file' class="btn btn-info btn-sm">新增</button>
+                                        <button id='del_file' class="btn btn-danger btn-sm">删除</button>
+                                    </div>
+                                    <div class="col-lg-8" style="vertical-align: center">
+                                        <span id="file_p" style="float: right"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alter"></div>
+                            <div class="card-body">
+                                <textarea id="file_content" name="content"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                  <div class="alter"></div>
-
-                <div class="card-body">
-                    <textarea id="file_content" name="content"></textarea>
-                </div>
-              </div>
             </div>
         </div>
-        </div>
     </div>
-</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/plugins/codemirror/codemirror.js' %}"></script>
+    <script src="{% static 'js/plugins/codemirror/mode/nginx/nginx.js' %}"></script>
+    <script src="{% static 'js/plugins/jsTree/jstree.min.js' %}"></script>
+    <script src="{% static 'js/plugins/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static "js/config-file.js" %}"></script>
+{% endblock %}

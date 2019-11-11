@@ -1,56 +1,55 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'base.html' %}
-<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
-<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
-<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/upload-files.js' %}"></script>
-
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-    {% include 'top.html' %}
-        <div class="container-fluid">
-        <div class="card shadow">
-			<div class="card-header">
-                模板管理
-            </div>
-
-            <div class="card-body">
-
-            <button type="button" class="btn btn-info" id='upload_files'>
-              <span class="glyphicon glyphicon-cloud-upload"></span>更新(新增)模板
-            </button>
-
-{#            <button type="button" class="btn btn-info" id='update_files'>#}
-{#              <span class="glyphicon glyphicon-cloud-upload"></span>更新(新增)模板#}
-{#            </button>#}
-
-            {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
-            <input id="fileupload" type="file" name="file" multiple
-                   style="display: none;"
-                   data-url="{% url 'common:upload_files' %}"
-                   data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-
-            {# 3. TABLE TO DISPLAY THE UPLOADED PHOTOS #}
-            <hr/>
-            <table id="gallery" class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>模板</th>
-                    <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for file in files_list %}
-                  <tr>
-                    <td><a target="_blank" href="{{ file.file.url }}">{{ file.file.name }}</a></td>
-                    <td width="6%"><a href="/common/remove_file/{{ file.id }}/" class="btn-danger btn-sm">删除</a></td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-        </div>
-        </div>
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>模板管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">
+                    <strong>模板管理</strong>
+                </li>
+            </ol>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content">
+    <div class="ibox-content">
+        <button type="button" class="btn btn-info" id='upload_files'>
+            <span class="glyphicon glyphicon-cloud-upload"></span>更新(新增)模板
+        </button>
+
+        <input id="fileupload" type="file" name="file" multiple
+               style="display: none;"
+               data-url="{% url 'common:upload_files' %}"
+               data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+        <hr/>
+        <table id="gallery" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>模板</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files_list %}
+            <tr>
+                <td><a target="_blank" href="{{ file.file.url }}">{{ file.file.name }}</a></td>
+                <td width="6%"><a href="/common/remove_file/{{ file.id }}/" class="btn-danger btn-sm">删除</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upload-files.js' %}"></script>
+{% endblock %}
