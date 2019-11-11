@@ -1,6 +1,6 @@
 $(function () {
     $('#a_task').addClass('active')
-    $('#a_exec_taxt').addClass('active')
+    $('#a_exec_task').addClass('active')
     $('#ul_task').addClass('in')
 
     $("#exec_tasks").click(function () {

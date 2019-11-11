@@ -1,4 +1,8 @@
 $(function () {
+    $('#a_task').addClass('active')
+    $('#a_task_script').addClass('active')
+    $('#ul_task').addClass('in')
+
     $('#file_content').hide()
     $('#save_file').prop('disabled', true)
     $('#del_file').prop('disabled', true)
@@ -45,7 +49,7 @@ function show_content(data,type,file_name) {
         matchBrackets: true,   // 括号匹配
         mode: 'shell',     // HMTL混合模式
         lineWrapping: true,    // 自动换行
-        theme: 'monokai',      // 使用monokai模版
+        theme: 'ambiance',      // 使用monokai模版
     });
 
     editor.setOption("extraKeys", {
