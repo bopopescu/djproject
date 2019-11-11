@@ -26,57 +26,54 @@
 
 {% block page-content %}
     <div class="row">
-        <div class="col-lg-3">
-            <div>
-                <div class="ibox float-e-margins">
-                    <div class="ibox-content">
-                        <div id="config_file" class="demo">
-                        <ul>
-                            {% for project in project_list %}
-                                {% if project.configfile_set.all %}
-                                    {% if forloop.counter == 1 %}
-                                        <li data-jstree='{ "opened" : true }'>{{ project }}
-                                    {% else %}
-                                        <li>{{ project }}
-                                    {% endif %}
-
-                                        <ul>
-                                            {% for config in project.configfile_set.all %}
-                                                <li name="{{ config.project.name }}" value="file">{{ config.file_name }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div>
+                    <div id="config_file" class="demo">
+                    <ul>
+                        {% for project in project_list %}
+                            {% if project.configfile_set.all %}
+                                {% if forloop.counter == 1 %}
+                                    <li data-jstree='{ "opened" : true }'>{{ project }}
+                                {% else %}
+                                    <li>{{ project }}
                                 {% endif %}
-                            {% endfor %}
+                                    <ul>
+                                        {% for config in project.configfile_set.all %}
+                                            <li name="{{ config.project.name }}" value="file">{{ config.file_name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
 
-                        </ul>
-                    </div>
+                    </ul>
+                </div>
 
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-9">
-            <div>
+        <div class="col-lg-10">
+            <div class="border-bottom white-bg dashboard-header">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-content">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-2">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <button id='save_file' class="btn btn-info btn-sm">保存</button>
-                                        <button id='add_file' class="btn btn-info btn-sm">新增</button>
-                                        <button id='del_file' class="btn btn-danger btn-sm">删除</button>
-                                    </div>
-                                    <div class="col-lg-8" style="vertical-align: center">
-                                        <span id="file_p" style="float: right"></span>
-                                    </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-2">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <button id='save_file' class="btn btn-info btn-sm">保存</button>
+                                    <button id='add_file' class="btn btn-info btn-sm">新增</button>
+                                    <button id='del_file' class="btn btn-danger btn-sm">删除</button>
+                                </div>
+                                <div class="col-lg-8" style="vertical-align: center">
+                                    <span id="file_p" style="float: right"></span>
                                 </div>
                             </div>
-                            <div class="alter"></div>
-                            <div class="card-body">
-                                <textarea id="file_content" name="content"></textarea>
-                            </div>
+                        </div>
+
+                        <div class="alter"></div>
+
+                        <div class="card-body">
+                            <textarea id="file_content" name="content"></textarea>
                         </div>
                     </div>
                 </div>

@@ -89,17 +89,17 @@
                         </a>
                     </li>
 
-                    <li>
+                    <li id="li_app_info">
                         <a href="#">
                             <i class="fa fa-bar-chart-o"></i>
                             <span class="nav-label">应用资料</span>
                             <span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{% url 'common:host' %}?env=all&type=all">主机</a></li>
-                            <li><a href="{% url 'common:instance' %}?env=all">JAVA 实例</a></li>
-                            <li><a href="{% url 'common:model' %}">系统模块</a></li>
-                            <li><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
+                            <li id="li_host"><a href="{% url 'common:host' %}?env=all&type=all">主机</a></li>
+                            <li id="li_java_instance"><a href="{% url 'common:instance' %}?env=all">JAVA 实例</a></li>
+                            <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
+                            <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -145,9 +145,6 @@
         {% endblock %}
 
         <div class="footer">
-{#            <div class="pull-right">#}
-{#                10GB of <strong>250GB</strong> Free.#}
-{#            </div>#}
             <div class="pull-right">
                 <strong>Copyright</strong> &copy; 2019-2020
             </div>
