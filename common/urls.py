@@ -25,5 +25,7 @@ urlpatterns = [
     path('task_script/',task_script,name='task_script'),
     path('open_script_file/',open_script_file,name='open_script_file'),
     path('save_script_file/',save_script_file,name='save_script_file'),
-    path('del_script_file/',del_script_file,name='del_script_file')
+    path('del_script_file/',del_script_file,name='del_script_file'),
+    path('add_host/',add_host,name='add_host'),
+    path('add_instance/',add_instance,name='add_instance'),
 ]

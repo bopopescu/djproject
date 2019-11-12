@@ -30,19 +30,28 @@
                 <div class="form-group">
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                            选择类别
+                            {% if type == 'all' %}
+                                选择类别
+                            {% else %}
+                                {{ type }}&nbsp;主机
+                            {% endif %}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=nginx&env={{ env }}">nginx</a></li>
-                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=java&env={{ env }}">java</a></li>
-                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=mysql&env={{ env }}">mysql</a></li>
-                            <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type=redis&env={{ env }}">redis</a></li>
+                            {% for t in type_list %}
+                                <li><a class="dropdown-item" href="{% url 'common:tasks' %}?type={{ t }}&env={{ env }}">{{ t }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                            选择环境
+                            {% if env == 'all' %}
+                                选择环境
+                            {% elif env == 'test' %}
+                                测试环境
+                            {% elif env == 'pro' %}
+                                生产环境
+                            {% endif %}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">

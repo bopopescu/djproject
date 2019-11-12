@@ -19,6 +19,7 @@ class HostType(models.Model):
     name = models.CharField('主机类别',max_length=200)
 
     class Meta:
+        ordering = ['name']
         verbose_name = '主机类别'
         verbose_name_plural = '主机类别'
 
@@ -49,7 +50,7 @@ class Host(models.Model):
     position = models.CharField('位置',max_length=200,choices=position_list)
     hostuser = models.CharField('系统管理员',max_length=200,default='root')
     password = models.CharField('密码',max_length=200,default='bsbnet')
-    type = models.CharField('类别',max_length=200,choices=type_list,default='java')
+    type = models.ForeignKey(HostType,verbose_name= '类别',on_delete=models.CASCADE)
     env = models.CharField('环境',max_length=200,choices=env_list,default='test')
     created_at = models.DateTimeField('创建时间',default=timezone.now)
 
@@ -89,7 +90,7 @@ class JarModel(models.Model):
 
 class Instance(models.Model):
     name = models.ForeignKey(JarModel,on_delete=models.CASCADE,verbose_name='模块名')
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机')
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'java'})
     port = models.IntegerField('端口号')
     package = models.CharField('包名',max_length=200)
     dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
@@ -105,7 +106,7 @@ class Instance(models.Model):
 class MySQLInstance(models.Model):
     type_list = [('master','主节点'),('slave','从节点')]
 
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址')
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址',limit_choices_to={'type__name':'mysql'})
     port = models.IntegerField('端口号',default=3306)
     dir = models.CharField('部署路径',max_length=200,default='/usr/local/mysql')
     version = models.CharField('版本',max_length=200,default='5.7')

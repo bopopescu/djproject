@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>应用资料</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li>应用资料</li>
+                <li><a href="{% url 'common:host' %}?env=all&type=all">{{ object_type }}</a></li>
+                <li class="active">
+                    <strong>新增</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>新增{{ object_type }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal" action="{{ submit_uri }}" method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            <div class="form-group">
+                                {{ field.errors }}
+                                {{ field.label_tag }}
+                                <div class="col-lg-6">{{ field }}</div>
+                            </div>
+                            {% endfor %}
+
+                            <div class="form-group">
+                                <div class="col-lg-4 col-lg-offset-2">
+                                    <button type="submit" class="btn btn-info">保存</button>
+                                    <a href="{{ back_uri }}" class="btn btn-info">返回</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/add_object.js" %}"></script>
+{% endblock %}

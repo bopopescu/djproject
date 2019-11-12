@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from dwebsocket.decorators import accept_websocket
 import paramiko
@@ -9,7 +9,7 @@ import socket
 from django.http import JsonResponse
 from django.views import View
 import os
-from .form import FileForm
+from .form import *
 from .models import UploadFile
 import json
 # Create your views here.
@@ -50,24 +50,55 @@ def host(request):
     elif type == 'all':
         host_list = Host.objects.filter(env=env).order_by('-type','ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type=type).order_by('-type','ip')
+        host_list = Host.objects.filter(type__name =type).order_by('-type','ip')
     else:
-        host_list = Host.objects.filter(env=env, type=type)
+        host_list = Host.objects.filter(env=env, type__name=type)
     paginator = Paginator(host_list, 10)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
-    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type})
+    type_list = HostType.objects.all()
+    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type,'type_list':type_list})
+
+def add_host(request):
+    object_type = '主机'
+    submit_uri = '/common/add_host/'
+    back_uri = '/common/host/?env=all&type=all'
+    if request.method == 'POST':
+        form = HostForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+    else:
+        form = HostForm()
+    return render(request, 'add_object.html', {'form': form,'object_type':object_type,'submit_uri':submit_uri,'back_uri':back_uri})
 
 def instance(request):
     env = request.GET.get('env')
     if env == 'all':
-        host_list = Host.objects.filter(type='java').order_by('-env')
+        host_list = Host.objects.filter(type__name='java').order_by('-env')
     else:
-        host_list = Host.objects.filter(env=env,type='java').order_by('-env')
+        host_list = Host.objects.filter(env=env,type__name='java').order_by('-env')
     paginator = Paginator(host_list, 3)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
     return render(request, 'instance.html', {'hosts': hosts,'env':env})
+
+def add_instance(request):
+    object_type = ' JAVA 实例'
+    submit_uri = '/common/add_instance/'
+    back_uri = '/common/instance/?env=all'
+    if request.method == 'POST':
+        form = InstanceForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+    else:
+        form = InstanceForm()
+    return render(request, 'add_object.html', {'form': form,'object_type':object_type,'submit_uri':submit_uri,'back_uri':back_uri})
 
 def model(request):
     model_list = JarModel.objects.all()
@@ -152,15 +183,16 @@ def tasks(request):
     elif type == 'all':
         host_list = Host.objects.filter(env=env).order_by('-type', 'ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type=type).order_by('-type', 'ip')
+        host_list = Host.objects.filter(type__name=type).order_by('-type', 'ip')
     else:
-        host_list = Host.objects.filter(env=env, type=type)
+        host_list = Host.objects.filter(env=env, type__name=type)
     paginator = Paginator(host_list, 10)
     page = request.GET.get('page')
+    type_list = HostType.objects.all()
     hosts = paginator.get_page(page)
 
     task_list = Task.objects.all()
-    return render(request, 'tasks.html', {'hosts': hosts, 'env': env, 'type': type,'task_list':task_list})
+    return render(request, 'tasks.html', {'hosts': hosts, 'env': env, 'type': type,'task_list':task_list,'type_list':type_list})
 
 @accept_websocket
 def exec_tasks(request):

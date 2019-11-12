@@ -22,19 +22,28 @@
         <div>
             <div class="btn-group">
                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                    选择类别
+                    {% if type == 'all' %}
+                        选择类别
+                    {% else %}
+                        {{ type }}&nbsp;主机
+                    {% endif %}
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type=nginx&env={{ env }}">nginx</a></li>
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type=java&env={{ env }}">java</a></li>
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type=mysql&env={{ env }}">mysql</a></li>
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type=redis&env={{ env }}">redis</a></li>
+                    {% for t in type_list %}
+                        <li><a class="dropdown-item" href="{% url 'common:host' %}?type={{ t }}&env={{ env }}">{{ t }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="btn-group">
                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                    选择环境
+                    {% if env == 'all' %}
+                        选择环境
+                    {% elif env == 'test' %}
+                        测试环境
+                    {% elif env == 'pro' %}
+                        生产环境
+                    {% endif %}
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -42,6 +51,7 @@
                     <li><a class="dropdown-item" href="{% url 'common:host' %}?type={{ type }}&env=pro">生产环境</a></li>
                </ul>
             </div>
+            <a href="{% url 'common:add_host' %}" class="btn btn-info">新增</a>
         </div>
     </div>
     <div class="ibox-content">
@@ -110,7 +120,7 @@
 {% block scripts %}
     <script>
         $('#li_app_info').addClass('active')
-        $('#li_app_info').addClass('in')
+        $('#ul_app').addClass('in')
         $('#li_host').addClass('active')
     </script>
 {% endblock %}
