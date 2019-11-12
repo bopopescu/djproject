@@ -1,55 +1,85 @@
-{% include 'base.html' %}
-<div id="wrapper">
-    {% include 'navbar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
-        {% include 'top.html' %}
-        <div class="container-fluid">
-            <h6 class="mb-2 text-gray-800"><a href="{% url 'common:project' %}">项目管理</a> > {{ project.name }}</h6>
-            <hr/>
-        {% if project.domain_set.all %}
-            <h6 class="mb-2 text-gray-800"><strong>访问地址</strong></h6>
-            <table class="table table-bordered dataTable">
-                <thead>
-                <tr>
-                      <th>名称</th>
-                      <th>URL 地址</th>
-                      <th>外网 IP</th>
-                      <th>Nginx IP</th>
-                      <th>环境</th>
-                      <th>创建时间</th>
-                      <th>备注</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {% for domain in project.domain_set.all %}
-                         <tr>
-                            <td>
-                                <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
-                            </td>
-                            <td>
-                                <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
-                            </td>
-                            <td>
-                                {{ domain.ip }}
-                            </td>
-                            <td>
-                                {{ domain.nginx.ip }}
-                            </td>
-                            {% if domain.nginx.env == 'test' %}
-                                <td>测试环境</td>
-                            {% elif domain.nginx.env == 'pro' %}
-                                <td>生产环境</td>
-                            {% endif %}
-                            <td>
-                                {{ domain.created_at }}
-                            </td>
-                            <td>{{ domain.disc }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <hr/>
-        {% endif %}
-        </div>
+{% extends 'base.html' %}
+
+{% block page-head %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>项目管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li><a href="{% url 'common:project'%}">项目管理</a></li>
+            <li class="active">
+                <strong>{{ project.name }}</strong>
+            </li>
+        </ol>
     </div>
 </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                    {% if project.domain_set.all %}
+                        <h6 class="mb-2 text-gray-800"><strong>访问地址</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-bordered dataTable">
+                            <thead>
+                            <tr>
+                                  <th>名称</th>
+                                  <th>URL 地址</th>
+                                  <th>外网 IP</th>
+                                  <th>Nginx IP</th>
+                                  <th>环境</th>
+                                  <th>创建时间</th>
+                                  <th>备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for domain in project.domain_set.all %}
+                                     <tr>
+                                        <td>
+                                            <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
+                                        </td>
+                                        <td>
+                                            {{ domain.ip }}
+                                        </td>
+                                        <td>
+                                            {{ domain.nginx.ip }}
+                                        </td>
+                                        {% if domain.nginx.env == 'test' %}
+                                            <td>测试环境</td>
+                                        {% elif domain.nginx.env == 'pro' %}
+                                            <td>生产环境</td>
+                                        {% endif %}
+                                        <td>
+                                            {{ domain.created_at }}
+                                        </td>
+                                        <td>{{ domain.disc }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr/>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            $("#project").addClass('active')
+        })
+    </script>
+{% endblock %}
