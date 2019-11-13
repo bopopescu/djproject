@@ -22,7 +22,13 @@
     <div class="ibox-title">
         <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                选择环境
+                {% if env == 'all' %}
+                    选择环境
+                {% elif env == 'test' %}
+                    测试环境
+                {% elif env == 'pro' %}
+                    生产环境
+                {% endif %}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
@@ -30,7 +36,10 @@
                 <li><a class="dropdown-item" href="{% url 'common:instance' %}?env=pro">生产环境</a></li>
            </ul>
         </div>
-        <a href="{% url 'common:add_instance' %}" class="btn btn-info">新增</a>
+{#        <a href="{% url 'common:add_instance' %}" class="btn btn-info">新增</a>#}
+        <button id="btn_add_host_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
+            新增
+        </button>
     </div>
     <div class="ibox-content">
         <div class="row">
@@ -118,5 +127,14 @@
         $('#li_app_info').addClass('active')
         $('#li_app_info').addClass('in')
         $('#li_java_instance').addClass('active')
+
+        $('form label').addClass('col-lg-2 control-label')
+        $('form input').addClass('form-control')
+        $('form select').addClass('form-control')
+        $('form ul').addClass('col-lg-offset-2')
+
+        {% if stat == 'error' %}
+            $('#btn_add_host_modal').click()
+        {% endif %}
     </script>
 {% endblock %}

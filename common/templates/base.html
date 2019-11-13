@@ -21,7 +21,7 @@
 
 </head>
 
-<body class="">
+<body>
     <div id="wrapper">
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
@@ -153,6 +153,34 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="addModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">新增{{ object_type }}</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="object_form" class="form-horizontal" action="{{ submit_uri }}" method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group">
+                            {{ field.errors }}
+                            {{ field.label_tag }}
+                            <div class="col-lg-10">{{ field }}</div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="form-group">
+                            <div class="col-lg-4 col-lg-offset-2">
+                                <a href="{% url 'common:host' %}?type={{ type }}&env={{ env }}" type="button" class="btn btn-white" data-dismiss="modal">取消</a>
+                                <button type="submit" class="btn btn-info">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Mainly scripts -->
     <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>

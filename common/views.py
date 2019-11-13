@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,HttpResponseRedirect
+from django.shortcuts import render,redirect,HttpResponseRedirect,HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from dwebsocket.decorators import accept_websocket
 import paramiko
@@ -43,62 +43,70 @@ def domain(request):
     return render(request,'domain.html',{'project_list':porject_list})
 
 def host(request):
-    type = request.GET.get('type')
-    env = request.GET.get('env')
-    if type == 'all' and env == 'all':
+    stat = 'success'
+    if request.method == 'POST':
+        type_id = request.POST.get('type')
+        type_name = HostType.objects.get(pk=type_id).name
+        env = request.POST.get('env')
+        form = HostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = HostForm()
+        else:
+            stat = 'error'
+    else:
+        type_name = request.GET.get('type')
+        env = request.GET.get('env')
+        form = HostForm()
+
+    if type_name == 'all' and env == 'all':
         host_list = Host.objects.all().order_by('-env','ip')
-    elif type == 'all':
+    elif type_name == 'all':
         host_list = Host.objects.filter(env=env).order_by('-type','ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type__name =type).order_by('-type','ip')
+        host_list = Host.objects.filter(type__name =type_name).order_by('-type','ip')
     else:
-        host_list = Host.objects.filter(env=env, type__name=type)
+        host_list = Host.objects.filter(env=env, type__name=type_name)
     paginator = Paginator(host_list, 10)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
     type_list = HostType.objects.all()
-    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type,'type_list':type_list})
 
-def add_host(request):
     object_type = '主机'
-    submit_uri = '/common/add_host/'
-    back_uri = '/common/host/?env=all&type=all'
-    if request.method == 'POST':
-        form = HostForm(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-        else:
-            print(form.errors)
-    else:
-        form = HostForm()
-    return render(request, 'add_object.html', {'form': form,'object_type':object_type,'submit_uri':submit_uri,'back_uri':back_uri})
+    submit_uri = '/common/host/'
+
+    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat})
 
 def instance(request):
-    env = request.GET.get('env')
-    if env == 'all':
-        host_list = Host.objects.filter(type__name='java').order_by('-env')
+    object_type = ' JAVA 实例'
+    submit_uri = '/common/instance/'
+    stat = 'success'
+
+    if request.method == 'POST':
+        form = InstanceForm(request.POST)
+        host_id = request.POST.get('host')
+        host = Host.objects.get(pk=host_id)
+        env = host.env
+        if form.is_valid():
+            form.save()
+            form = InstanceForm()
+            host_list = Host.objects.filter(id = host_id)
+        else:
+            stat = 'error'
+            host_list = Host.objects.filter(env=env, type__name='java').order_by('-env')
     else:
-        host_list = Host.objects.filter(env=env,type__name='java').order_by('-env')
+        env = request.GET.get('env')
+        form = InstanceForm()
+        if env == 'all':
+            host_list = Host.objects.filter(type__name='java').order_by('-env')
+        else:
+            host_list = Host.objects.filter(env=env,type__name='java').order_by('-env')
+
     paginator = Paginator(host_list, 3)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
-    return render(request, 'instance.html', {'hosts': hosts,'env':env})
 
-def add_instance(request):
-    object_type = ' JAVA 实例'
-    submit_uri = '/common/add_instance/'
-    back_uri = '/common/instance/?env=all'
-    if request.method == 'POST':
-        form = InstanceForm(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-        else:
-            print(form.errors)
-    else:
-        form = InstanceForm()
-    return render(request, 'add_object.html', {'form': form,'object_type':object_type,'submit_uri':submit_uri,'back_uri':back_uri})
+    return render(request, 'instance.html', {'hosts': hosts,'env':env,'form':form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat})
 
 def model(request):
     model_list = JarModel.objects.all()
