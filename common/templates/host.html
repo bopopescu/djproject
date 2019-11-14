@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block page-head %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
@@ -31,7 +33,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     {% for t in type_list %}
-                        <li><a class="dropdown-item" href="{% url 'common:host' %}?type={{ t }}&env={{ env }}">{{ t }}</a></li>
+                        <li><a class="dropdown-item" href="{% url 'common:change_host' 'gets' 'none' %}?type={{ t }}&env={{ env }}">{{ t }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -47,8 +49,8 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type={{ type }}&env=test">测试环境</a></li>
-                    <li><a class="dropdown-item" href="{% url 'common:host' %}?type={{ type }}&env=pro">生产环境</a></li>
+                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'gets' 'none' %}?type={{ type }}&env=test">测试环境</a></li>
+                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'gets' 'none' %}?type={{ type }}&env=pro">生产环境</a></li>
                </ul>
             </div>
             <button id="btn_add_host_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
@@ -72,6 +74,7 @@
                       <th>位置</th>
                       <th>环境</th>
                       <th>创建时间</th>
+                      <th style="width: 5%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,6 +93,18 @@
                             <td>生产环境</td>
                         {% endif %}
                         <td>{{ h.created_at }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                        操作
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'get' h.id %}?type={{ type }}&env={{ env }}">修改</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'del' h.id %}?type={{ type }}&env={{ env }}">删除</a></li>
+                               </ul>
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -122,17 +137,13 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static 'js/host.js' %}"></script>
     <script>
-        $('#li_app_info').addClass('active')
-        $('#ul_app').addClass('in')
-        $('#li_host').addClass('active')
-
-        $('form label').addClass('col-lg-2 control-label')
-        $('form input').addClass('form-control')
-        $('form select').addClass('form-control')
-        $('form ul').addClass('col-lg-offset-2')
-
         {% if stat == 'error' %}
+            $('#btn_add_host_modal').click()
+        {% elif stat == 'get' %}
+            $('#btn_add_host_modal').click()
+        {% elif stat == 'add' %}
             $('#btn_add_host_modal').click()
         {% endif %}
     </script>

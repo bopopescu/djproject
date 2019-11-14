@@ -96,7 +96,7 @@
                             <span class="fa arrow"></span>
                         </a>
                         <ul id='ul_app' class="nav nav-second-level collapse">
-                            <li id="li_host"><a href="{% url 'common:host' %}?env=all&type=all">主机</a></li>
+                            <li id="li_host"><a href="{% url 'common:change_host' 'gets' 'none' %}?env=all&type=all">主机</a></li>
                             <li id="li_java_instance"><a href="{% url 'common:instance' %}?env=all">JAVA 实例</a></li>
                             <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
                             <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
@@ -157,7 +157,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">新增{{ object_type }}</h4>
+                    <h4 class="modal-title">{{ object_type }}</h4>
                 </div>
                 <div class="modal-body">
                     <form id="object_form" class="form-horizontal" action="{{ submit_uri }}" method="post">
@@ -172,7 +172,7 @@
 
                         <div class="form-group">
                             <div class="col-lg-4 col-lg-offset-2">
-                                <a href="{% url 'common:host' %}?type={{ type }}&env={{ env }}" type="button" class="btn btn-white" data-dismiss="modal">取消</a>
+                                <a href="{{ back_uri }}?type={{ type }}&env={{ env }}" type="button" class="btn btn-white">返回</a>
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                         </div>

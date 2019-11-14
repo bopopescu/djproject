@@ -5,7 +5,6 @@ app_name = 'common'
 urlpatterns = [
     path('checkbackup/',checkbackup,name='checkbackup'),
     path('execcheck/',execcheck,name='execcheck'),
-    path('host/',host,name='host'),
     path('instance/',instance,name='instance'),
     path('domain/',domain,name='domain'),
     path('model/',model,name='model'),
@@ -26,4 +25,5 @@ urlpatterns = [
     path('open_script_file/',open_script_file,name='open_script_file'),
     path('save_script_file/',save_script_file,name='save_script_file'),
     path('del_script_file/',del_script_file,name='del_script_file'),
+    path('host/<cmd>/<host_id>/',host,name='change_host')
 ]

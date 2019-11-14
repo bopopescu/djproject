@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,HttpResponseRedirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponseRedirect,reverse
 from django.views.decorators.csrf import csrf_exempt
 from dwebsocket.decorators import accept_websocket
 import paramiko
@@ -42,9 +42,13 @@ def domain(request):
     porject_list = paginator.get_page(page)
     return render(request,'domain.html',{'project_list':porject_list})
 
-def host(request):
+def host(request,cmd,host_id):
     stat = 'success'
-    if request.method == 'POST':
+    object_type = '新增主机'
+    submit_uri = '/common/host/add/none/'
+    back_uri = '/common/host/gets/none/'
+
+    if cmd == 'add':
         type_id = request.POST.get('type')
         type_name = HostType.objects.get(pk=type_id).name
         env = request.POST.get('env')
@@ -52,11 +56,45 @@ def host(request):
         if form.is_valid():
             form.save()
             form = HostForm()
+            stat = 'add'
+        else:
+            stat = 'error'
+    elif cmd == 'gets':
+        type_name = request.GET.get('type')
+        env = request.GET.get('env')
+        form = HostForm()
+    elif cmd == 'del':
+        stat = 'del'
+        env = request.GET.get('env')
+        type_name = request.GET.get('type')
+
+        host = Host.objects.get(pk=host_id)
+        host.delete()
+        form = HostForm()
+    elif cmd == 'get':
+        stat = 'get'
+        object_type = '修改主机'
+        env = request.GET.get('env')
+        type_name = request.GET.get('type')
+
+        host = Host.objects.get(pk=host_id)
+        form = HostForm(instance=host)
+        submit_uri = '/common/host/save/%s/' %host_id
+    elif cmd == 'save':
+        type_id = request.POST.get('type')
+        type_name = HostType.objects.get(pk=type_id).name
+        env = request.POST.get('env')
+
+        host = Host.objects.get(pk=host_id)
+        form = HostForm(request.POST,instance=host)
+        if form.is_valid():
+            form.save()
+            form = HostForm()
         else:
             stat = 'error'
     else:
-        type_name = request.GET.get('type')
-        env = request.GET.get('env')
+        env = 'all'
+        type_name = 'all'
         form = HostForm()
 
     if type_name == 'all' and env == 'all':
@@ -72,10 +110,8 @@ def host(request):
     hosts = paginator.get_page(page)
     type_list = HostType.objects.all()
 
-    object_type = '主机'
-    submit_uri = '/common/host/'
-
-    return render(request,'host.html',{'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat})
+    content = {'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat,'back_uri':back_uri}
+    return render(request,'host.html',content)
 
 def instance(request):
     object_type = ' JAVA 实例'
