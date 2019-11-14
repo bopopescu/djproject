@@ -97,7 +97,7 @@
                         </a>
                         <ul id='ul_app' class="nav nav-second-level collapse">
                             <li id="li_host"><a href="{% url 'common:change_host' 'gets' 'none' %}?env=all&type=all">主机</a></li>
-                            <li id="li_java_instance"><a href="{% url 'common:instance' %}?env=all">JAVA 实例</a></li>
+                            <li id="li_java_instance"><a href="{% url 'common:instance' 'gets' 'none' %}?env=all">JAVA 实例</a></li>
                             <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
                             <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
                         </ul>
@@ -172,7 +172,7 @@
 
                         <div class="form-group">
                             <div class="col-lg-4 col-lg-offset-2">
-                                <a href="{{ back_uri }}?type={{ type }}&env={{ env }}" type="button" class="btn btn-white">返回</a>
+                                <a href="?type={{ type }}&env={{ env }}" type="button" class="btn btn-white">返回</a>
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                         </div>
@@ -191,6 +191,15 @@
 
     <!-- Custom and plugin javascript -->
     <script src="{% static 'js/inspinia.js' %}"></script>
+
+    <script>
+        console.log("{{ stat }}")
+        {% if stat == 'error' %}
+            $('#btn_add_object_modal').click()
+        {% elif stat == 'get' %}
+            $('#btn_add_object_modal').click()
+        {% endif %}
+    </script>
 
     {% block scripts %}
     {% endblock %}

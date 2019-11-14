@@ -45,98 +45,121 @@ def domain(request):
 def host(request,cmd,host_id):
     stat = 'success'
     object_type = '新增主机'
+    form = HostForm()
     submit_uri = '/common/host/add/none/'
-    back_uri = '/common/host/gets/none/'
 
-    if cmd == 'add':
+    if request.method == 'POST':
         type_id = request.POST.get('type')
         type_name = HostType.objects.get(pk=type_id).name
         env = request.POST.get('env')
-        form = HostForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form = HostForm()
-            stat = 'add'
-        else:
-            stat = 'error'
-    elif cmd == 'gets':
-        type_name = request.GET.get('type')
-        env = request.GET.get('env')
-        form = HostForm()
-    elif cmd == 'del':
-        stat = 'del'
-        env = request.GET.get('env')
-        type_name = request.GET.get('type')
-
-        host = Host.objects.get(pk=host_id)
-        host.delete()
-        form = HostForm()
-    elif cmd == 'get':
-        stat = 'get'
-        object_type = '修改主机'
-        env = request.GET.get('env')
-        type_name = request.GET.get('type')
-
-        host = Host.objects.get(pk=host_id)
-        form = HostForm(instance=host)
-        submit_uri = '/common/host/save/%s/' %host_id
-    elif cmd == 'save':
-        type_id = request.POST.get('type')
-        type_name = HostType.objects.get(pk=type_id).name
-        env = request.POST.get('env')
-
-        host = Host.objects.get(pk=host_id)
-        form = HostForm(request.POST,instance=host)
-        if form.is_valid():
-            form.save()
-            form = HostForm()
-        else:
-            stat = 'error'
+        if cmd == 'add':
+            form = HostForm(request.POST)
+            if form.is_valid():
+                form.save()
+                form = HostForm()
+                stat = 'add'
+            else:
+                stat = 'error'
+        elif cmd == 'save':
+            host = Host.objects.get(pk=host_id)
+            form = HostForm(request.POST, instance=host)
+            if form.is_valid():
+                form.save()
+                form = HostForm()
+            else:
+                object_type = '修改主机'
+                stat = 'error'
+                submit_uri = '/common/host/save/%s/' % host_id
     else:
-        env = 'all'
-        type_name = 'all'
-        form = HostForm()
+        type_name = request.GET.get('type')
+        env = request.GET.get('env')
+        if cmd == 'gets':
+            form = HostForm()
+        elif cmd == 'get':
+            stat = 'get'
+            object_type = '修改主机'
+            host = Host.objects.get(pk=host_id)
+            form = HostForm(instance=host)
+            submit_uri = '/common/host/save/%s/' % host_id
+        elif cmd == 'del':
+            stat = 'del'
+            host = Host.objects.get(pk=host_id)
+            host.delete()
+            form = HostForm()
 
     if type_name == 'all' and env == 'all':
-        host_list = Host.objects.all().order_by('-env','ip')
+        host_list = Host.objects.all().order_by('-env','created_at')
     elif type_name == 'all':
-        host_list = Host.objects.filter(env=env).order_by('-type','ip')
+        host_list = Host.objects.filter(env=env).order_by('created_at','ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type__name =type_name).order_by('-type','ip')
+        host_list = Host.objects.filter(type__name =type_name).order_by('created_at','ip')
     else:
         host_list = Host.objects.filter(env=env, type__name=type_name)
+
     paginator = Paginator(host_list, 10)
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
+
     type_list = HostType.objects.all()
 
-    content = {'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat,'back_uri':back_uri}
+    content = {'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat}
     return render(request,'host.html',content)
 
-def instance(request):
-    object_type = ' JAVA 实例'
-    submit_uri = '/common/instance/'
+def instance(request,cmd,instance_id):
+    object_type = '新增 JAVA 实例'
+    submit_uri = '/common/instance/add/none/'
     stat = 'success'
+    form = InstanceForm()
+    host_list = ''
 
     if request.method == 'POST':
-        form = InstanceForm(request.POST)
         host_id = request.POST.get('host')
         host = Host.objects.get(pk=host_id)
         env = host.env
-        if form.is_valid():
-            form.save()
-            form = InstanceForm()
-            host_list = Host.objects.filter(id = host_id)
-        else:
-            stat = 'error'
-            host_list = Host.objects.filter(env=env, type__name='java').order_by('-env')
+        if cmd == 'add':
+            stat = 'add'
+            form = InstanceForm(request.POST)
+            if form.is_valid():
+                form.save()
+                form = InstanceForm()
+                host_list = Host.objects.filter(id = host_id)
+            else:
+                stat = 'error'
+                host_list = Host.objects.filter(env=env, type__name='java').order_by('-env','ip')
+        elif cmd == 'save':
+            inst = Instance.objects.get(pk=instance_id)
+            form = InstanceForm(request.POST,instance=inst)
+            if form.is_valid():
+                form.save()
+                form = InstanceForm()
+                host_list = Host.objects.filter(id = host_id)
+            else:
+                stat = 'error'
+                host_list = Host.objects.filter(env=env, type__name='java').order_by('-env','ip')
     else:
         env = request.GET.get('env')
-        form = InstanceForm()
-        if env == 'all':
-            host_list = Host.objects.filter(type__name='java').order_by('-env')
+        if cmd == 'gets':
+            if env == 'all':
+                host_list = Host.objects.filter(type__name='java').order_by('-env','ip')
+            else:
+                host_list = Host.objects.filter(env=env,type__name='java').order_by('-env','ip')
         else:
-            host_list = Host.objects.filter(env=env,type__name='java').order_by('-env')
+            if cmd == 'get':
+                stat = 'get'
+                object_type = '修改 JAVA 实例'
+                ints = Instance.objects.get(pk=instance_id)
+                form = InstanceForm(instance=ints)
+                submit_uri = '/common/instance/save/%s/' % instance_id
+            elif cmd == 'del':
+                stat = 'del'
+                ints = Instance.objects.get(pk=instance_id)
+                ints.delete()
+                form = InstanceForm()
+
+            if env == 'all':
+                host_list = Host.objects.filter(type__name='java').order_by('-env', 'ip')
+            else:
+                host_list = Host.objects.filter(env=env, type__name='java').order_by('-env', 'ip')
 
     paginator = Paginator(host_list, 3)
     page = request.GET.get('page')

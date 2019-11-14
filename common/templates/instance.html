@@ -32,12 +32,12 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'common:instance' %}?env=test">测试环境</a></li>
-                <li><a class="dropdown-item" href="{% url 'common:instance' %}?env=pro">生产环境</a></li>
+                <li><a class="dropdown-item" href="{% url 'common:instance' 'gets' 'none' %}?env=test">测试环境</a></li>
+                <li><a class="dropdown-item" href="{% url 'common:instance' 'gets' 'none' %}?env=pro">生产环境</a></li>
            </ul>
         </div>
 {#        <a href="{% url 'common:add_instance' %}" class="btn btn-info">新增</a>#}
-        <button id="btn_add_host_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
+        <button id="btn_add_object_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
             新增
         </button>
     </div>
@@ -54,6 +54,7 @@
                       <th>部署路径</th>
                       <th>环境</th>
                       <th>创建时间</th>
+                      <th style="width: 5%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -86,6 +87,18 @@
                             <td>
                                 {{ instance.created_at }}
                             </td>
+                            <td>
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                        操作
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'common:instance' 'get' instance.id %}?env={{ env }}">修改</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'common:instance' 'del' instance.id %}?env={{ env }}">删除</a></li>
+                               </ul>
+                            </div>
+                        </td>
                             </tr>
                         {% endfor %}
                     {% else %}
@@ -132,9 +145,5 @@
         $('form input').addClass('form-control')
         $('form select').addClass('form-control')
         $('form ul').addClass('col-lg-offset-2')
-
-        {% if stat == 'error' %}
-            $('#btn_add_host_modal').click()
-        {% endif %}
     </script>
 {% endblock %}

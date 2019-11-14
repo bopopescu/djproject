@@ -53,7 +53,7 @@
                     <li><a class="dropdown-item" href="{% url 'common:change_host' 'gets' 'none' %}?type={{ type }}&env=pro">生产环境</a></li>
                </ul>
             </div>
-            <button id="btn_add_host_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
+            <button id="btn_add_object_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
                 新增
             </button>
         </div>
@@ -138,13 +138,4 @@
 
 {% block scripts %}
     <script src="{% static 'js/host.js' %}"></script>
-    <script>
-        {% if stat == 'error' %}
-            $('#btn_add_host_modal').click()
-        {% elif stat == 'get' %}
-            $('#btn_add_host_modal').click()
-        {% elif stat == 'add' %}
-            $('#btn_add_host_modal').click()
-        {% endif %}
-    </script>
 {% endblock %}
