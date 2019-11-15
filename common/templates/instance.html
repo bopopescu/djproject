@@ -146,4 +146,10 @@
         $('form select').addClass('form-control')
         $('form ul').addClass('col-lg-offset-2')
     </script>
+    <script>
+        {% if stat == 'save' or stat == 'add' or stat == 'del' %}
+            url = '{% url 'common:instance' 'gets' 'none' %}?env={{ env }}'
+            window.location.href = url
+        {% endif %}
+    </script>
 {% endblock %}

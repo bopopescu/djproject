@@ -172,7 +172,7 @@
 
                         <div class="form-group">
                             <div class="col-lg-4 col-lg-offset-2">
-                                <a href="?type={{ type }}&env={{ env }}" type="button" class="btn btn-white">返回</a>
+                                <a href="{{ back_uri }}?type={{ type }}&env={{ env }}" type="button" class="btn btn-white">返回</a>
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                         </div>
@@ -193,7 +193,6 @@
     <script src="{% static 'js/inspinia.js' %}"></script>
 
     <script>
-        console.log("{{ stat }}")
         {% if stat == 'error' %}
             $('#btn_add_object_modal').click()
         {% elif stat == 'get' %}

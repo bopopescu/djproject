@@ -25,5 +25,6 @@ urlpatterns = [
     path('open_script_file/',open_script_file,name='open_script_file'),
     path('save_script_file/',save_script_file,name='save_script_file'),
     path('del_script_file/',del_script_file,name='del_script_file'),
-    path('host/<cmd>/<host_id>/',host,name='change_host')
+    path('host/<cmd>/<host_id>/',host,name='change_host'),
+    path('host/search/',search_host,name='search_host'),
 ]

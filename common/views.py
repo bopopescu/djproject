@@ -12,6 +12,7 @@ import os
 from .form import *
 from .models import UploadFile
 import json
+
 # Create your views here.
 def checkbackup(request):
     return render(request,'check_backup.html')
@@ -47,6 +48,7 @@ def host(request,cmd,host_id):
     object_type = '新增主机'
     form = HostForm()
     submit_uri = '/common/host/add/none/'
+    back_uri = '/common/host/gets/none/'
 
     if request.method == 'POST':
         type_id = request.POST.get('type')
@@ -61,6 +63,7 @@ def host(request,cmd,host_id):
             else:
                 stat = 'error'
         elif cmd == 'save':
+            stat = 'save'
             host = Host.objects.get(pk=host_id)
             form = HostForm(request.POST, instance=host)
             if form.is_valid():
@@ -81,6 +84,7 @@ def host(request,cmd,host_id):
             host = Host.objects.get(pk=host_id)
             form = HostForm(instance=host)
             submit_uri = '/common/host/save/%s/' % host_id
+
         elif cmd == 'del':
             stat = 'del'
             host = Host.objects.get(pk=host_id)
@@ -88,11 +92,11 @@ def host(request,cmd,host_id):
             form = HostForm()
 
     if type_name == 'all' and env == 'all':
-        host_list = Host.objects.all().order_by('-env','created_at')
+        host_list = Host.objects.all().order_by('-env','-created_at')
     elif type_name == 'all':
-        host_list = Host.objects.filter(env=env).order_by('created_at','ip')
+        host_list = Host.objects.filter(env=env).order_by('-created_at','ip')
     elif env == 'all':
-        host_list = Host.objects.filter(type__name =type_name).order_by('created_at','ip')
+        host_list = Host.objects.filter(type__name =type_name).order_by('-created_at','ip')
     else:
         host_list = Host.objects.filter(env=env, type__name=type_name)
 
@@ -102,12 +106,35 @@ def host(request,cmd,host_id):
 
     type_list = HostType.objects.all()
 
-    content = {'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat}
+    content = {'hosts':hosts,'env':env,'type':type_name,'type_list':type_list,'form': form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat,'back_uri':back_uri}
     return render(request,'host.html',content)
+
+def search_host(request):
+    ip = request.GET.get('s_ip')
+    type_name = 'all'
+    env = 'all'
+    stat = 'search'
+    object_type = '新增主机'
+    form = HostForm()
+    submit_uri = '/common/host/add/none/'
+    back_uri = '/common/host/gets/none/'
+
+    host_list = Host.objects.filter(ip__contains=ip)
+
+    paginator = Paginator(host_list, 10)
+    page = request.GET.get('page')
+    hosts = paginator.get_page(page)
+
+    type_list = HostType.objects.all()
+
+    content = {'hosts': hosts, 'env': env, 'type': type_name, 'type_list': type_list, 'form': form,
+               'object_type': object_type, 'submit_uri': submit_uri, 'stat': stat, 'back_uri': back_uri,'ip':ip}
+    return render(request, 'host.html', content)
 
 def instance(request,cmd,instance_id):
     object_type = '新增 JAVA 实例'
     submit_uri = '/common/instance/add/none/'
+    back_uri = '/common/instance/gets/none'
     stat = 'success'
     form = InstanceForm()
     host_list = ''
@@ -127,6 +154,7 @@ def instance(request,cmd,instance_id):
                 stat = 'error'
                 host_list = Host.objects.filter(env=env, type__name='java').order_by('-env','ip')
         elif cmd == 'save':
+            stat = 'save'
             inst = Instance.objects.get(pk=instance_id)
             form = InstanceForm(request.POST,instance=inst)
             if form.is_valid():
@@ -165,7 +193,7 @@ def instance(request,cmd,instance_id):
     page = request.GET.get('page')
     hosts = paginator.get_page(page)
 
-    return render(request, 'instance.html', {'hosts': hosts,'env':env,'form':form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat})
+    return render(request, 'instance.html', {'hosts': hosts,'env':env,'form':form,'object_type':object_type,'submit_uri':submit_uri,'stat':stat,'back_uri':back_uri})
 
 def model(request):
     model_list = JarModel.objects.all()

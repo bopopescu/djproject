@@ -56,6 +56,14 @@
             <button id="btn_add_object_modal" type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">
                 新增
             </button>
+            <form class="col-lg-3 pull-right" method="get" action="{% url 'common:search_host' %}">
+                <div class="input-group">
+                    <input type="text" required placeholder="IP 地址" id='s_ip' name="s_ip" class="form-control">
+                    <div class="input-group-btn">
+                        <button id="btn_search_ip" class="btn btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -81,7 +89,7 @@
                 {% for h in hosts %}
                     <tr>
                         <td width="1%">{{ forloop.counter }}</td>
-                        <td><a href="/admin/deployjar/host/{{ h.id }}/change/" target="_blank"> {{ h.name }}</a></td>
+                        <td>{{ h.name }}</td>
                         <td>{{ h.ip }}</td>
                         <td>{{ h.version }}</td>
                         <td>{{ h.config }}</td>
@@ -138,4 +146,20 @@
 
 {% block scripts %}
     <script src="{% static 'js/host.js' %}"></script>
+
+    <script>
+        {% if stat == 'save' or stat == 'add' or stat == 'del' %}
+            url = '{% url 'common:change_host' 'gets' 'none' %}?env={{ env }}&type={{ type }}'
+            window.location.href = url
+        {% elif stat == 'search' %}
+            $('#s_ip').val('{{ ip }}')
+        {% endif %}
+    </script>
+
+    <script>
+        s_ip = $('#s_ip').text()
+        $('#btn_search_ip').click(function () {
+            {#window.location.href = '{% url 'common:change_host' 'search' 'none' %}?type={{ type }}&env={{ env }}&s_ip=' + s_ip#}
+        })
+    </script>
 {% endblock %}
