@@ -10,7 +10,6 @@ $(function () {
         };
 
         socket.onmessage = function (e) {
-            console.log(e.data)
             if (e.data){
                 if(e.data == 'over'){
                     $('button').prop('disabled', false)

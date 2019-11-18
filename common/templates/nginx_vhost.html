@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block page-head %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>应用资料</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li>应用资料</li>
+                <li class="active">
+                    <strong>NGINX 虚拟主机</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                  <th>NGINX 虚拟主机名</th>
+                                  <th>项目名</th>
+                                  <th>IP 地址</th>
+                                  <th>端口号</th>
+                                  <th>访问协议</th>
+                                  <th>环境</th>
+                                  <th>配置文件</th>
+                                  <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for hn in host_name_list %}
+                            {% if hn.nginxvhost_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ hn.nginxvhost_set.all.count }}" style="vertical-align: middle">
+                                        {{ hn.hostname }}
+                                    </td>
+                                    <td rowspan="{{ hn.nginxvhost_set.all.count }}" style="vertical-align: middle">
+                                        {{ hn.project.name }}
+                                    </td>
+                                    {% for vhost in hn.nginxvhost_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>{{ vhost.instance.host.ip }}</td>
+                                            <td>{{ vhost.instance.port }}</td>
+                                            <td>{{ vhost.protocol }}</td>
+                                            {% if vhost.instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif vhost.instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ vhost.config_file.file_name }}</td>
+                                            <td>{{ vhost.created_at }}</td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td>{{ hn.hostname }}</td>
+                                    <td colspan="7">未创建 NGINX 虚拟主机</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="row" style="margin-bottom: 20px">
+                            <div class="col-lg-6"></div>
+                            <div class="col-lg-6 col-md-7" style="text-align:right">
+                            <span class="step-links">
+                                {% if host_name_list.has_previous %}
+                                    <a href="?page=1">首页</a>
+                                    <a href="?page={{ host_name_list.previous_page_number }}">上一页</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    当前 {{ host_name_list.number }} / {{ host_name_list.paginator.num_pages }}
+                                </span>
+
+                                {% if host_name_list.has_next %}
+                                    <a href="?page={{ host_name_list.next_page_number }}">下一页</a>
+                                    <a href="?page={{ host_name_list.paginator.num_pages }}">尾页</a>
+                                {% endif %}
+                            </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#li_app_info').addClass('active')
+        $('#ul_app').addClass('in')
+        $('#li_nginx_vhost').addClass('active')
+    </script>
+{% endblock %}

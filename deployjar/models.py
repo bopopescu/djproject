@@ -149,8 +149,8 @@ class Domain(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = '域名'
-        verbose_name_plural = '域名'
+        verbose_name = '项目访问地址'
+        verbose_name_plural = '项目访问地址'
 
     def __str__(self):
         return self.url
@@ -194,3 +194,46 @@ class ConfigFile(models.Model):
 
     def __str__(self):
         return self.project.name +'-' + self.file_name
+
+class NginxHostName(models.Model):
+    hostname = models.CharField('域名',max_length=200)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = '域名'
+        verbose_name_plural = '域名'
+
+    def __str__(self):
+        return self.hostname
+
+class NginxInstance(models.Model):
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'nginx'})
+    port = models.IntegerField('端口号',default=80)
+    version = models.CharField('版本号',max_length=200,default='1.9')
+    config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='主配置文件')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'NGINX 实例'
+        verbose_name_plural = 'NGINX 实例'
+
+    def __str__(self):
+        return self.host.ip + ':' + str(self.port)
+
+class NginxVhost(models.Model):
+    protocol_list = [('http','http'),('https','https')]
+
+    hostname = models.ForeignKey(NginxHostName,on_delete=models.CASCADE,verbose_name='Nginx 虚拟主机名')
+    instance = models.ForeignKey(NginxInstance,on_delete=models.CASCADE,verbose_name='Nginx 实例')
+    port = models.IntegerField('端口号',default=80)
+    protocol = models.CharField('访问协议',max_length=200,choices=protocol_list,default='http')
+    config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='配置文件')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Nginx 虚拟主机'
+        verbose_name_plural = 'Nginx 虚拟主机'
+
+    def __str__(self):
+        return self.hostname.hostname + ':' + str(self.instance.port)

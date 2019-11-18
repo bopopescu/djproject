@@ -100,6 +100,7 @@
                             <li id="li_java_instance"><a href="{% url 'common:instance' 'gets' 'none' %}?env=all">JAVA 实例</a></li>
                             <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
                             <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
+                            <li id="li_nginx_vhost"><a href="{% url 'common:nginx_vhost' %}">NGINX 虚拟主机</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -108,49 +109,50 @@
 
         <div id="page-wrapper" class="gray-bg">
 
-        <div class="row border-bottom">
-        <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-        </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <a href="/">
-                        <i class="fa fa-home"></i> 首页
-                    </a>
-                </li>
-                <li>
-                    {% if request.user.is_authenticated %}
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            {{ request.user }}
-                            <b class="caret"></b>
-                        </a>
-                    {% else %}
-                        <a href="/admin/login/"><i class="fa fa-sign-in"></i>登陆</a>
-                    {% endif %}
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="/admin/" target="_blank">后台管理</a></li>
-                        <li class="divider"></li>
-                        <li><a href="/admin/logout/">退出</a></li>
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a href="/">
+                                <i class="fa fa-home"></i> 首页
+                            </a>
+                        </li>
+                        <li>
+                            {% if request.user.is_authenticated %}
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    {{ request.user }}
+                                    <b class="caret"></b>
+                                </a>
+                            {% else %}
+                                <a href="/admin/login/"><i class="fa fa-sign-in"></i>登陆</a>
+                            {% endif %}
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="/admin/" target="_blank">后台管理</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/admin/logout/">退出</a></li>
+                            </ul>
+                        </li>
                     </ul>
-                </li>
-            </ul>
-        </nav>
-        </div>
-
-        {% block page-head %}
-        {% endblock %}
-
-        {% block page-content %}
-        {% endblock %}
-
-        <div class="footer">
-            <div class="pull-right">
-                <strong>Copyright</strong> &copy; 2019-2020
+                </nav>
             </div>
-        </div>
+
+            {% block page-head %}
+            {% endblock %}
+
+            {% block page-content %}
+            {% endblock %}
+
+            <div class="footer">
+                <div class="pull-right">
+                    <strong>Copyright</strong> &copy; 2019-2020
+                </div>
+            </div>
 
         </div>
+
     </div>
 
     <div class="modal inmodal fade" id="addModal" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -188,7 +190,7 @@
     <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
     <script src="{% static 'js/plugins/jeditable/jquery.jeditable.js' %}"></script>
     <script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
-
+    <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
     <!-- Custom and plugin javascript -->
     <script src="{% static 'js/inspinia.js' %}"></script>
 
@@ -198,6 +200,12 @@
         {% elif stat == 'get' %}
             $('#btn_add_object_modal').click()
         {% endif %}
+
+        $('.metismenu').slimScroll({
+            height: '680px',
+            allowPageScroll: true
+        })
+
     </script>
 
     {% block scripts %}

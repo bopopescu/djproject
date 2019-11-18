@@ -37,7 +37,7 @@ def execcheck(request):
         request.websocket.send('over')
 
 def domain(request):
-    porjects = Project.objects.all()
+    porjects = Project.objects.all().order_by('name')
     paginator = Paginator(porjects, 3)
     page = request.GET.get('page')
     porject_list = paginator.get_page(page)
@@ -497,3 +497,12 @@ def del_script_file(request):
        os.remove(path)
 
     return JsonResponse({'status':'success'})
+
+def nginx_vhost(request):
+    hostnames = NginxHostName.objects.all().order_by('hostname')
+
+    paginator = Paginator(hostnames, 10)
+    page = request.GET.get('page')
+    host_name_list = paginator.get_page(page)
+
+    return render(request,'nginx_vhost.html',{'host_name_list':host_name_list})
