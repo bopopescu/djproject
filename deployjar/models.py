@@ -237,3 +237,50 @@ class NginxVhost(models.Model):
 
     def __str__(self):
         return self.hostname.hostname + ':' + str(self.instance.port)
+
+class MongoDBCluster(models.Model):
+    type_list = [('副本集','副本集'),('分片副本集','分片副本集')]
+    name = models.CharField('集群名',max_length=200,unique=True)
+    type = models.CharField('类型',max_length=200,choices=type_list)
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'MongoDB 集群'
+        verbose_name_plural = 'MongoDB 集群'
+
+    def __str__(self):
+        return self.name
+
+class MongoDBInstance(models.Model):
+    role_list = [('primary','primary'),('secondary','secondary '),('arbiter','arbiter'),('route','route')]
+
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'mongodb'})
+    port = models.IntegerField('端口号',default=27017)
+    data_dir = models.CharField('数据目录',max_length=200,default='/usr/local/mongodb/data')
+    config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='配置文件')
+    shard = models.CharField('分片',max_length=200,blank=True)
+    role = models.CharField('角色',max_length=200,choices=role_list)
+    cluster = models.ForeignKey(MongoDBCluster,on_delete=models.CASCADE,verbose_name='集群')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'MongoDB 实例'
+        verbose_name_plural = 'MongoDB 实例'
+
+    def __str__(self):
+        return self.host.ip + ':' + str(self.port)
+
+class MongoDBDatabase(models.Model):
+    name = models.CharField('数据库名',max_length=200,unique=True)
+    user = models.CharField('用户',max_length=200,blank=True)
+    password = models.CharField('密码',max_length=200,blank=True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
+    cluster = models.ForeignKey(MongoDBCluster,on_delete=models.CASCADE,verbose_name='集群')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'MongoDB 数据库'
+        verbose_name_plural = 'MongoDB 数据库'
+
+    def __str__(self):
+        return self.name

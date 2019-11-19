@@ -506,3 +506,12 @@ def nginx_vhost(request):
     host_name_list = paginator.get_page(page)
 
     return render(request,'nginx_vhost.html',{'host_name_list':host_name_list})
+
+def mongodb(request):
+    mongodbs = MongoDBDatabase.objects.all().order_by('name')
+
+    paginator = Paginator(mongodbs, 5)
+    page = request.GET.get('page')
+    mongodb_list = paginator.get_page(page)
+
+    return render(request, 'mongodb.html', {'mongodb_list': mongodb_list})

@@ -30,6 +30,27 @@
                         <img alt="image" src="{% static 'img/logo.png' %}" style="height: 60px;width: 100%">
                         <div class="logo-element"> H+ </div>
                     </li>
+                    <li id="project">
+                        <a href="{% url 'common:project' %}">
+                            <i class="fa fa-cubes"></i>
+                            <span class="nav-label">项目管理</span>
+                        </a>
+                    </li>
+                    <li id="li_app_info">
+                        <a href="#">
+                            <i class="fa fa-bar-chart-o"></i>
+                            <span class="nav-label">应用资料</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul id='ul_app' class="nav nav-second-level collapse">
+                            <li id="li_host"><a href="{% url 'common:change_host' 'gets' 'none' %}?env=all&type=all">主机</a></li>
+                            <li id="li_java_instance"><a href="{% url 'common:instance' 'gets' 'none' %}?env=all">JAVA 实例</a></li>
+                            <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
+                            <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
+                            <li id="li_nginx_vhost"><a href="{% url 'common:nginx_vhost' %}">NGINX 虚拟主机</a></li>
+                            <li id="li_mongodb"><a href="{% url 'common:mongodb' %}">MongoDB 数据库</a></li>
+                        </ul>
+                    </li>
                     <li id="deploy">
                         <a href="{% url 'deployjar:deploy' %}?name=null&env=null">
                         <i class="fa fa-refresh"></i>
@@ -75,33 +96,11 @@
                         </a>
                     </li>
 
-                    <li id="project">
-                        <a href="{% url 'common:project' %}">
-                            <i class="fa fa-cubes"></i>
-                            <span class="nav-label">项目管理</span>
-                        </a>
-                    </li>
-
                     <li id="li_config">
                         <a href="{% url 'common:config_file' %}">
                             <i class="fa fa-gears"></i>
                             <span class="nav-label">配置中心</span>
                         </a>
-                    </li>
-
-                    <li id="li_app_info">
-                        <a href="#">
-                            <i class="fa fa-bar-chart-o"></i>
-                            <span class="nav-label">应用资料</span>
-                            <span class="fa arrow"></span>
-                        </a>
-                        <ul id='ul_app' class="nav nav-second-level collapse">
-                            <li id="li_host"><a href="{% url 'common:change_host' 'gets' 'none' %}?env=all&type=all">主机</a></li>
-                            <li id="li_java_instance"><a href="{% url 'common:instance' 'gets' 'none' %}?env=all">JAVA 实例</a></li>
-                            <li id="li_model"><a href="{% url 'common:model' %}">系统模块</a></li>
-                            <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
-                            <li id="li_nginx_vhost"><a href="{% url 'common:nginx_vhost' %}">NGINX 虚拟主机</a></li>
-                        </ul>
                     </li>
                 </ul>
             </div>
