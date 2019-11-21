@@ -290,7 +290,7 @@ class RedisCluster(models.Model):
 
     name = models.CharField('集群名',max_length=200,unique=True)
     type = models.CharField('类别',max_length=200,choices=type_list)
-    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目使用')
+    project = models.ManyToManyField(Project,verbose_name='项目使用')
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:

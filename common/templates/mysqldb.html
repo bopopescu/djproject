@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="wrapper wrapper-content">
+<div class="row wrapper wrapper-content">
     <div class="ibox-title">
         <div>
             <a href="/admin/deployjar/mysqlinstance/add/" class="btn btn-info" target="_blank">新增 MySQL 实例</a>
@@ -82,7 +82,7 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                    <button data-toggle="dropdown" style="margin-bottom: 0px" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
                                             操作
                                         <span class="caret"></span>
                                     </button>
@@ -96,7 +96,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <div class="row" style="margin-bottom: 20px">
+            <div class="row">
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6 col-md-7" style="text-align:right">
                 <span class="step-links">

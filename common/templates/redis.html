@@ -18,21 +18,29 @@
 {% endblock %}
 
 {% block page-content %}
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div>
+                            <a href="/admin/deployjar/rediscluster/add/" class="btn btn-info" target="_blank">新增集群</a>
+                            <a href="/admin/deployjar/redisinstance/add/" class="btn btn-info" target="_blank">新增实例</a>
+                        </div>
+                    </div>
                     <div class="ibox-content">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered dataTable">
                             <thead>
                             <tr>
-                                  <th>集群名</th>
-                                  <th>IP 地址</th>
-                                  <th>端口号</th>
-                                  <th>角色</th>
-                                  <th>环境</th>
-                                  <th>版本</th>
-                                  <th>创建时间</th>
+                                <th>集群名</th>
+                                <th>项目</th>
+                                <th>IP 地址</th>
+                                <th>端口号</th>
+                                <th>角色</th>
+                                <th>环境</th>
+                                <th>版本</th>
+                                <th>创建时间</th>
+                                <th style="width: 5%">操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -41,6 +49,15 @@
                                 <tr>
                                     <td rowspan="{{ rc.redisinstance_set.all.count }}" style="vertical-align: middle">
                                         <a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a>
+                                    </td>
+                                    <td rowspan="{{ rc.redisinstance_set.all.count }}" style="vertical-align: middle">
+                                        {% for p in rc.project.all %}
+                                            {% if forloop.counter == 1 %}
+                                                {{ p.name }}
+                                            {% else %}
+                                                , {{ p.name }}
+                                            {% endif %}
+                                        {% endfor %}
                                     </td>
                                     {% for instance in rc.redisinstance_set.all %}
                                         {% if forloop.counter != 1 %}
@@ -56,19 +73,38 @@
                                             {% endif %}
                                             <td>{{ instance.version }}</td>
                                             <td>{{ instance.created_at }}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button style="margin-bottom: 0px" data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                                        操作<span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="/admin/deployjar/redisinstance/{{ instance.id }}/change/" target="_blank">修改</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                             {% else %}
                                 <tr>
                                     <td><a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a></td>
-                                    <td colspan="6">未指定实例</td>
+                                    <td>
+                                        {% for p in rc.project.all %}
+                                            {% if forloop.counter == 1 %}
+                                                {{ p.name }}
+                                            {% else %}
+                                                , {{ p.name }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td colspan="7">未指定实例</td>
                                 </tr>
                             {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
 
-                        <div class="row" style="margin-bottom: 20px">
+                        <div class="row">
                             <div class="col-lg-6"></div>
                             <div class="col-lg-6 col-md-7" style="text-align:right">
                             <span class="step-links">

@@ -18,16 +18,24 @@
 {% endblock %}
 
 {% block page-content %}
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div>
+                            <a href="/admin/deployjar/mongodbcluster/add/" class="btn btn-info" target="_blank">新增集群</a>
+                            <a href="/admin/deployjar/mongodbinstance/add/" class="btn btn-info" target="_blank">新增实例</a>
+                            <a href="/admin/deployjar/mongodbdatabase/add/" class="btn btn-info" target="_blank">新增数据库</a>
+                        </div>
+                    </div>
                     <div class="ibox-content">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered dataTable">
                             <thead>
                             <tr>
                                   <th>数据库名</th>
                                   <th>集群名</th>
+                                  <th>项目</th>
                                   <th>IP 地址</th>
                                   <th>端口号</th>
                                   <th>数据目录</th>
@@ -36,6 +44,7 @@
                                   <th>角色</th>
                                   <th>环境</th>
                                   <th>创建时间</th>
+                                  <th style="width: 5%">操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -48,6 +57,7 @@
                                     <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">
                                         <a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a>
                                     </td>
+                                    <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">{{ db.project.name }}</td>
                                     {% for instance in db.cluster.mongodbinstance_set.all %}
                                         {% if forloop.counter != 1 %}
                                             <tr>
@@ -64,20 +74,31 @@
                                                 <td>生产环境</td>
                                             {% endif %}
                                             <td>{{ instance.created_at }}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button style="margin-bottom: 0px" data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                                        操作<span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="/admin/deployjar/mongodbinstance/{{ instance.id }}/change/" target="_blank">修改</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                             {% else %}
                                 <tr>
                                     <td><a href="/admin/deployjar/mongodbdatabase/{{ db.id }}/change/" target="_blank">{{ db.name }}</a></td>
                                     <td><a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a></td>
-                                    <td colspan="8">未指定实例</td>
+                                    <td>{{ db.project.name }}</td>
+                                    <td colspan="9">未指定实例</td>
                                 </tr>
                             {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
 
-                        <div class="row" style="margin-bottom: 20px">
+                        <div class="row">
                             <div class="col-lg-6"></div>
                             <div class="col-lg-6 col-md-7" style="text-align:right">
                             <span class="step-links">

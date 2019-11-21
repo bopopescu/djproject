@@ -18,58 +18,243 @@
 {% endblock %}
 
 {% block page-content %}
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
+
+                    {% if project.nginxhostname_set.all %}
                     <div class="ibox-title">
-                    {% if project.domain_set.all %}
                         <h6 class="mb-2 text-gray-800"><strong>访问地址</strong></h6>
                     </div>
                     <div class="ibox-content">
                         <table class="table table-bordered dataTable">
                             <thead>
                             <tr>
-                                  <th>名称</th>
-                                  <th>URL 地址</th>
-                                  <th>外网 IP</th>
-                                  <th>Nginx IP</th>
-                                  <th>环境</th>
-                                  <th>创建时间</th>
-                                  <th>备注</th>
+                                <th>NGINX 虚拟主机名(域名)</th>
+                                <th>IP 地址</th>
+                                <th>端口号</th>
+                                <th>访问协议</th>
+                                <th>环境</th>
+                                <th>配置文件</th>
+                                <th>创建时间</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {% for domain in project.domain_set.all %}
-                                     <tr>
-                                        <td>
-                                            <a href="/admin/deployjar/domain/{{ domain.id }}/change/" target="_blank">{{ domain.name }}</a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ domain.url }}" target="_blank">{{ domain.url }}</a>
-                                        </td>
-                                        <td>
-                                            {{ domain.ip }}
-                                        </td>
-                                        <td>
-                                            {{ domain.nginx.ip }}
-                                        </td>
-                                        {% if domain.nginx.env == 'test' %}
-                                            <td>测试环境</td>
-                                        {% elif domain.nginx.env == 'pro' %}
-                                            <td>生产环境</td>
+                            {% for hn in project.nginxhostname_set.all %}
+                            {% if hn.nginxvhost_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ hn.nginxvhost_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/nginxhostname/{{ hn.id }}/change/" target="_blank">{{ hn.hostname }}</a>
+                                    </td>
+                                    {% for vhost in hn.nginxvhost_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
                                         {% endif %}
-                                        <td>
-                                            {{ domain.created_at }}
-                                        </td>
-                                        <td>{{ domain.disc }}</td>
-                                    </tr>
-                                {% endfor %}
+                                            <td>{{ vhost.instance.host.ip }}</td>
+                                            <td>{{ vhost.instance.port }}</td>
+                                            <td>{{ vhost.protocol }}</td>
+                                            {% if vhost.instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif vhost.instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ vhost.config_file.file_name }}</td>
+                                            <td>{{ vhost.created_at }}</td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><a href="/admin/deployjar/nginxhostname/{{ hn.id }}/change/" target="_blank">{{ hn.hostname }}</a></td>
+                                    <td colspan="8">未创建 NGINX 虚拟主机</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
                             </tbody>
                         </table>
-                        <hr/>
-                    {% endif %}
+
                     </div>
+                    {% endif %}
+
+                    {% if project.mysqldb_set.all %}
+                    <div class="ibox-title">
+                        <h6 class="mb-2 text-gray-800"><strong>MySQL 数据库</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-bordered dataTable">
+                                <thead>
+                                <tr>
+                                      <th>数据库名</th>
+                                      <th>IP 地址</th>
+                                      <th>端口号</th>
+                                      <th>部署路径</th>
+                                      <th>版本</th>
+                                      <th>类型</th>
+                                      <th>环境</th>
+                                      <th>创建时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for db in project.mysqldb_set.all %}
+                                    <tr>
+                                        <td rowspan="{{ db.instance.all.count  }}" style="vertical-align: middle">
+                                            <a href="/admin/deployjar/mysqldb/{{ db.id }}/change/" target="_blank">{{ db.name }}</a>
+                                        </td>
+                                    {% for instance in db.instance.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>
+                                                {{ instance.host.ip }}
+                                            </td>
+                                            <td>
+                                                {{ instance.port }}
+                                            </td>
+                                            <td>
+                                                {{ instance.dir }}
+                                            </td>
+                                            <td>
+                                                {{ instance.version }}
+                                            </td>
+                                            <td>
+                                                {{ instance.type }}
+                                            </td>
+                                            {% if instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>
+                                                {{ instance.created_at }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if project.rediscluster_set.all %}
+                    <div class="ibox-title">
+                        <h6 class="mb-2 text-gray-800"><strong>Redis 集群</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-bordered dataTable">
+                            <thead>
+                            <tr>
+                                <th>集群名</th>
+                                <th>IP 地址</th>
+                                <th>端口号</th>
+                                <th>角色</th>
+                                <th>环境</th>
+                                <th>版本</th>
+                                <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for rc in project.rediscluster_set.all %}
+                            {% if rc.redisinstance_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ rc.redisinstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a>
+                                    </td>
+                                    {% for instance in rc.redisinstance_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>{{ instance.host.ip }}</td>
+                                            <td>{{ instance.port }}</td>
+                                            <td>{{ instance.role }}</td>
+                                            {% if instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ instance.version }}</td>
+                                            <td>{{ instance.created_at }}</td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a></td>
+                                    <td colspan="7">未指定实例</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    {% if project.mongodbdatabase_set.all %}
+                    <div class="ibox-title">
+                        <h6 class="mb-2 text-gray-800"><strong>MongoDB 数据库</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-bordered dataTable">
+                            <thead>
+                            <tr>
+                                  <th>数据库名</th>
+                                  <th>集群名</th>
+                                  <th>IP 地址</th>
+                                  <th>端口号</th>
+                                  <th>数据目录</th>
+                                  <th>配置文件</th>
+                                  <th>分片</th>
+                                  <th>角色</th>
+                                  <th>环境</th>
+                                  <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for db in project.mongodbdatabase_set.all %}
+                            {% if db.cluster.mongodbinstance_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/mongodbdatabase/{{ db.id }}/change/" target="_blank">{{ db.name }}</a>
+                                    </td>
+                                    <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a>
+                                    </td>
+                                    {% for instance in db.cluster.mongodbinstance_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>{{ instance.host.ip }}</td>
+                                            <td>{{ instance.port }}</td>
+                                            <td>{{ instance.data_dir }}</td>
+                                            <td>{{ instance.config_file.file_name }}</td>
+                                            <td>{{ instance.shard }}</td>
+                                            <td>{{ instance.role }}</td>
+                                            {% if instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ instance.created_at }}</td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><a href="/admin/deployjar/mongodbdatabase/{{ db.id }}/change/" target="_blank">{{ db.name }}</a></td>
+                                    <td><a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a></td>
+                                    <td>{{ db.project.name }}</td>
+                                    <td colspan="9">未指定实例</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

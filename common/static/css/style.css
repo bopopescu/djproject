@@ -106,7 +106,7 @@ h5 {
   border-radius: 3px;
   color: inherit;
   line-height: 25px;
-  margin: 4px;
+  margin: 0px;
   text-align: left;
   font-weight: normal;
 }
@@ -3444,7 +3444,7 @@ video {
   padding: 0 20px;
 }
 .wrapper-content {
-  padding: 20px 10px 40px;
+  padding: 20px 10px 50px;
 }
 #page-wrapper {
   padding: 0 15px;
@@ -3719,7 +3719,7 @@ code {
 }
 .ibox {
   clear: both;
-  margin-bottom: 25px;
+  /*margin-bottom: 25px;*/
   margin-top: 0;
   padding: 0;
 }
