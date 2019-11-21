@@ -108,7 +108,7 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'get' h.id %}?type={{ type }}&env={{ env }}">修改</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'common:change_host' 'get' h.id %}?type={{ type }}&env={{ env }}&page={{ hosts.number }}">修改</a></li>
                                     <li><a class="dropdown-item" href="{% url 'common:change_host' 'del' h.id %}?type={{ type }}&env={{ env }}">删除</a></li>
                                </ul>
                             </div>
@@ -154,12 +154,5 @@
         {% elif stat == 'search' %}
             $('#s_ip').val('{{ ip }}')
         {% endif %}
-    </script>
-
-    <script>
-        s_ip = $('#s_ip').text()
-        $('#btn_search_ip').click(function () {
-            {#window.location.href = '{% url 'common:change_host' 'search' 'none' %}?type={{ type }}&env={{ env }}&s_ip=' + s_ip#}
-        })
     </script>
 {% endblock %}

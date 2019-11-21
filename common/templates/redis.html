@@ -10,7 +10,7 @@
                 </li>
                 <li>应用资料</li>
                 <li class="active">
-                    <strong>NGINX 虚拟主机</strong>
+                    <strong>Redis 集群</strong>
                 </li>
             </ol>
         </div>
@@ -22,57 +22,46 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <div>
-                            <a href="/admin/deployjar/mysqlinstance/add/" class="btn btn-info" target="_blank">新增域名</a>
-                            <a href="/admin/deployjar/mysqldb/add/" class="btn btn-info" target="_blank">新增 Nginx 实例</a>
-                            <a href="/admin/deployjar/mysqldb/add/" class="btn btn-info" target="_blank">新增 Nginx 虚拟主机</a>
-                        </div>
-                    </div>
                     <div class="ibox-content">
                         <table class="table table-bordered">
                             <thead>
                             <tr>
-                                  <th>NGINX 虚拟主机名(域名)</th>
-                                  <th>项目名</th>
+                                  <th>集群名</th>
                                   <th>IP 地址</th>
                                   <th>端口号</th>
-                                  <th>访问协议</th>
+                                  <th>角色</th>
                                   <th>环境</th>
-                                  <th>配置文件</th>
+                                  <th>版本</th>
                                   <th>创建时间</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for hn in host_name_list %}
-                            {% if hn.nginxvhost_set.all.count > 0 %}
+                            {% for rc in redis_cluster_list %}
+                            {% if rc.redisinstance_set.all.count > 0 %}
                                 <tr>
-                                    <td rowspan="{{ hn.nginxvhost_set.all.count }}" style="vertical-align: middle">
-                                        <a href="/admin/deployjar/nginxhostname/{{ hn.id }}/change/" target="_blank">{{ hn.hostname }}</a>
+                                    <td rowspan="{{ rc.redisinstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a>
                                     </td>
-                                    <td rowspan="{{ hn.nginxvhost_set.all.count }}" style="vertical-align: middle">
-                                        {{ hn.project.name }}
-                                    </td>
-                                    {% for vhost in hn.nginxvhost_set.all %}
+                                    {% for instance in rc.redisinstance_set.all %}
                                         {% if forloop.counter != 1 %}
                                             <tr>
                                         {% endif %}
-                                            <td>{{ vhost.instance.host.ip }}</td>
-                                            <td>{{ vhost.instance.port }}</td>
-                                            <td>{{ vhost.protocol }}</td>
-                                            {% if vhost.instance.host.env == 'test' %}
+                                            <td>{{ instance.host.ip }}</td>
+                                            <td>{{ instance.port }}</td>
+                                            <td>{{ instance.role }}</td>
+                                            {% if instance.host.env == 'test' %}
                                                 <td>测试环境</td>
-                                            {% elif vhost.instance.host.env == 'pro' %}
+                                            {% elif instance.host.env == 'pro' %}
                                                 <td>生产环境</td>
                                             {% endif %}
-                                            <td>{{ vhost.config_file.file_name }}</td>
-                                            <td>{{ vhost.created_at }}</td>
+                                            <td>{{ instance.version }}</td>
+                                            <td>{{ instance.created_at }}</td>
                                         </tr>
                                     {% endfor %}
                             {% else %}
                                 <tr>
-                                    <td>{{ hn.hostname }}</td>
-                                    <td colspan="7">未创建 NGINX 虚拟主机</td>
+                                    <td><a href="/admin/deployjar/rediscluster/{{ rc.id }}/change/" target="_blank">{{ rc.name }}</a></td>
+                                    <td colspan="6">未指定实例</td>
                                 </tr>
                             {% endif %}
                             {% endfor %}
@@ -83,18 +72,18 @@
                             <div class="col-lg-6"></div>
                             <div class="col-lg-6 col-md-7" style="text-align:right">
                             <span class="step-links">
-                                {% if host_name_list.has_previous %}
+                                {% if redis_cluster_list.has_previous %}
                                     <a href="?page=1">首页</a>
-                                    <a href="?page={{ host_name_list.previous_page_number }}">上一页</a>
+                                    <a href="?page={{ redis_cluster_list.previous_page_number }}">上一页</a>
                                 {% endif %}
 
                                 <span class="current">
-                                    当前 {{ host_name_list.number }} / {{ host_name_list.paginator.num_pages }}
+                                    当前 {{ redis_cluster_list.number }} / {{ redis_cluster_list.paginator.num_pages }}
                                 </span>
 
-                                {% if host_name_list.has_next %}
-                                    <a href="?page={{ host_name_list.next_page_number }}">下一页</a>
-                                    <a href="?page={{ host_name_list.paginator.num_pages }}">尾页</a>
+                                {% if redis_cluster_list.has_next %}
+                                    <a href="?page={{ redis_cluster_list.next_page_number }}">下一页</a>
+                                    <a href="?page={{ redis_cluster_list.paginator.num_pages }}">尾页</a>
                                 {% endif %}
                             </span>
                             </div>
@@ -111,6 +100,6 @@
     <script>
         $('#li_app_info').addClass('active')
         $('#ul_app').addClass('in')
-        $('#li_nginx_vhost').addClass('active')
+        $('#li_redis').addClass('active')
     </script>
 {% endblock %}

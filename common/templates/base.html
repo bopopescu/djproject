@@ -49,6 +49,7 @@
                             <li id="li_mysql"><a href="{% url 'common:mysqldb' %}">MySQL 数据库</a></li>
                             <li id="li_nginx_vhost"><a href="{% url 'common:nginx_vhost' %}">NGINX 虚拟主机</a></li>
                             <li id="li_mongodb"><a href="{% url 'common:mongodb' %}">MongoDB 数据库</a></li>
+                            <li id="li_redis"><a href="{% url 'common:redis' %}">Redis 集群</a></li>
                         </ul>
                     </li>
                     <li id="deploy">
@@ -201,7 +202,7 @@
         {% endif %}
 
         $('.metismenu').slimScroll({
-            height: '680px',
+            height: '100%',
             allowPageScroll: true
         })
 

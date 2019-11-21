@@ -43,10 +43,10 @@
                             {% if db.cluster.mongodbinstance_set.all.count > 0 %}
                                 <tr>
                                     <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">
-                                        {{ db.name }}
+                                        <a href="/admin/deployjar/mongodbdatabase/{{ db.id }}/change/" target="_blank">{{ db.name }}</a>
                                     </td>
                                     <td rowspan="{{ db.cluster.mongodbinstance_set.all.count }}" style="vertical-align: middle">
-                                        {{ db.cluster.name }}
+                                        <a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a>
                                     </td>
                                     {% for instance in db.cluster.mongodbinstance_set.all %}
                                         {% if forloop.counter != 1 %}
@@ -68,8 +68,9 @@
                                     {% endfor %}
                             {% else %}
                                 <tr>
-                                    <td>{{ db.name }}</td>
-                                    <td colspan="9">未指定实例</td>
+                                    <td><a href="/admin/deployjar/mongodbdatabase/{{ db.id }}/change/" target="_blank">{{ db.name }}</a></td>
+                                    <td><a href="/admin/deployjar/mongodbcluster/{{ db.cluster.id }}/change/">{{ db.cluster.name }}</a></td>
+                                    <td colspan="8">未指定实例</td>
                                 </tr>
                             {% endif %}
                             {% endfor %}

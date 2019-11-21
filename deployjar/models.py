@@ -284,3 +284,35 @@ class MongoDBDatabase(models.Model):
 
     def __str__(self):
         return self.name
+
+class RedisCluster(models.Model):
+    type_list = [('单实例','单实例'),('主从','主从'),('哨兵模式','哨兵模式')]
+
+    name = models.CharField('集群名',max_length=200,unique=True)
+    type = models.CharField('类别',max_length=200,choices=type_list)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目使用')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Redis 集群'
+        verbose_name_plural = 'Redis 集群'
+
+    def __str__(self):
+        return self.name
+
+class RedisInstance(models.Model):
+    role_list = [('master','master'),('slave','slave')]
+
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'redis'})
+    port = models.IntegerField('端口号',default=6379)
+    role = models.CharField('角色',max_length=200,choices=role_list)
+    cluster = models.ForeignKey(RedisCluster,on_delete=models.CASCADE,verbose_name='集群名')
+    version = models.CharField('版本',max_length=200,default='4.0')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Redis 实例'
+        verbose_name_plural = 'Redis 实例'
+
+    def __str__(self):
+        return self.host.ip + ':' + str(self.port)

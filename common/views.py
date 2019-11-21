@@ -515,3 +515,12 @@ def mongodb(request):
     mongodb_list = paginator.get_page(page)
 
     return render(request, 'mongodb.html', {'mongodb_list': mongodb_list})
+
+def redis(request):
+    rds = RedisCluster.objects.all().order_by('name')
+
+    paginator = Paginator(rds, 5)
+    page = request.GET.get('page')
+    redis_cluster_list = paginator.get_page(page)
+
+    return render(request, 'redis.html', {'redis_cluster_list': redis_cluster_list})

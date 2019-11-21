@@ -10,7 +10,7 @@
                 </li>
                 <li>应用资料</li>
                 <li class="active">
-                    <strong>MySQL 实例</strong>
+                    <strong>MySQL 数据库</strong>
                 </li>
             </ol>
         </div>
@@ -19,6 +19,12 @@
 
 {% block page-content %}
 <div class="wrapper wrapper-content">
+    <div class="ibox-title">
+        <div>
+            <a href="/admin/deployjar/mysqlinstance/add/" class="btn btn-info" target="_blank">新增 MySQL 实例</a>
+            <a href="/admin/deployjar/mysqldb/add/" class="btn btn-info" target="_blank">新增 MySQL 数据库</a>
+        </div>
+    </div>
     <div class="ibox-content">
         <div class="row">
             <div class="col-lg-12">
@@ -34,7 +40,7 @@
                       <th>类型</th>
                       <th>环境</th>
                       <th>创建时间</th>
-                      <th>操作</th>
+                      <th style="width: 5%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,7 +80,17 @@
                             <td>
                                 {{ instance.created_at }}
                             </td>
-                            <td><a class="btn-info btn-sm" href="/admin/deployjar/mysqlinstance/{{ instance.id }}/change/" target="_blank">修改</a></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                            操作
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/admin/deployjar/mysqlinstance/{{ instance.id }}/change/" target="_blank">实例修改</a></li>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                     {% endfor %}
                 {% endfor %}

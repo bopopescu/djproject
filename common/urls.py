@@ -28,5 +28,6 @@ urlpatterns = [
     path('host/<cmd>/<host_id>/',host,name='change_host'),
     path('host/search/',search_host,name='search_host'),
     path('nginx_vhost/',nginx_vhost,name='nginx_vhost'),
-    path('mongodb/',mongodb,name='mongodb')
+    path('mongodb/',mongodb,name='mongodb'),
+    path('redis/',redis,name='redis')
 ]
