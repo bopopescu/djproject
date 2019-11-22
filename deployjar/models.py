@@ -316,3 +316,63 @@ class RedisInstance(models.Model):
 
     def __str__(self):
         return self.host.ip + ':' + str(self.port)
+
+class KafkaCluster(models.Model):
+    type_list = [('单实例','单实例'),('集群','集群')]
+
+    name = models.CharField('集群名',max_length=200,unique=True)
+    type = models.CharField('类别',max_length=200,choices=type_list)
+    project = models.ManyToManyField(Project,verbose_name='项目使用')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Kafka 集群'
+        verbose_name_plural = 'Kafka 集群'
+
+    def __str__(self):
+        return self.name
+
+class KafkaInstance(models.Model):
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'kafka'})
+    port = models.IntegerField('端口号',default=9092)
+    cluster = models.ForeignKey(KafkaCluster,on_delete=models.CASCADE,verbose_name='集群名')
+    version = models.CharField('版本',max_length=200,default='4.0')
+    config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='配置文件')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Kafka 实例'
+        verbose_name_plural = 'Kafka 实例'
+
+    def __str__(self):
+        return self.host.ip + ':' + str(self.port)
+
+class ZookeeperCluster(models.Model):
+    type_list = [('单实例','单实例'),('集群','集群')]
+
+    name = models.CharField('集群名',max_length=200,unique=True)
+    type = models.CharField('类别',max_length=200,choices=type_list)
+    project = models.ManyToManyField(Project,verbose_name='项目使用')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Zookeeper 集群'
+        verbose_name_plural = 'Zookeeper 集群'
+
+    def __str__(self):
+        return self.name
+
+class ZookeeperInstance(models.Model):
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'zookeeper'})
+    port = models.IntegerField('端口号',default=2181)
+    cluster = models.ForeignKey(ZookeeperCluster,on_delete=models.CASCADE,verbose_name='集群名')
+    version = models.CharField('版本',max_length=200,default='4.0')
+    config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='配置文件')
+    created_at = models.DateTimeField('创建时间', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Zookeeper 实例'
+        verbose_name_plural = 'Zookeeper 实例'
+
+    def __str__(self):
+        return self.host.ip + ':' + str(self.port)

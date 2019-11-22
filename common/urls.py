@@ -29,5 +29,7 @@ urlpatterns = [
     path('host/search/',search_host,name='search_host'),
     path('nginx_vhost/',nginx_vhost,name='nginx_vhost'),
     path('mongodb/',mongodb,name='mongodb'),
-    path('redis/',redis,name='redis')
+    path('redis/',redis,name='redis'),
+    path('kafka/',kafka,name='kafka'),
+    path('zookeeper/',zookeeper,name='zookeeper')
 ]

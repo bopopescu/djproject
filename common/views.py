@@ -524,3 +524,21 @@ def redis(request):
     redis_cluster_list = paginator.get_page(page)
 
     return render(request, 'redis.html', {'redis_cluster_list': redis_cluster_list})
+
+def kafka(request):
+    clusters = KafkaCluster.objects.all().order_by('name')
+
+    paginator = Paginator(clusters, 5)
+    page = request.GET.get('page')
+    kafka_cluster_list = paginator.get_page(page)
+
+    return render(request, 'kafka.html', {'kafka_cluster_list': kafka_cluster_list})
+
+def zookeeper(request):
+    clusters = ZookeeperCluster.objects.all().order_by('name')
+
+    paginator = Paginator(clusters, 5)
+    page = request.GET.get('page')
+    zookeeper_cluster_list = paginator.get_page(page)
+
+    return render(request, 'zookeeper.html', {'zookeeper_cluster_list': zookeeper_cluster_list})
