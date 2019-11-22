@@ -11,6 +11,7 @@ from django.views import View
 import os
 from .form import *
 from .models import UploadFile
+from djproject.settings import MEDIA_ROOT
 import json
 
 # Create your views here.
@@ -372,7 +373,7 @@ def open_file(request):
     project = request.POST.get("project")
     file_name = request.POST.get("file_name")
 
-    path = 'media/%s/' %project
+    path = '%s/%s/' %(MEDIA_ROOT,project)
     file_path = path + file_name
     p_stat = os.path.exists(path)
     f_stat = os.path.exists(file_path)
@@ -398,7 +399,7 @@ def save_file(request):
     project = request.POST.get("project")
     file_name = request.POST.get("file_name")
 
-    path = 'media/%s/' %project
+    path = '%s/%s/' %(MEDIA_ROOT,project)
     file_path = path + file_name
     p_stat = os.path.exists(path)
 
@@ -422,7 +423,7 @@ def del_file(request):
     c_file = ConfigFile.objects.get(project__name=project,file_name=file_name)
     c_file.delete()
 
-    path = 'media/%s/' %project + file_name
+    path = '%s/%s/' %(MEDIA_ROOT,project) + file_name
     stat = os.path.exists(path)
 
     if stat:
