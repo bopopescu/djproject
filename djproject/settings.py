@@ -136,4 +136,7 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# dev
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# pro
+MEDIA_ROOT = '/data/djproject/media'
