@@ -321,7 +321,7 @@ def exec_tasks(request):
                         try:
                             t.connect(username=user, password=password)
                             sftp = paramiko.SFTPClient.from_transport(t)
-                            sftp.put('media/scripts/' + type + '/' + script, '/tmp/%s' % script)
+                            sftp.put('%s/scripts/' %settings.MEDIA_ROOT + type + '/' + script, '/tmp/%s' % script)
                         except Exception as e:
                             print(e)
                             msg = "在服务器 %s 上执行失败！" % host.name
@@ -441,7 +441,7 @@ def open_script_file(request):
     type = request.POST.get("type")
     file_name = request.POST.get("file_name")
 
-    path = 'media/scripts/%s/' % type
+    path = '%s/scripts/%s/' % (settings.MEDIA_ROOT,type)
     file_path = path + file_name
     p_stat = os.path.exists(path)
     f_stat = os.path.exists(file_path)
@@ -467,7 +467,7 @@ def save_script_file(request):
     type = request.POST.get("type")
     file_name = request.POST.get("file_name")
 
-    path = 'media/scripts/%s/' %type
+    path = '%s/scripts/%s/' %(settings.MEDIA_ROOT,type)
     file_path = path + file_name
     p_stat = os.path.exists(path)
 
@@ -491,7 +491,7 @@ def del_script_file(request):
     s_file = Task.objects.get(type__cn_name=type,script=file_name)
     s_file.delete()
 
-    path = 'media/scripts/%s/' %type + file_name
+    path = '%s/scripts/%s/' %(settings.MEDIA_ROOT,type) + file_name
     stat = os.path.exists(path)
 
     if stat:
