@@ -268,7 +268,7 @@ def update_files(name):
     t = paramiko.Transport((host,port))
     t.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(t)
-    sftp.put('media/%s' %name,'/data/baipao/template/%s' %name)
+    sftp.put('%s/%s' %(settings.MEDIA_ROOT,name),'/data/baipao/template/%s' %name)
     t.close()
 
 def tasks(request):

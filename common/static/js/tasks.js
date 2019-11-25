@@ -4,6 +4,7 @@ $(function () {
     $('#ul_task').addClass('in')
 
     $("#exec_tasks").click(function () {
+        $('#btn_show_modal').click()
         var hosts = document.getElementsByName("host")
         ips =[]
         for (i=0; i<hosts.length; i++){
