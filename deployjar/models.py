@@ -164,7 +164,7 @@ class TaskType(models.Model):
         verbose_name_plural = '任务类别'
 
     def __str__(self):
-        return self.en_name
+        return self.cn_name
 
 class Task(models.Model):
     name = models.CharField('名称',max_length=200)
@@ -176,6 +176,7 @@ class Task(models.Model):
     class Meta:
         verbose_name = '任务'
         verbose_name_plural = '任务'
+        ordering = ['-type__en_name']
 
     def __str__(self):
         return self.name

@@ -118,12 +118,16 @@
                         <thead>
                         <td width="6%"></td>
                         <td>名称</td>
+                        <td>类别</td>
+                        <td>脚本</td>
                         </thead>
                         <tbody>
                         {% for task in task_list %}
                             <tr>
                                 <td style="text-align: center"><input type="checkbox" name="task" id="task{{ forloop.counter }}" value="{{ task.id }}"></td>
                                 <td>{{ task.name }}</td>
+                                <td>{{ task.type.cn_name }}</td>
+                                <td>{{ task.script }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
