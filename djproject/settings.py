@@ -138,6 +138,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 # dev
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = 'F:\data\djproject\media'
+# MEDIA_ROOT = 'F:\data\djproject\media'
 # pro
-# MEDIA_ROOT = '/data/djproject/media'
+MEDIA_ROOT = '/data/djproject/media'
