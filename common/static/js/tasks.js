@@ -26,7 +26,7 @@ $(function () {
         data = {'ips':ips,'tks':tks}
 
         $('button').prop('disabled', true)
-        $('#messagecontainer').empty()
+        $('#msgc').empty()
 
         var socket = new WebSocket("ws://" + window.location.host + "/common/exec_tasks/")
         socket.onopen = function () {
@@ -38,7 +38,7 @@ $(function () {
                     $('button').prop('disabled', false)
                 }
                 else{
-                    $('#messagecontainer').append(e.data+'<br/>');
+                    $('#msgc').append(e.data+'<br/>');
                 }
             }
         };
