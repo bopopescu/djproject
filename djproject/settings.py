@@ -86,7 +86,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'host': '188.188.1.134',
+            # 'host': '188.188.1.134',
+            'host': '188.188.1.131',
             'database': 'django',
             'user': 'django',
             'password': 'Django2.1'
