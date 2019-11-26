@@ -86,8 +86,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            # 'host': '188.188.1.134',
-            'host': '188.188.1.131',
+            'host': '188.188.1.134',
+            # 'host': '188.188.1.131',
             'database': 'django',
             'user': 'django',
             'password': 'Django2.1'
@@ -139,6 +139,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 # dev
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# MEDIA_ROOT = 'F:\data\djproject\media'
+MEDIA_ROOT = 'F:\data\djproject\media'
 # pro
-MEDIA_ROOT = '/data/djproject/media'
+# MEDIA_ROOT = '/data/djproject/media'

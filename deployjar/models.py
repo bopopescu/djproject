@@ -82,8 +82,8 @@ class JarModel(models.Model):
     created_at = models.DateTimeField('创建时间',default=timezone.now)
 
     class Meta:
-        verbose_name = '模块'
-        verbose_name_plural = '模块'
+        verbose_name = 'JAVA 模块'
+        verbose_name_plural = 'JAVA 模块'
 
     def __str__(self):
         return self.name
