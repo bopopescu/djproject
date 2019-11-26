@@ -25,13 +25,14 @@
 
                     {% if project.nginxhostname_set.all %}
                     <div class="ibox-title">
-                        <h6 class="mb-2 text-gray-800"><strong>访问地址</strong></h6>
+                        <h6 class="mb-2 text-gray-800"><strong>Nginx</strong></h6>
                     </div>
                     <div class="ibox-content">
                         <table class="table table-bordered dataTable">
                             <thead>
                             <tr>
                                 <th>NGINX 虚拟主机名(域名)</th>
+                                <th>访问地址</th>
                                 <th>IP 地址</th>
                                 <th>端口号</th>
                                 <th>访问协议</th>
@@ -51,6 +52,13 @@
                                         {% if forloop.counter != 1 %}
                                             <tr>
                                         {% endif %}
+                                            <td>
+                                                {% if vhost.protocol == 'http' %}
+                                                    <a href="{{ vhost.protocol }}://{{ hn.hostname }}:90" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}:90</a>
+                                                {% elif vhost.protocol == 'https' %}
+                                                    <a href="{{ vhost.protocol }}://{{ hn.hostname }}" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}</a>
+                                                {% endif %}
+                                            </td>
                                             <td>{{ vhost.instance.host.ip }}</td>
                                             <td>{{ vhost.instance.port }}</td>
                                             <td>{{ vhost.protocol }}</td>
@@ -66,7 +74,7 @@
                             {% else %}
                                 <tr>
                                     <td><a href="/admin/deployjar/nginxhostname/{{ hn.id }}/change/" target="_blank">{{ hn.hostname }}</a></td>
-                                    <td colspan="8">未创建 NGINX 虚拟主机</td>
+                                    <td colspan="7">未创建 NGINX 虚拟主机</td>
                                 </tr>
                             {% endif %}
                             {% endfor %}
