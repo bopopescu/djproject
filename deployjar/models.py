@@ -200,7 +200,7 @@ class ConfigFile(models.Model):
 
 class NginxHostName(models.Model):
     hostname = models.CharField('域名',max_length=200)
-    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,verbose_name='项目')
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:
