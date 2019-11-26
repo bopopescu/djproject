@@ -36,8 +36,6 @@ $(function () {
     $('#add_file').click(function () {
          window.open("/admin/deployjar/configfile/add/")
     })
-
-    $('.col-lg-10').css('bottom','50px')
 })
 
 function show_content(data,project,file_name) {

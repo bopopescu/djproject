@@ -4489,7 +4489,7 @@ body.mini-navbar.fixed-sidebar .logo-element {
 /* DASBOARD */
 .dashboard-header {
   border-top: 0;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 20px 50px 20px;
 }
 .dashboard-header h2 {
   margin-top: 10px;
