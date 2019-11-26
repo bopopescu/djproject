@@ -90,7 +90,8 @@ class JarModel(models.Model):
 
 class Instance(models.Model):
     name = models.ForeignKey(JarModel,on_delete=models.CASCADE,verbose_name='模块名')
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'java'})
+    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机')
+    # host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机', limit_choices_to={'type__name': 'java'})
     port = models.IntegerField('端口号')
     package = models.CharField('包名',max_length=200)
     dir = models.CharField('部署路径',max_length=200,default='/usr/local/')
@@ -106,7 +107,8 @@ class Instance(models.Model):
 class MySQLInstance(models.Model):
     type_list = [('master','主节点'),('slave','从节点')]
 
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址',limit_choices_to={'type__name':'mysql'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='IP 地址')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址',limit_choices_to={'type__name':'mysql'})
     port = models.IntegerField('端口号',default=3306)
     dir = models.CharField('部署路径',max_length=200,default='/usr/local/mysql')
     version = models.CharField('版本',max_length=200,default='5.7')
@@ -209,7 +211,8 @@ class NginxHostName(models.Model):
         return self.hostname
 
 class NginxInstance(models.Model):
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'nginx'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'nginx'})
     port = models.IntegerField('端口号',default=80)
     version = models.CharField('版本号',max_length=200,default='1.9')
     config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='主配置文件')
@@ -255,7 +258,8 @@ class MongoDBCluster(models.Model):
 class MongoDBInstance(models.Model):
     role_list = [('primary','primary'),('secondary','secondary '),('arbiter','arbiter'),('route','route')]
 
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'mongodb'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'mongodb'})
     port = models.IntegerField('端口号',default=27017)
     data_dir = models.CharField('数据目录',max_length=200,default='/usr/local/mongodb/data')
     config_file = models.ForeignKey(ConfigFile,on_delete=models.CASCADE,verbose_name='配置文件')
@@ -304,7 +308,8 @@ class RedisCluster(models.Model):
 class RedisInstance(models.Model):
     role_list = [('master','master'),('slave','slave')]
 
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'redis'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'redis'})
     port = models.IntegerField('端口号',default=6379)
     role = models.CharField('角色',max_length=200,choices=role_list)
     cluster = models.ForeignKey(RedisCluster,on_delete=models.CASCADE,verbose_name='集群名')
@@ -334,7 +339,8 @@ class KafkaCluster(models.Model):
         return self.name
 
 class KafkaInstance(models.Model):
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'kafka'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'kafka'})
     port = models.IntegerField('端口号',default=9092)
     cluster = models.ForeignKey(KafkaCluster,on_delete=models.CASCADE,verbose_name='集群名')
     version = models.CharField('版本',max_length=200,default='4.0')
@@ -364,7 +370,8 @@ class ZookeeperCluster(models.Model):
         return self.name
 
 class ZookeeperInstance(models.Model):
-    host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'zookeeper'})
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'zookeeper'})
     port = models.IntegerField('端口号',default=2181)
     cluster = models.ForeignKey(ZookeeperCluster,on_delete=models.CASCADE,verbose_name='集群名')
     version = models.CharField('版本',max_length=200,default='4.0')
