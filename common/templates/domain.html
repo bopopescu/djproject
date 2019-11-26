@@ -71,11 +71,9 @@
                                 {% endfor %}
                             {% else %}
                                 <tr>
-                                    <td rowspan="{{ project.domain_set.all.count }}">
-                                        {{ project.name }}
-                                    </td>
+                                    <td>{{ project.name }}</td>
                                     <td colspan="7">没有访问地址</td>
-                                    </tr>
+                                </tr>
                             {% endif %}
                             {% endfor %}
                             </tbody>
