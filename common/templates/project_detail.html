@@ -54,7 +54,11 @@
                                         {% endif %}
                                             <td>
                                                 {% if vhost.protocol == 'http' %}
-                                                    <a href="{{ vhost.protocol }}://{{ hn.hostname }}:90" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}:90</a>
+                                                    {% if vhost.instance.host.env == 'pro' %}
+                                                        <a href="{{ vhost.protocol }}://{{ hn.hostname }}" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}</a>
+                                                    {% else %}
+                                                        <a href="{{ vhost.protocol }}://{{ hn.hostname }}:90" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}:90</a>
+                                                    {% endif %}
                                                 {% elif vhost.protocol == 'https' %}
                                                     <a href="{{ vhost.protocol }}://{{ hn.hostname }}" target="_blank">{{ vhost.protocol }}://{{ hn.hostname }}</a>
                                                 {% endif %}
