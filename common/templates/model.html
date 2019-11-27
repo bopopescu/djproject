@@ -36,7 +36,7 @@
                       <th>部署路径</th>
                       <th>环境</th>
                       <th>创建时间</th>
-                      <th>操作</th>
+                      <th style="width: 5%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,6 +74,11 @@
                             <td><a class="btn-info btn-sm" href="/admin/deployjar/instance/{{ instance.id }}/change/" target="_blank">修改</a></td>
                         </tr>
                     {% endfor %}
+                {% else %}
+                    <tr>
+                        <td><a href="/admin/deployjar/jarmodel/{{ model.id }}/change/" target="_blank">{{ model.name }}</a></td>
+                        <td colspan="7">没有实例</td>
+                    </tr>
                 {% endif %}
                 {% endfor %}
                 </tbody>
