@@ -328,6 +328,58 @@
                     </div>
                     {% endif %}
 
+                    {% if project.kafkacluster_set.all %}
+                    <div class="ibox-title">
+                        <h6 class="mb-2 text-gray-800"><strong>Zookeeper</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-bordered dataTable">
+                            <thead>
+                            <tr>
+                                <th>集群名</th>
+                                <th>IP 地址</th>
+                                <th>端口号</th>
+                                <th>环境</th>
+                                <th>版本</th>
+                                <th>配置文件</th>
+                                <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for kc in project.kafkacluster_set.all %}
+                            {% if kc.kafkainstance_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ kc.kafkainstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/kafkacluster/{{ kc.id }}/change/" target="_blank">{{ kc.name }}</a>
+                                    </td>
+                                    {% for instance in kc.kafkainstance_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>{{ instance.host.ip }}</td>
+                                            <td>{{ instance.port }}</td>
+                                            {% if instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ instance.version }}</td>
+                                            <td>{{ instance.config_file.file_name }}</td>
+                                            <td>{{ instance.created_at }}</td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><a href="/admin/deployjar/kafkacluster/{{ rc.id }}/change/" target="_blank">{{ kc.name }}</a></td>
+                                    <td colspan="6">未指定实例</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+
                 </div>
             </div>
         </div>
