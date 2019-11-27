@@ -134,7 +134,7 @@ class MySQLDB(models.Model):
     created_at = models.DateTimeField('创建时间', default=timezone.now)
 
     class Meta:
-        ordering = ['-name']
+        ordering = ['name']
         verbose_name = 'MySQL 数据库'
         verbose_name_plural = 'MySQL 数据库'
 
