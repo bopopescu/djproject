@@ -18,6 +18,7 @@ class Project(models.Model):
     manager = models.CharField('负责人',max_length=200)
     created_at = models.DateTimeField('创建时间',default=timezone.now)
     class Meta:
+        ordering = ['name']
         verbose_name = '项目'
         verbose_name_plural = '项目'
 
