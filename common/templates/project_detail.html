@@ -283,7 +283,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for zc in zookeepercluster_set.all %}
+                            {% for zc in project.zookeepercluster_set.all %}
                             {% if zc.zookeeperinstance_set.all.count > 0 %}
                                 <tr>
                                     <td rowspan="{{ zc.zookeeperinstance_set.all.count }}" style="vertical-align: middle">
