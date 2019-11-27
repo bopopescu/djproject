@@ -263,6 +263,110 @@
                     </div>
                     {% endif %}
 
+                    {% if project.zookeepercluster_set.all %}
+                    <div class="ibox-title">
+                        <h6 class="mb-2 text-gray-800"><strong>Zookeeper</strong></h6>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-bordered dataTable">
+                            <thead>
+                            <tr>
+                                <th>集群名</th>
+                                <th>项目</th>
+                                <th>IP 地址</th>
+                                <th>端口号</th>
+                                <th>环境</th>
+                                <th>版本</th>
+                                <th>配置文件</th>
+                                <th>创建时间</th>
+                                <th style="width: 5%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for zc in zookeepercluster_set.all %}
+                            {% if zc.zookeeperinstance_set.all.count > 0 %}
+                                <tr>
+                                    <td rowspan="{{ zc.zookeeperinstance_set.all.count }}" style="vertical-align: middle">
+                                        <a href="/admin/deployjar/zookeepercluster/{{ zc.id }}/change/" target="_blank">{{ zc.name }}</a>
+                                    </td>
+                                    <td rowspan="{{ zc.zookeeperinstance_set.all.count }}" style="vertical-align: middle">
+                                        {% for p in zc.project.all %}
+                                            {% if forloop.counter == 1 %}
+                                                {{ p.name }}
+                                            {% else %}
+                                                , {{ p.name }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    {% for instance in zc.zookeeperinstance_set.all %}
+                                        {% if forloop.counter != 1 %}
+                                            <tr>
+                                        {% endif %}
+                                            <td>{{ instance.host.ip }}</td>
+                                            <td>{{ instance.port }}</td>
+                                            {% if instance.host.env == 'test' %}
+                                                <td>测试环境</td>
+                                            {% elif instance.host.env == 'pro' %}
+                                                <td>生产环境</td>
+                                            {% endif %}
+                                            <td>{{ instance.version }}</td>
+                                            <td>{{ instance.config_file.file_name }}</td>
+                                            <td>{{ instance.created_at }}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button style="margin-bottom: 0px" data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" aria-expanded="false">
+                                                        操作<span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="/admin/deployjar/zookeeperinstance/{{ instance.id }}/change/" target="_blank">修改</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><a href="/admin/deployjar/zookeepercluster/{{ zc.id }}/change/" target="_blank">{{ zc.name }}</a></td>
+                                    <td>
+                                        {% for p in zc.project.all %}
+                                            {% if forloop.counter == 1 %}
+                                                {{ p.name }}
+                                            {% else %}
+                                                , {{ p.name }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td colspan="7">未指定实例</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-lg-6"></div>
+                            <div class="col-lg-6 col-md-7" style="text-align:right">
+                            <span class="step-links">
+                                {% if zookeeper_cluster_list.has_previous %}
+                                    <a href="?page=1">首页</a>
+                                    <a href="?page={{ zookeeper_cluster_list.previous_page_number }}">上一页</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    当前 {{ zookeeper_cluster_list.number }} / {{ zookeeper_cluster_list.paginator.num_pages }}
+                                </span>
+
+                                {% if zookeeper_cluster_list.has_next %}
+                                    <a href="?page={{ zookeeper_cluster_list.next_page_number }}">下一页</a>
+                                    <a href="?page={{ zookeeper_cluster_list.paginator.num_pages }}">尾页</a>
+                                {% endif %}
+                            </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
