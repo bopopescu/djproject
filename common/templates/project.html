@@ -38,9 +38,9 @@
                                     {% if forloop.counter != 1 %}
                                         <tr>
                                     {% endif %}
-                                    <td rowspan="{{ p.jarmodel_set.all.count }}"><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
-                                    <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.manager }}</td>
-                                    <td rowspan="{{ p.jarmodel_set.all.count }}">{{ p.created_at }}</td>
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}" style="vertical-align: middle"><a href='{% url "common:project_detail" p.id %}'> {{ p.name }}</a></td>
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}" style="vertical-align: middle">{{ p.manager }}</td>
+                                    <td rowspan="{{ p.jarmodel_set.all.count }}" style="vertical-align: middle">{{ p.created_at }}</td>
                                     {% for m in p.jarmodel_set.all %}
                                     {% if forloop.counter != 1 %}
                                         <tr>
