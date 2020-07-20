@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('port', models.IntegerField(default=3306, verbose_name='端口号')),
                 ('dir', models.CharField(default='/usr/local/mysql', max_length=200, verbose_name='部署路径')),
                 ('version', models.CharField(default='5.7', max_length=200, verbose_name='版本')),
-                ('type', models.CharField(choices=[('主节点', 'primary'), ('从节点', 'slave')], max_length=200, verbose_name='类型')),
+                ('type', models.CharField(choices=[('主节点', 'primary'), ('从节点', 'subordinate')], max_length=200, verbose_name='类型')),
                 ('password', models.CharField(default='111111', max_length=200, verbose_name='root 密码')),
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now, verbose_name='创建时间')),
                 ('host', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='deployjar.Host', verbose_name='IP 地址')),

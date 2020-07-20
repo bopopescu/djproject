@@ -45,6 +45,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='mysqlinstance',
             name='type',
-            field=models.CharField(choices=[('primary', '主节点'), ('slave', '从节点')], max_length=200, verbose_name='类型'),
+            field=models.CharField(choices=[('primary', '主节点'), ('subordinate', '从节点')], max_length=200, verbose_name='类型'),
         ),
     ]

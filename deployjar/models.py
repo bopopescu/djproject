@@ -105,7 +105,7 @@ class Instance(models.Model):
         return self.host.ip + ':%s' %self.port
 
 class MySQLInstance(models.Model):
-    type_list = [('master','主节点'),('slave','从节点')]
+    type_list = [('main','主节点'),('subordinate','从节点')]
 
     host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='IP 地址')
     # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='IP 地址',limit_choices_to={'type__name':'mysql'})
@@ -309,7 +309,7 @@ class RedisCluster(models.Model):
         return self.name
 
 class RedisInstance(models.Model):
-    role_list = [('master','master'),('slave','slave')]
+    role_list = [('main','main'),('subordinate','subordinate')]
 
     host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
     # host = models.ForeignKey(Host,on_delete=models.CASCADE,verbose_name='主机',limit_choices_to={'type__name':'redis'})

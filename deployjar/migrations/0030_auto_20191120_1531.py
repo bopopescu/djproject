@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('port', models.IntegerField(default=6379, verbose_name='端口号')),
-                ('role', models.CharField(choices=[('master', 'master'), ('slave', 'slave')], max_length=200, verbose_name='角色')),
+                ('role', models.CharField(choices=[('main', 'main'), ('subordinate', 'subordinate')], max_length=200, verbose_name='角色')),
                 ('version', models.CharField(default='4.0', max_length=200, verbose_name='版本')),
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now, verbose_name='创建时间')),
                 ('cluster', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='deployjar.RedisCluster', verbose_name='集群名')),
